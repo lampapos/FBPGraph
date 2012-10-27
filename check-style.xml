@@ -125,8 +125,5 @@
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation"/>
   <module name="FileTabCharacter"/>
-  <module name="SuppressionFilter">
-    <property name="file" value="${basedir}/checkstyle-suppress.xml"/>
-  </module>
   <module name="SuppressionCommentFilter"/>
 </module>
