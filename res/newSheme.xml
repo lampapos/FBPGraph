@@ -1,0 +1,30 @@
+<Sh>
+<Logical>
+	<Nodes>
+		<node type="user" id="0">a</node>
+		<node type="const" id="1">8</node>
+		<node type="sign" id="2">*</node>
+		<node type="bd" id="3">a4</node>
+		<node type="sign" id="4">-</node>
+		<node type="const" id="5">2</node>
+		<node type="user" id="6">Print</node>
+	</Nodes>
+	<Connections>
+		<con s="0" d="6" />
+		<con s="1" d="2" />
+		<con s="2" d="0" />
+		<con s="3" d="4" />
+		<con s="4" d="2" />
+		<con s="5" d="4" />
+	</Connections>
+</Logical>
+<Geometry>
+	<geo id="0" color="" x="180" y="80" />
+	<geo id="1" color="" x="320" y="240" />
+	<geo id="2" color="" x="180" y="170" />
+	<geo id="3" color="" x="90" y="360" />
+	<geo id="4" color="" x="180" y="270" />
+	<geo id="5" color="" x="320" y="350" />
+	<geo id="6" color="" x="447" y="88" />
+</Geometry>
+</Sh>

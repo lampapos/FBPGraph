@@ -1,0 +1,174 @@
+<orc.gg.parse.SLContainer>
+  <data>
+    <orc.gg.parse.Node1>
+      <name>Generator</name>
+      <id>1</id>
+      <out__connect>
+        <com.mxgraph.model.mxCell>
+          <id>20</id>
+          <geometry>
+            <x>1.0</x>
+            <y>0.5</y>
+            <width>20.0</width>
+            <height>20.0</height>
+            <offset>
+              <x>-10.0</x>
+              <y>-10.0</y>
+            </offset>
+            <relative>true</relative>
+          </geometry>
+          <style>shape=ellipse;perimter=ellipsePerimeter</style>
+          <vertex>true</vertex>
+          <edge>false</edge>
+          <connectable>true</connectable>
+          <visible>true</visible>
+          <collapsed>false</collapsed>
+          <parent class="com.mxgraph.model.mxCell">
+            <id>19</id>
+            <value class="string">Generator</value>
+            <geometry>
+              <x>170.0</x>
+              <y>136.0</y>
+              <width>90.0</width>
+              <height>30.0</height>
+              <relative>false</relative>
+            </geometry>
+            <style>ROUNDED</style>
+            <vertex>true</vertex>
+            <edge>false</edge>
+            <connectable>true</connectable>
+            <visible>true</visible>
+            <collapsed>false</collapsed>
+            <parent class="com.mxgraph.model.mxCell">
+              <id>1</id>
+              <vertex>false</vertex>
+              <edge>false</edge>
+              <connectable>true</connectable>
+              <visible>true</visible>
+              <collapsed>false</collapsed>
+              <parent class="com.mxgraph.model.mxCell">
+                <id>0</id>
+                <vertex>false</vertex>
+                <edge>false</edge>
+                <connectable>true</connectable>
+                <visible>true</visible>
+                <collapsed>false</collapsed>
+                <children>
+                  <com.mxgraph.model.mxCell reference="../../.."/>
+                </children>
+              </parent>
+              <children>
+                <com.mxgraph.model.mxCell reference="../../.."/>
+                <com.mxgraph.model.mxCell>
+                  <id>21</id>
+                  <value class="string">PrintResult</value>
+                  <geometry>
+                    <x>451.0</x>
+                    <y>142.0</y>
+                    <width>90.0</width>
+                    <height>30.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>ROUNDED</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>true</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                  <children>
+                    <com.mxgraph.model.mxCell>
+                      <id>22</id>
+                      <geometry>
+                        <x>0.0</x>
+                        <y>0.5</y>
+                        <width>20.0</width>
+                        <height>20.0</height>
+                        <offset>
+                          <x>-10.0</x>
+                          <y>-10.0</y>
+                        </offset>
+                        <relative>true</relative>
+                      </geometry>
+                      <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                      <vertex>true</vertex>
+                      <edge>false</edge>
+                      <connectable>true</connectable>
+                      <visible>true</visible>
+                      <collapsed>false</collapsed>
+                      <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                      <edges/>
+                    </com.mxgraph.model.mxCell>
+                  </children>
+                  <edges>
+                    <com.mxgraph.model.mxCell>
+                      <id>27</id>
+                      <value class="string"></value>
+                      <geometry>
+                        <x>0.0</x>
+                        <y>0.0</y>
+                        <width>0.0</width>
+                        <height>0.0</height>
+                        <sourcePoint>
+                          <x>260.0</x>
+                          <y>150.0</y>
+                        </sourcePoint>
+                        <targetPoint>
+                          <x>450.0</x>
+                          <y>160.0</y>
+                        </targetPoint>
+                        <relative>true</relative>
+                      </geometry>
+                      <style>sourcePort=20;targetPort=22</style>
+                      <vertex>false</vertex>
+                      <edge>true</edge>
+                      <connectable>true</connectable>
+                      <visible>true</visible>
+                      <collapsed>false</collapsed>
+                      <parent class="com.mxgraph.model.mxCell" reference="../../../../.."/>
+                      <source class="com.mxgraph.model.mxCell" reference="../../../../../.."/>
+                      <target class="com.mxgraph.model.mxCell" reference="../../.."/>
+                    </com.mxgraph.model.mxCell>
+                  </edges>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell"/>
+              </children>
+            </parent>
+            <children>
+              <com.mxgraph.model.mxCell reference="../../.."/>
+            </children>
+            <edges>
+              <com.mxgraph.model.mxCell reference="../../parent/children/com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell"/>
+            </edges>
+          </parent>
+          <edges/>
+        </com.mxgraph.model.mxCell>
+      </out__connect>
+      <in__connect/>
+      <cell reference="../out__connect/com.mxgraph.model.mxCell/parent"/>
+      <x>170</x>
+      <y>136</y>
+      <color></color>
+    </orc.gg.parse.Node1>
+    <orc.gg.parse.Node1>
+      <name>PrintResult</name>
+      <id>2</id>
+      <out__connect/>
+      <in__connect>
+        <com.mxgraph.model.mxCell reference="../../../orc.gg.parse.Node1/out__connect/com.mxgraph.model.mxCell/parent/parent/children/com.mxgraph.model.mxCell[2]/children/com.mxgraph.model.mxCell"/>
+      </in__connect>
+      <cell reference="../../orc.gg.parse.Node1/out__connect/com.mxgraph.model.mxCell/parent/parent/children/com.mxgraph.model.mxCell[2]"/>
+      <x>451</x>
+      <y>142</y>
+      <color></color>
+    </orc.gg.parse.Node1>
+  </data>
+  <con>
+    <orc.gg.parse.Connection>
+      <source>1</source>
+      <destination>2</destination>
+      <cell reference="../../../data/orc.gg.parse.Node1/out__connect/com.mxgraph.model.mxCell/parent/parent/children/com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell"/>
+    </orc.gg.parse.Connection>
+  </con>
+  <max__id>4</max__id>
+</orc.gg.parse.SLContainer>
