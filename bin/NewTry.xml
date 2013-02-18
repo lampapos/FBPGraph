@@ -1,0 +1,434 @@
+<edu.kpi.fbp.parse.SLContainer>
+  <data>
+    <edu.kpi.fbp.primitives.Node>
+      <name>Summator</name>
+      <id>1</id>
+      <out__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell>
+            <id>4</id>
+            <value class="string"></value>
+            <geometry>
+              <x>262.0</x>
+              <y>129.0</y>
+              <width>20.0</width>
+              <height>20.0</height>
+              <relative>false</relative>
+            </geometry>
+            <style>shape=ellipse;perimter=ellipsePerimeter</style>
+            <vertex>true</vertex>
+            <edge>false</edge>
+            <connectable>true</connectable>
+            <visible>true</visible>
+            <collapsed>false</collapsed>
+            <parent class="com.mxgraph.model.mxCell">
+              <id>1</id>
+              <vertex>false</vertex>
+              <edge>false</edge>
+              <connectable>true</connectable>
+              <visible>true</visible>
+              <collapsed>false</collapsed>
+              <parent class="com.mxgraph.model.mxCell">
+                <id>0</id>
+                <vertex>false</vertex>
+                <edge>false</edge>
+                <connectable>true</connectable>
+                <visible>true</visible>
+                <collapsed>false</collapsed>
+                <children>
+                  <com.mxgraph.model.mxCell reference="../../.."/>
+                </children>
+              </parent>
+              <children>
+                <com.mxgraph.model.mxCell>
+                  <id>2</id>
+                  <value class="string">Summator</value>
+                  <geometry>
+                    <x>182.0</x>
+                    <y>124.0</y>
+                    <width>90.0</width>
+                    <height>30.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>fillColor=green</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>false</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell>
+                  <id>3</id>
+                  <value class="string"></value>
+                  <geometry>
+                    <x>172.0</x>
+                    <y>129.0</y>
+                    <width>20.0</width>
+                    <height>20.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>true</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                  <edges>
+                    <com.mxgraph.model.mxCell>
+                      <id>13</id>
+                      <value class="string"></value>
+                      <geometry>
+                        <x>0.0</x>
+                        <y>0.0</y>
+                        <width>0.0</width>
+                        <height>0.0</height>
+                        <sourcePoint>
+                          <x>180.0</x>
+                          <y>140.0</y>
+                        </sourcePoint>
+                        <targetPoint>
+                          <x>170.0</x>
+                          <y>70.0</y>
+                        </targetPoint>
+                        <relative>true</relative>
+                      </geometry>
+                      <style></style>
+                      <vertex>false</vertex>
+                      <edge>true</edge>
+                      <connectable>true</connectable>
+                      <visible>true</visible>
+                      <collapsed>false</collapsed>
+                      <parent class="com.mxgraph.model.mxCell" reference="../../../../.."/>
+                      <source class="com.mxgraph.model.mxCell" reference="../../.."/>
+                      <target class="com.mxgraph.model.mxCell">
+                        <id>7</id>
+                        <value class="string"></value>
+                        <geometry>
+                          <x>156.0</x>
+                          <y>65.0</y>
+                          <width>20.0</width>
+                          <height>20.0</height>
+                          <relative>false</relative>
+                        </geometry>
+                        <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                        <vertex>true</vertex>
+                        <edge>false</edge>
+                        <connectable>true</connectable>
+                        <visible>true</visible>
+                        <collapsed>false</collapsed>
+                        <parent class="com.mxgraph.model.mxCell" reference="../../../../../.."/>
+                        <edges>
+                          <com.mxgraph.model.mxCell reference="../../.."/>
+                        </edges>
+                      </target>
+                    </com.mxgraph.model.mxCell>
+                  </edges>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell reference="../../.."/>
+                <com.mxgraph.model.mxCell>
+                  <id>5</id>
+                  <value class="string">Summator</value>
+                  <geometry>
+                    <x>76.0</x>
+                    <y>60.0</y>
+                    <width>90.0</width>
+                    <height>30.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>false</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell>
+                  <id>6</id>
+                  <value class="string"></value>
+                  <geometry>
+                    <x>66.0</x>
+                    <y>65.0</y>
+                    <width>20.0</width>
+                    <height>20.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>true</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                  <edges>
+                    <com.mxgraph.model.mxCell>
+                      <id>14</id>
+                      <value class="string"></value>
+                      <geometry>
+                        <x>0.0</x>
+                        <y>0.0</y>
+                        <width>0.0</width>
+                        <height>0.0</height>
+                        <sourcePoint>
+                          <x>80.0</x>
+                          <y>80.0</y>
+                        </sourcePoint>
+                        <targetPoint>
+                          <x>30.0</x>
+                          <y>30.0</y>
+                        </targetPoint>
+                        <relative>true</relative>
+                      </geometry>
+                      <style></style>
+                      <vertex>false</vertex>
+                      <edge>true</edge>
+                      <connectable>true</connectable>
+                      <visible>true</visible>
+                      <collapsed>false</collapsed>
+                      <parent class="com.mxgraph.model.mxCell" reference="../../../../.."/>
+                      <source class="com.mxgraph.model.mxCell" reference="../../.."/>
+                      <target class="com.mxgraph.model.mxCell">
+                        <id>11</id>
+                        <value class="string"></value>
+                        <geometry>
+                          <x>22.0</x>
+                          <y>13.0</y>
+                          <width>20.0</width>
+                          <height>20.0</height>
+                          <relative>false</relative>
+                        </geometry>
+                        <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                        <vertex>true</vertex>
+                        <edge>false</edge>
+                        <connectable>true</connectable>
+                        <visible>true</visible>
+                        <collapsed>false</collapsed>
+                        <parent class="com.mxgraph.model.mxCell" reference="../../../../../.."/>
+                        <edges>
+                          <com.mxgraph.model.mxCell reference="../../.."/>
+                        </edges>
+                      </target>
+                    </com.mxgraph.model.mxCell>
+                  </edges>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell/target"/>
+                <com.mxgraph.model.mxCell>
+                  <id>8</id>
+                  <value class="string">Generator</value>
+                  <geometry>
+                    <x>311.0</x>
+                    <y>203.0</y>
+                    <width>90.0</width>
+                    <height>30.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>fillColor=red</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>false</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell>
+                  <id>9</id>
+                  <value class="string"></value>
+                  <geometry>
+                    <x>391.0</x>
+                    <y>208.0</y>
+                    <width>20.0</width>
+                    <height>20.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <style>shape=ellipse;perimter=ellipsePerimeter</style>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>true</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                  <edges>
+                    <com.mxgraph.model.mxCell>
+                      <id>12</id>
+                      <value class="string"></value>
+                      <geometry>
+                        <x>0.0</x>
+                        <y>0.0</y>
+                        <width>0.0</width>
+                        <height>0.0</height>
+                        <sourcePoint>
+                          <x>400.0</x>
+                          <y>220.0</y>
+                        </sourcePoint>
+                        <targetPoint>
+                          <x>280.0</x>
+                          <y>140.0</y>
+                        </targetPoint>
+                        <relative>true</relative>
+                      </geometry>
+                      <style></style>
+                      <vertex>false</vertex>
+                      <edge>true</edge>
+                      <connectable>true</connectable>
+                      <visible>true</visible>
+                      <collapsed>false</collapsed>
+                      <parent class="com.mxgraph.model.mxCell" reference="../../../../.."/>
+                      <source class="com.mxgraph.model.mxCell" reference="../../.."/>
+                      <target class="com.mxgraph.model.mxCell" reference="../../../../../.."/>
+                    </com.mxgraph.model.mxCell>
+                  </edges>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell>
+                  <id>10</id>
+                  <value class="string">PrintResult</value>
+                  <geometry>
+                    <x>32.0</x>
+                    <y>8.0</y>
+                    <width>90.0</width>
+                    <height>30.0</height>
+                    <relative>false</relative>
+                  </geometry>
+                  <vertex>true</vertex>
+                  <edge>false</edge>
+                  <connectable>false</connectable>
+                  <visible>true</visible>
+                  <collapsed>false</collapsed>
+                  <parent class="com.mxgraph.model.mxCell" reference="../../.."/>
+                </com.mxgraph.model.mxCell>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[5]/edges/com.mxgraph.model.mxCell/target"/>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[8]/edges/com.mxgraph.model.mxCell"/>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell"/>
+                <com.mxgraph.model.mxCell reference="../com.mxgraph.model.mxCell[5]/edges/com.mxgraph.model.mxCell"/>
+              </children>
+            </parent>
+            <edges>
+              <com.mxgraph.model.mxCell reference="../../parent/children/com.mxgraph.model.mxCell[8]/edges/com.mxgraph.model.mxCell"/>
+            </edges>
+          </cell>
+          <cellId>0</cellId>
+          <parentId>1</parentId>
+          <side>true</side>
+          <x>80</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </out__connect>
+      <in__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell reference="../../../out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[2]"/>
+          <cellId>0</cellId>
+          <parentId>1</parentId>
+          <side>false</side>
+          <x>-10</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </in__connect>
+      <cell reference="../out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell"/>
+      <x>182</x>
+      <y>124</y>
+      <color>green</color>
+    </edu.kpi.fbp.primitives.Node>
+    <edu.kpi.fbp.primitives.Node>
+      <name>Summator</name>
+      <id>2</id>
+      <out__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell reference="../../../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell/target"/>
+          <cellId>0</cellId>
+          <parentId>2</parentId>
+          <side>true</side>
+          <x>80</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </out__connect>
+      <in__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell reference="../../../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[5]"/>
+          <cellId>0</cellId>
+          <parentId>2</parentId>
+          <side>false</side>
+          <x>-10</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </in__connect>
+      <cell reference="../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[4]"/>
+      <x>76</x>
+      <y>60</y>
+      <color></color>
+    </edu.kpi.fbp.primitives.Node>
+    <edu.kpi.fbp.primitives.Node>
+      <name>Generator</name>
+      <id>3</id>
+      <out__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell reference="../../../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[8]"/>
+          <cellId>0</cellId>
+          <parentId>3</parentId>
+          <side>true</side>
+          <x>80</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </out__connect>
+      <in__connect/>
+      <cell reference="../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[7]"/>
+      <x>311</x>
+      <y>203</y>
+      <color>red</color>
+    </edu.kpi.fbp.primitives.Node>
+    <edu.kpi.fbp.primitives.Node>
+      <name>PrintResult</name>
+      <id>4</id>
+      <out__connect/>
+      <in__connect>
+        <edu.kpi.fbp.primitives.Port>
+          <cell reference="../../../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[5]/edges/com.mxgraph.model.mxCell/target"/>
+          <cellId>0</cellId>
+          <parentId>4</parentId>
+          <side>false</side>
+          <x>-10</x>
+          <y>5</y>
+          <offset>true</offset>
+        </edu.kpi.fbp.primitives.Port>
+      </in__connect>
+      <cell reference="../../edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[9]"/>
+      <x>32</x>
+      <y>8</y>
+      <color></color>
+    </edu.kpi.fbp.primitives.Node>
+  </data>
+  <con>
+    <edu.kpi.fbp.parse.Connection>
+      <source>3</source>
+      <destination>1</destination>
+      <p__source>0</p__source>
+      <p__destination>0</p__destination>
+      <s__side>true</s__side>
+      <d__side>true</d__side>
+      <cell reference="../../../data/edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[8]/edges/com.mxgraph.model.mxCell"/>
+    </edu.kpi.fbp.parse.Connection>
+    <edu.kpi.fbp.parse.Connection>
+      <source>1</source>
+      <destination>2</destination>
+      <p__source>0</p__source>
+      <p__destination>0</p__destination>
+      <s__side>false</s__side>
+      <d__side>true</d__side>
+      <cell reference="../../../data/edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[2]/edges/com.mxgraph.model.mxCell"/>
+    </edu.kpi.fbp.parse.Connection>
+    <edu.kpi.fbp.parse.Connection>
+      <source>2</source>
+      <destination>4</destination>
+      <p__source>0</p__source>
+      <p__destination>0</p__destination>
+      <s__side>false</s__side>
+      <d__side>false</d__side>
+      <cell reference="../../../data/edu.kpi.fbp.primitives.Node/out__connect/edu.kpi.fbp.primitives.Port/cell/parent/children/com.mxgraph.model.mxCell[5]/edges/com.mxgraph.model.mxCell"/>
+    </edu.kpi.fbp.parse.Connection>
+  </con>
+  <max__id>4</max__id>
+</edu.kpi.fbp.parse.SLContainer>

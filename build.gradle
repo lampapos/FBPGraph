@@ -21,10 +21,11 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    mavenRepo url: "https://raw.github.com/lampapos/FBPRepo/master/repo"
+    mavenRepo url: "https://raw.github.com/lampapos/FBPRepo/master"
 }
 
 dependencies {
     compile 'edu.kpi.fbp:FBPCore:1.0'
     compile 'edu.kpi.fbp:FBPComponentLib:1.0'
+    compile 'org.tinyjee.jgraphx:jgraphx:1.10.4.1'
 }

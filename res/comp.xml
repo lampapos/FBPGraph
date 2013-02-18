@@ -1,1 +1,0 @@
-<Component><node type="sign">"+"</node><node type="sign">"-"</node><node type="sign">"/"</node><node type="sign">"*"</node><node type="bd">"in"</node><node type="bd">"out"</node><node type="const">"42"</node><node type="user">"a+b"</node></Component>
