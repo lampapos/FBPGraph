@@ -1,23 +1,19 @@
 package edu.kpi.fbp.primitives;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.jpmorrsn.fbp.engine.Component;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
-import edu.kpi.fbp.javafbp.ComponentDescriptor.ComponentDescriptorUtils;
-
-import edu.kpi.fbp.utils.ComponentsObserver;
 
 public class Node {
   // Logical
   public String name;
   public int id;
+  ComponentDescriptor comDes;
 
   // TODO are you sure that this public field is good idea? and they should be named in camel case style
   public ArrayList<Port> out_connect = new ArrayList<Port>(0);
@@ -38,9 +34,10 @@ public class Node {
    * @param id
    *          - уникальный идентификатор вершины.
    */
-  public Node(final String name, final int id) {
+  public Node(final String name, final int id, ComponentDescriptor des) {
     this.name = name;
     this.id = id;
+    this.comDes = des;
   }
 
   /**
@@ -64,14 +61,9 @@ public class Node {
 
     int portIn = 0, portOut = 0;
     
-    //Path to folder with components .jar
-    final ComponentsObserver obs = ComponentsObserver.create(new File("component/"));
-    //obtain a certain class
-    System.out.println("name - " + "edu.kpi.fbp.network." + name);
-    final Class<? extends Component> clazz = obs.getAvailableComponentsSet().get("edu.kpi.fbp.network."+name).getComponentClass();
     //get number of ports
-    portIn = ComponentDescriptorUtils.getInputPorts(clazz).size();
-    portOut = ComponentDescriptorUtils.getOutputPorts(clazz).size();
+    portIn = comDes.getInPorts().size();
+    portOut = comDes.getOutPorts().size();
     
     H = portIn;
     if (H < portOut)

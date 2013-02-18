@@ -29,18 +29,13 @@ public class Components {
    */
   public String choose = "";
 
-  //String pathToXml = "";
   DefaultMutableTreeNode root;
   int insertIndex;
   ArrayList<Component> comp = new ArrayList<Component>();
   Gui G;
-  //mxGraphComponent work;
-  //WorkField W;
 
   public Components(Gui g) {
 	  G = g;
-	  //work = gc;
-	  //W = wf;
   }
 
 boolean D = true;
@@ -100,13 +95,12 @@ boolean D = true;
 		            gf.getModel().beginUpdate();
 		            try {
 		            	G.max_id++;
-		            	final Node n = new Node(choose, 0);
+		            	final Node n = new Node(choose, 0, G.connect.getComponentDescriptor("edu.kpi.fbp.network."+choose));
 		            	n.draw(gf, local_x, local_y);
 		            	G.W.nodes.add(n);
 		            } finally {
 		            	gf.getModel().endUpdate();
 		            }
-		            //buf = G.W.nodes.size() - 1;
 	
 		        }
 			}
@@ -125,8 +119,7 @@ boolean D = true;
   public DefaultMutableTreeNode buildTree() {
     root = new DefaultMutableTreeNode("Components");
     
-    final ComponentsObserver obs = ComponentsObserver.create(new File("component/"));
-    Object[] comp = obs.getAvailableComponentsSet().keySet().toArray();
+    Object[] comp = G.connect.getComponentKeySet();
 
     for(int i=0; i<comp.length; i++){
     	root.add(new DefaultMutableTreeNode(cutName(comp[i].toString())));

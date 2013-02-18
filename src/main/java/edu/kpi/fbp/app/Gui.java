@@ -21,6 +21,8 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
+import edu.kpi.fbp.network.Connect;
+import edu.kpi.fbp.network.LocalConnect;
 import edu.kpi.fbp.panel.Components;
 import edu.kpi.fbp.panel.NodeProperties;
 import edu.kpi.fbp.panel.WorkField;
@@ -45,16 +47,19 @@ public class Gui extends JApplet {
 
   public int max_id = 0;
 
+  public Connect connect = new LocalConnect();
+
   public final WorkField W = new WorkField();
 
   private final JPanel elements = new JPanel();
   private JScrollPane jsp = new JScrollPane();
   private imageArrow jspArrow = new imageArrow();
   public final mxGraphComponent work = W.createMXGraph(W.nodes);
-  private final NodeProperties prop = new NodeProperties(work);
+  private final NodeProperties prop = new NodeProperties(work, connect);
   private JPanel property = prop.generateJP(W.nodes, cell_i);
 
   private final Components C = new Components(this);
+  
 
   SLcore SL = new SLcore();
 
@@ -411,7 +416,6 @@ public class Gui extends JApplet {
     add(work);
     add(property);
     
-
   }
 
 }

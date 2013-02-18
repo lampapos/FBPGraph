@@ -5,12 +5,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,31 +17,32 @@ import javax.swing.JTextField;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 
-import edu.kpi.fbp.javafbp.ComponentDescriptor.ComponentDescriptorUtils;
+import edu.kpi.fbp.javafbp.ComponentDescriptor;
+import edu.kpi.fbp.network.Connect;
 import edu.kpi.fbp.primitives.Node;
-import edu.kpi.fbp.utils.ComponentsObserver;
 
 public class NodeProperties {
   mxGraphComponent work;
+  Connect conDes;
 
   /**
    * Set true to debag options;
    */
   boolean D = false;
 
-  public NodeProperties(mxGraphComponent g) {
-    work = g;
+  public NodeProperties(mxGraphComponent g, Connect con) {
+	  this.work = g;
+	  this.conDes = con;
   }
 
   public JPanel generateJP(final ArrayList<Node> nodes, final int iter) {
     JPanel P = new JPanel();
-    Class<? extends com.jpmorrsn.fbp.engine.Component> target = null;
+    ComponentDescriptor target = null;
 
     if (iter != -1) {
 
-    	final ComponentsObserver obs = ComponentsObserver.create(new File("component/"));
-        //obtain a certain class
-        target = obs.getAvailableComponentsSet().get("edu.kpi.fbp.network."+nodes.get(iter).name).getComponentClass();
+        //obtain a certain descriptor
+        target = conDes.getComponentDescriptor("edu.kpi.fbp.network."+nodes.get(iter).name);
 
 
 	  P.setLayout(new BoxLayout(P, BoxLayout.Y_AXIS));
@@ -55,20 +54,8 @@ public class NodeProperties {
 	  jtfN.setEditable(false);
 	  P.add(jtfN);
 	
-	  //String[] colors = { "black", "red", "green", "blue", "white", "default" };
-	  //final JComboBox<String> jcb = new JComboBox<String>(colors);
-	  
-		
-	  
-	  //jcb.setAlignmentX(Component.LEFT_ALIGNMENT);
-	  //jcb.setMinimumSize(new Dimension(150, 20));
-	  //jcb.setMaximumSize(new Dimension(150, 20));
-	  
-	  
-	  //P.add(jcb);
-	
 	  P.add(new JLabel("Number of ports in:"));
-	  final JTextField jtfPi = new JTextField("" + ComponentDescriptorUtils.getInputPorts(target).size());
+	  final JTextField jtfPi = new JTextField("" + target.getInPorts().size());
 	  jtfPi.setEditable(false);
 	  jtfPi.setAlignmentX(Component.LEFT_ALIGNMENT);
 	  jtfPi.setMinimumSize(new Dimension(150, 20));
@@ -76,7 +63,7 @@ public class NodeProperties {
 	  P.add(jtfPi);
 	
 	  P.add(new JLabel("Number of ports out:"));
-	  final JTextField jtfPo = new JTextField("" + ComponentDescriptorUtils.getOutputPorts(target).size());
+	  final JTextField jtfPo = new JTextField("" + target.getOutPorts().size());
 	  jtfPo.setEditable(false);
 	  jtfPo.setAlignmentX(Component.LEFT_ALIGNMENT);
 	  jtfPo.setMinimumSize(new Dimension(150, 20));
@@ -84,16 +71,16 @@ public class NodeProperties {
 	  P.add(jtfPo);
 	
 	  P.add(new JLabel("Priority:"));
-	  final JTextField prior = new JTextField("" + ComponentDescriptorUtils.getComponentPriority(target));
+	  final JTextField prior = new JTextField("" + target.getPriority());
 	  prior.setEditable(false);
 	  prior.setAlignmentX(Component.LEFT_ALIGNMENT);
 	  prior.setMinimumSize(new Dimension(150, 20));
 	  prior.setMaximumSize(new Dimension(150, 20));
 	  P.add(prior);
 	
-	  P.add(new JLabel("Must run: " + ComponentDescriptorUtils.isComponentMustRun(target)));
+	  P.add(new JLabel("Must run: " + target.isMustRun()));
 	  
-	  JPanel colorButtons = new JPanel();
+	  	JPanel colorButtons = new JPanel();
 		colorButtons.setLayout(null);
 		
 		JButton red = new JButton();
@@ -196,7 +183,7 @@ public class NodeProperties {
 		P.add(colorButtons);
 	
 	  P.add(new JLabel("Hint:"));
-	  JScrollPane hint = new JScrollPane(new JTextField(ComponentDescriptorUtils.getComponentDescription(target)));
+	  JScrollPane hint = new JScrollPane(new JTextField(target.getDescription()));
 	  hint.setAlignmentX(Component.LEFT_ALIGNMENT);
 	  hint.setMinimumSize(new Dimension(150, 280));
 	  hint.setMaximumSize(new Dimension(150, 280));
