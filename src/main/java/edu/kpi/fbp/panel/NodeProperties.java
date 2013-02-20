@@ -144,14 +144,14 @@ public class NodeProperties {
 		});
 		
 		JButton magenta = new JButton();
-		magenta.setBackground(Color.magenta);
+		magenta.setBackground(Color.cyan);
 		magenta.setBounds(100, 0, 20, 20);
 		magenta.addActionListener(new ActionListener() {
 				
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				work.getGraph().setCellStyles(mxConstants.STYLE_FILLCOLOR, "magenta", new Object[] { nodes.get(iter).cell });
-		        nodes.get(iter).color = "magenta";	
+				work.getGraph().setCellStyles(mxConstants.STYLE_FILLCOLOR, "cyan", new Object[] { nodes.get(iter).cell });
+		        nodes.get(iter).color = "cyan";	
 			}
 		});
 		

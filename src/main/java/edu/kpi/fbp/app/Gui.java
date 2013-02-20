@@ -1,5 +1,6 @@
 package edu.kpi.fbp.app;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -19,7 +20,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.network.Connect;
 import edu.kpi.fbp.network.LocalConnect;
@@ -32,94 +32,133 @@ import edu.kpi.fbp.primitives.Node;
 import edu.kpi.fbp.primitives.Port;
 import edu.kpi.fbp.primitives.imageArrow;
 
+/**
+ * Main applet which including all gui elements.
+ * @author Cheshire
+ *
+ */
 public class Gui extends JApplet {
 	/**
-	 * 
+	 * serialVersionUID.
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	* Set true to debag options;
-	*/
-  private final boolean D = false;
-
-  private int cell_i = -1;
-
-  public int max_id = 0;
-
+	 * Set true to debag options.
+	 */
+  private final boolean debug = false;
+  /**
+   * Id of selected node.
+   */
+  private int cellI = -1;
+  /**
+   * Id of new elements would be maxId + 1.
+   */
+  public int maxId = 0;
+  /**
+   * Network interface.
+   */
   public Connect connect = new LocalConnect();
-
-  public final WorkField W = new WorkField();
-
+  /**
+   * Work filed.
+   */
+  public final WorkField workField = new WorkField();
+  /**
+   * Panel consist tree of all components.
+   */
   private final JPanel elements = new JPanel();
+  /**
+   * ScrollPane for elements.
+   */
   private JScrollPane jsp = new JScrollPane();
-  private imageArrow jspArrow = new imageArrow();
-  public final mxGraphComponent work = W.createMXGraph(W.nodes);
+  /**
+   * Auxiliary arrow.
+   */
+  private imageArrow jpArrow = new imageArrow();
+  /**
+   * mxGraph component created to adding cell on it.
+   */
+  public final mxGraphComponent work = workField.createMXGraph(workField.nodes);
+  /**
+   * Class which generated attribute panel.
+   */
   private final NodeProperties prop = new NodeProperties(work, connect);
-  private JPanel property = prop.generateJP(W.nodes, cell_i);
+  /**
+   * PancompTreeow component attributes.
+   */
+  private JPanel property = prop.generateJP(workField.nodes, cellI);
+  /**
+   * Tree with all components.
+   */
+  private final Components compTree = new Components(this);
+  /**
+   * Save/load network.
+   */
+  SLcore saveLoad = new SLcore();
+  /**
+   * Currently selected cell.
+   */
+  Object bufCell = null;
 
-  private final Components C = new Components(this);
-  
-
-  SLcore SL = new SLcore();
-
-  Object buf_cell = null;
-
+  /**
+   * Delete one node from network and all connections to it.
+   * @param pos - position in array of nodes.
+   */
   public void deleteNode(final int pos) {
-    final int b_id = W.nodes.get(pos).id;
+    final int bId = workField.nodes.get(pos).id;
     // Убираем ссылки на id данной вершины
-    for (int i = 0; i < W.con.size(); i++) {
-      if ((W.con.get(i).source == b_id) || (W.con.get(i).destination == b_id)) {
-        W.con.remove(i);
+    for (int i = 0; i < workField.con.size(); i++) {
+      if ((workField.con.get(i).source == bId) || (workField.con.get(i).destination == bId)) {
+        workField.con.remove(i);
       }
     }
     // Удаляем порты у вершины.
-    W.nodes.get(pos).deletePorts(work);
+    workField.nodes.get(pos).deletePorts(work);
     // Добавляем вершину к массиву удаляемых.
-    work.getGraph().removeCells(new Object[] { W.nodes.get(pos).cell });
+    work.getGraph().removeCells(new Object[] {workField.nodes.get(pos).cell});
     // Убираем вершину из внутреннего представления.
-    W.nodes.remove(pos);
+    workField.nodes.remove(pos);
 
   }
 
   /**
-   * Удаление определенной вершины.
+   * Delete one node/connection.
    */
   void deleteCell() {
-    final mxCell cell = (mxCell) buf_cell;
-    if (D) {
+    final mxCell cell = (mxCell) bufCell;
+    if (debug) {
       System.out.println("Source - " + cell.getSource());
     }
-    final int pos = W.getNode(cell);
+    final int pos = workField.getNode(cell);
 
     // Если выбрана вершина
     if (pos != -1) {
       deleteNode(pos);
     } else {
       // Если выбрано хоть что-то
-      if (buf_cell != null) {
+      if (bufCell != null) {
         // Если это связь
-        if (W.isConnection(cell)) {
+        if (workField.isConnection(cell)) {
 
-          for (int i = 0; i < W.con.size(); i++) {
-            if (cell.equals(W.con.get(i).cell)) {
-              W.con.remove(i);
+          for (int i = 0; i < workField.con.size(); i++) {
+            if (cell.equals(workField.con.get(i).cell)) {
+              workField.con.remove(i);
             }
           }
 
-          work.getGraph().removeCells(new Object[] { buf_cell });
+          work.getGraph().removeCells(new Object[] { bufCell });
         } else {
-          SL.dumpC(W.con);
+          saveLoad.dumpC(workField.con);
           System.out.println("port - " + cell);
           // Если это порт, то обрабатываем также как и удаление вершины но сначала необходимо найти эту вершину.
           // Находим порт
           Port buf = null;
-          for (int i = 0; i < W.nodes.size(); i++) {
-            buf = W.nodes.get(i).getInPort(cell);
+          for (int i = 0; i < workField.nodes.size(); i++) {
+            buf = workField.nodes.get(i).getInPort(cell);
             if (buf != null) {
               break;
             } else {
-              buf = W.nodes.get(i).getOutPort(cell);
+              buf = workField.nodes.get(i).getOutPort(cell);
               if (buf != null) {
                 break;
               }
@@ -127,69 +166,69 @@ public class Gui extends JApplet {
           }
           // Находим родителя
           mxCell parent = null;
-          for (int i = 0; i < W.nodes.size(); i++) {
-            if (W.nodes.get(i).id == buf.parentId) {
-              parent = W.nodes.get(i).cell;
+          for (int i = 0; i < workField.nodes.size(); i++) {
+            if (workField.nodes.get(i).id == buf.parentId) {
+              parent = workField.nodes.get(i).cell;
               break;
             }
           }
           // Находим позицию родителя и удаляем все вместе
-          deleteNode(W.getNode(parent));
+          deleteNode(workField.getNode(parent));
 
         }
 
       }
     }
-    SL.dump(W.nodes);
-    buf_cell = null;
+    saveLoad.dump(workField.nodes);
+    bufCell = null;
     // Убираем панельку свойств для удаленных элементов
     repaintProperty(-1);
   }
 
   /**
-   * Перерисовать панельку свойств
+   * Repaint NodeProperties.
    */
   void repaintProperty(final int buf) {
     remove(property);
-    property = prop.generateJP(W.nodes, buf);
+    property = prop.generateJP(workField.nodes, buf);
     property.setBounds(745, 5, 150, 490);
     add(property);
     revalidate();
     repaint(745, 5, 150, 490);
 
-    cell_i = buf;
+    cellI = buf;
   }
   
   /**
-   * Show/hide arrow image
-   * @param b - show or hide image
+   * Show/hide arrow image.
+   * @param bool - show or hide image
    */
-  public void showArrow(boolean b){
-	  jspArrow.setVisible(b);
+  public void showArrow(boolean bool) {
+	  jpArrow.setVisible(bool);
 	  revalidate();
 	  repaint(161, 6, 18, 18);
   }
 
   /**
-   * Обработчик открытия схемы
+   * Обработчик открытия схемы.
    */
   void load() {
     // Загрузка схемы из файла
-    SL.load();
-    W.nodes = SL.N;
-    W.con = SL.C;
+    saveLoad.load();
+    workField.nodes = saveLoad.N;
+    workField.con = saveLoad.C;
     // Очистка наборного поля
     work.getGraph().removeCells(work.getGraph().getChildVertices(work.getGraph().getDefaultParent()));
     // Отрисовываем вершины
-    for (int i = 0; i < W.nodes.size(); i++) {
-      W.nodes.get(i).draw(work.getGraph(), W.nodes.get(i).x, W.nodes.get(i).y);
+    for (int i = 0; i < workField.nodes.size(); i++) {
+      workField.nodes.get(i).draw(work.getGraph(), workField.nodes.get(i).x, workField.nodes.get(i).y);
     }
     // Отрисовываем связи
-    for (int i = 0; i < W.con.size(); i++) {
-      W.con.get(i).drawCon(work.getGraph(), W.nodes);
+    for (int i = 0; i < workField.con.size(); i++) {
+      workField.con.get(i).drawCon(work.getGraph(), workField.nodes);
     }
     // Запоминаем максимальный id
-    max_id = SL.max_id;
+    maxId = saveLoad.max_id;
 
   }
 
@@ -199,7 +238,7 @@ public class Gui extends JApplet {
     setSize(900, 520);
     // setLocation(100, 100);
 
-    setLayout(null);
+    setLayout(null); //new BorderLayout());
 
     final JMenuBar menuBar = new JMenuBar();
 
@@ -218,7 +257,7 @@ public class Gui extends JApplet {
     fileMenuSave.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        SL.save(W.nodes, W.con, max_id);
+        saveLoad.save(workField.nodes, workField.con, maxId);
       }
     });
 
@@ -227,9 +266,9 @@ public class Gui extends JApplet {
       @Override
       public void actionPerformed(final ActionEvent e) {
         work.getGraph().removeCells(work.getGraph().getChildVertices(work.getGraph().getDefaultParent()));
-        W.nodes.clear();
-        W.con.clear();
-        max_id = 0;
+        workField.nodes.clear();
+        workField.con.clear();
+        maxId = 0;
 
         repaintProperty(-1);
       }
@@ -281,40 +320,22 @@ public class Gui extends JApplet {
         // Если нажата левая клавиша
         if (e.getButton() == MouseEvent.BUTTON1) {
           // Получить вершину по координатам
-          buf_cell = work.getCellAt(e.getX(), e.getY());
+          bufCell = work.getCellAt(e.getX(), e.getY());
           // Получить ее обьект ( или -1 если мы нажали на пустое место )
-          int buf = W.getNode(buf_cell);
+          int buf = workField.getNode(bufCell);
           // =======
-          if (D)
-            System.out.println("buf cell_i - " + buf);
-          // =======
-          // Если кликнули по пустому полю и был выбран элемент - отрисовать его
-          /* ==========================================================
-          if ((buf == -1) && (!C.choose.equals(""))) {
-            final mxGraph gf = work.getGraph();
-            gf.getModel().beginUpdate();
-            try {
-              max_id++;
-              final Node n = new Node(C.choose, max_id);
-              n.draw(gf, e.getX(), e.getY());
-              W.nodes.add(n);
-            } finally {
-              gf.getModel().endUpdate();
-            }
-            buf = W.nodes.size() - 1;
-
+          if (debug) {
+            System.out.println("buf cellI - " + buf);
           }
-          ========================================================== */
-          
           // Отрисовать панельку свойств, если кликнули по тому же элементу не перерисовывать
-          if (cell_i != buf) {
+          if (cellI != buf) {
             repaintProperty(buf);
           }
         } else {
 
           // При нажатии правой - сбросить выбор элемента
           if (e.getButton() == MouseEvent.BUTTON3) {
-            C.choose = "";
+            compTree.choose = "";
           }
         }
 
@@ -332,13 +353,13 @@ public class Gui extends JApplet {
         // от источника к приемнику
         if (edge.getTarget() != null) {
           Port in = null, out = null;
-          in = W.getPort(edge.getSource());
-          out = W.getPort(edge.getTarget());
-          W.con.add(new Connection(in.cellId, in.side, in.parentId, out.cellId, out.side, out.parentId, edge));
+          in = workField.getPort(edge.getSource());
+          out = workField.getPort(edge.getTarget());
+          workField.con.add(new Connection(in.cellId, in.side, in.parentId, out.cellId, out.side, out.parentId, edge));
         } else {
-          work.getGraph().removeCells(new Object[] { edge });
+          work.getGraph().removeCells(new Object[] {edge});
         }
-        SL.dumpC(W.con);
+        saveLoad.dumpC(workField.con);
       }
     });
 
@@ -349,21 +370,21 @@ public class Gui extends JApplet {
 
         final Object[] cells = (Object[]) arg1.getProperty("cells");
 
-        if (W.getNode(cells[0]) != -1) {
-          final Node M = W.nodes.get(W.getNode(cells[0]));
-          final int oldX = M.x, oldY = M.y;
+        if (workField.getNode(cells[0]) != -1) {
+          final Node moved = workField.nodes.get(workField.getNode(cells[0]));
+          final int oldX = moved.x, oldY = moved.y;
 
           // Сохраняем новое положение вершины
-          M.x += Double.parseDouble("" + arg1.getProperty("dx"));
-          M.y += Double.parseDouble("" + arg1.getProperty("dy"));
+          moved.x += Double.parseDouble("" + arg1.getProperty("dx"));
+          moved.y += Double.parseDouble("" + arg1.getProperty("dy"));
 
           // Смещаем порты относительно новой позиции вершины
-          for (int i = 0; i < M.in_connect.size(); i++) {
-            work.getGraph().moveCells(new Object[] { M.in_connect.get(i).cell }, M.x - oldX, M.y - oldY);
+          for (int i = 0; i < moved.in_connect.size(); i++) {
+            work.getGraph().moveCells(new Object[] { moved.in_connect.get(i).cell }, moved.x - oldX, moved.y - oldY);
 
           }
-          for (int i = 0; i < M.out_connect.size(); i++) {
-            work.getGraph().moveCells(new Object[] { M.out_connect.get(i).cell }, M.x - oldX, M.y - oldY);
+          for (int i = 0; i < moved.out_connect.size(); i++) {
+            work.getGraph().moveCells(new Object[] { moved.out_connect.get(i).cell }, moved.x - oldX, moved.y - oldY);
 
           }
         }
@@ -389,7 +410,7 @@ public class Gui extends JApplet {
           work.zoom(0.5);
         }
         if (e.isControlDown() && (e.getKeyCode() == 83)) {
-          SL.save(W.nodes, W.con, max_id);
+          saveLoad.save(workField.nodes, workField.con, maxId);
         }
         if (e.isControlDown() && (e.getKeyCode() == 79)) {
           load();
@@ -399,22 +420,22 @@ public class Gui extends JApplet {
 
     elements.setLayout(null);
     // final JScrollPane
-    jsp = new JScrollPane(C.build());
+    jsp = new JScrollPane(compTree.build());
     jsp.setBounds(0, 0, 150, 490);
     elements.add(jsp);
     
-    jspArrow.setBounds(161, 6, 18, 18);
-    jspArrow.setVisible(false);
+    jpArrow.setBounds(161, 6, 18, 18);
+    jpArrow.setVisible(false);
 
-    elements.setBounds(5, 5, 150, 490);
+    elements.setBounds(5, 5, 150, 490); //PreferredSize(new Dimension(150, 490));
     work.setBounds(160, 5, 580, 490);
-    property.setBounds(745, 5, 150, 490);
+    property.setBounds(745, 5, 150, 490); //PreferredSize(new Dimension(150, 490));
 
-    add(jspArrow);
+    add(jpArrow);
     
-    add(elements);
-    add(work);
-    add(property);
+    add(elements); //, BorderLayout.WEST);
+    add(work); //, BorderLayout.CENTER);
+    add(property); //, BorderLayout.EAST);
     
   }
 

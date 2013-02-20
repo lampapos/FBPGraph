@@ -13,7 +13,7 @@ public class Node {
   // Logical
   public String name;
   public int id;
-  ComponentDescriptor comDes;
+  public ComponentDescriptor comDes;
 
   // TODO are you sure that this public field is good idea? and they should be named in camel case style
   public ArrayList<Port> out_connect = new ArrayList<Port>(0);
@@ -89,7 +89,7 @@ public class Node {
     }
 
     if (!color.equals("")) {
-      graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[] { cell });
+      graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[] {cell});
     }
   }
 

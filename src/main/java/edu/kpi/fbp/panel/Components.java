@@ -88,16 +88,16 @@ boolean D = true;
 			int local_x = e.getX() - 160, local_y = e.getY() - 5;
 			
 			if( (local_x > 0 && local_x < 580) && (local_y > 0 && local_y < 490) ){
-		        int buf = G.W.getNode( G.work.getCellAt(e.getX(), e.getY()) );
+		        int buf = G.workField.getNode( G.work.getCellAt(e.getX(), e.getY()) );
 		        
 				if ((buf == -1) && (!choose.equals(""))) {
 		            final mxGraph gf = G.work.getGraph();
 		            gf.getModel().beginUpdate();
 		            try {
-		            	G.max_id++;
+		            	G.maxId++;
 		            	final Node n = new Node(choose, 0, G.connect.getComponentDescriptor("edu.kpi.fbp.network."+choose));
 		            	n.draw(gf, local_x, local_y);
-		            	G.W.nodes.add(n);
+		            	G.workField.nodes.add(n);
 		            } finally {
 		            	gf.getModel().endUpdate();
 		            }

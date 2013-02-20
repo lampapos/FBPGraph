@@ -2,8 +2,11 @@ package edu.kpi.fbp.network;
 
 import java.io.File;
 
+import com.jpmorrsn.fbp.engine.Component;
+
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
 import edu.kpi.fbp.utils.ComponentsObserver;
+import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 
 public class LocalConnect implements Connect{
 	
@@ -15,7 +18,12 @@ public class LocalConnect implements Connect{
 
 	@Override
 	public ComponentDescriptor getComponentDescriptor(String componentName) {
-		return ComponentDescriptor.buildDescriptor(Generator.class);
+		
+		ComponentClassDescriptor ccd = obs.getAvailableComponentsSet().get(componentName);
+		
+		final Class<? extends Component> clazz = ccd.getComponentClass();
+		ComponentDescriptor desc = ComponentDescriptor.buildDescriptor(clazz);
+		return desc;
 	}
 
 	@Override
