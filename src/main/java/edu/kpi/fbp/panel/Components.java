@@ -95,7 +95,7 @@ boolean D = true;
 		            gf.getModel().beginUpdate();
 		            try {
 		            	G.maxId++;
-		            	final Node n = new Node(choose, 0, G.connect.getComponentDescriptor("edu.kpi.fbp.network."+choose));
+		            	final Node n = new Node(choose, G.maxId, G.connect.getComponentDescriptor("edu.kpi.fbp.network."+choose));
 		            	n.draw(gf, local_x, local_y);
 		            	G.workField.nodes.add(n);
 		            } finally {

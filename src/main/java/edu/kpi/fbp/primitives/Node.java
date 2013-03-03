@@ -77,13 +77,13 @@ public class Node {
 
     // Создание и добавление портов.
     for (int i = 0; i < portIn; i++) {
-      final Port in = new Port(graph, in_connect.size(), id, (x - 10), (y + 5 + 30 * i), false);
+      final Port in = new Port(graph, in_connect.size(), id, (x - 5), (y + 10 + 30 * i), false);
       in.setOffset(x, y);
       in_connect.add(in);
     }
 
     for (int i = 0; i < portOut; i++) {
-      final Port out = new Port(graph, out_connect.size(), id, (x + 80), (y + 5 + 30 * i), true);
+      final Port out = new Port(graph, out_connect.size(), id, (x + 85), (y + 10 + 30 * i), true);
       out.setOffset(x, y);
       out_connect.add(out);
     }

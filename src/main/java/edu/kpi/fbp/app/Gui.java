@@ -1,6 +1,7 @@
 package edu.kpi.fbp.app;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -26,6 +27,7 @@ import edu.kpi.fbp.network.LocalConnect;
 import edu.kpi.fbp.panel.Components;
 import edu.kpi.fbp.panel.NodeProperties;
 import edu.kpi.fbp.panel.WorkField;
+import edu.kpi.fbp.parse.AlternativeSLcore;
 import edu.kpi.fbp.parse.Connection;
 import edu.kpi.fbp.parse.SLcore;
 import edu.kpi.fbp.primitives.Node;
@@ -94,7 +96,7 @@ public class Gui extends JApplet {
   /**
    * Save/load network.
    */
-  SLcore saveLoad = new SLcore();
+  AlternativeSLcore saveLoad = new AlternativeSLcore(connect);
   /**
    * Currently selected cell.
    */
@@ -206,7 +208,7 @@ public class Gui extends JApplet {
   public void showArrow(boolean bool) {
 	  jpArrow.setVisible(bool);
 	  revalidate();
-	  repaint(161, 6, 18, 18);
+	  jpArrow.repaint();//(161, 6, 18, 18);
   }
 
   /**
@@ -215,8 +217,8 @@ public class Gui extends JApplet {
   void load() {
     // Загрузка схемы из файла
     saveLoad.load();
-    workField.nodes = saveLoad.N;
-    workField.con = saveLoad.C;
+    workField.nodes = saveLoad.loadNodes;
+    workField.con = saveLoad.loadConnection;
     // Очистка наборного поля
     work.getGraph().removeCells(work.getGraph().getChildVertices(work.getGraph().getDefaultParent()));
     // Отрисовываем вершины
@@ -228,7 +230,7 @@ public class Gui extends JApplet {
       workField.con.get(i).drawCon(work.getGraph(), workField.nodes);
     }
     // Запоминаем максимальный id
-    maxId = saveLoad.max_id;
+    maxId = saveLoad.maxId;
 
   }
 
@@ -239,6 +241,8 @@ public class Gui extends JApplet {
     // setLocation(100, 100);
 
     setLayout(null); //new BorderLayout());
+    
+    setBackground(Color.white);
 
     final JMenuBar menuBar = new JMenuBar();
 

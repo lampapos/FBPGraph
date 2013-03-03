@@ -70,9 +70,10 @@ public class AlternativeSLcore {
 	   * Load data from xml.
 	   */
 	  public void load() {
+		  maxId = 0;
 		  //clear arrays (на всякий)
-		  loadNodes.clear();
-		  loadConnection.clear();
+		  loadNodes = new ArrayList<Node>();
+		  loadConnection = new ArrayList<Connection>();
 		  
 		  NetworkModel deserializedModel = null;
 		  
@@ -94,22 +95,37 @@ public class AlternativeSLcore {
 			  
 			  for (int i = 0; i < components.size(); i++) {
 				  String globalName = components.get(i).getName();
+				  int newId = Integer.parseInt(globalName.split("_")[1]);
 				  Node newNode = new Node(
 						  globalName.split("_")[0],
-						  Integer.parseInt(globalName.split("_")[1]),
+						  newId,
 						  connect.getComponentDescriptor("edu.kpi.fbp.network."+globalName.split("_")[0])
 						  );
 				  
-				  Point pos = (Point) extra.get(newNode.name+"|position");
-				  newNode.x = pos.x;
-				  newNode.y = pos.y;
-				  newNode.color = (String) extra.get(newNode.name+"|color");
+				  System.out.println("name - " + newNode.name+"_"+newNode.id);
 				  
+				  Point pos = (Point) extra.get(newNode.name+"_"+newNode.id+"|position");
+				  
+				  System.out.println("pos - "+pos);
+				  
+				  newNode.x = (int) pos.getX();
+				  newNode.y = (int) pos.getY();
+				  newNode.color = (String) extra.get(newNode.name+"_"+newNode.id+"|color");
+				  if (newNode.color == null){
+					  newNode.color = "";
+				  }
 				  loadNodes.add(newNode);
+				  
+				  if(maxId < newId){
+					  maxId = newId;
+				  }
 			  }
 			  
 			  for (int i = 0; i < links.size(); i++) {
 				  LinkModel newLM = links.get(i);
+				  
+				  System.out.println("LinkModel("+i+") - "+newLM) ;
+				  
 				  // getLinkName(nodes, con.get(i).source),
 				  //con.get(i).s_side + "_" + con.get(i).p_source,
 				  //getLinkName(nodes, con.get(i).destination),
@@ -117,10 +133,10 @@ public class AlternativeSLcore {
 				  Connection newCon = new Connection(
 						  Integer.parseInt(newLM.getFromPort().split("_")[1]),
 						  Boolean.parseBoolean(newLM.getFromPort().split("_")[0]),
-						  Integer.parseInt(newLM.getFromComponent()),
+						  Integer.parseInt(newLM.getFromComponent().split("_")[1]),
 						  Integer.parseInt(newLM.getToPort().split("_")[1]),
 						  Boolean.parseBoolean(newLM.getToPort().split("_")[0]),
-						  Integer.parseInt(newLM.getToComponent()),
+						  Integer.parseInt(newLM.getToComponent().split("_")[1]),
 						  null
 						  );
 						  

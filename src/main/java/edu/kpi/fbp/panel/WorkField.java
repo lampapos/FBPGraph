@@ -1,5 +1,6 @@
 package edu.kpi.fbp.panel;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -119,8 +120,12 @@ public class WorkField {
     // Sets the default edge style
     Map<String, Object> style = graph.getStylesheet().getDefaultEdgeStyle();
     style.put(mxConstants.STYLE_EDGE, mxEdgeStyle.ElbowConnector);
-
+    
     final mxGraphComponent graphComponent = new mxGraphComponent(graph);
+    
+    graphComponent.getViewport().setOpaque(false);
+    graphComponent.setOpaque(true);
+    graphComponent.setBackground(Color.WHITE);
 
     return graphComponent;
   }

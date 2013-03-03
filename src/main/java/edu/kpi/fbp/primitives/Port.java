@@ -40,7 +40,7 @@ public class Port {
    */
   public Port(final mxGraph graph, final int cell_id, final int id, final int x, final int y, final boolean isOut) {
     final Object parent = graph.getDefaultParent();
-    cell = (mxCell) graph.insertVertex(parent, null, "", x, y, 20, 20, "shape=ellipse;perimter=ellipsePerimeter");
+    cell = (mxCell) graph.insertVertex(parent, null, "", x, y, 10, 10, "shape=ellipse;perimter=ellipsePerimeter");
     cell.setConnectable(true);
 
     this.x = x;
