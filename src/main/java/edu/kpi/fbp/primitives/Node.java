@@ -1,5 +1,6 @@
 package edu.kpi.fbp.primitives;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 import com.mxgraph.model.mxCell;
@@ -8,12 +9,17 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
+import edu.kpi.fbp.params.ComponentParameter;
 
 public class Node {
   // Logical
   public String name;
   public int id;
+  
+  //Component attributes
   public ComponentDescriptor comDes;
+  //public java.util.List<ComponentParameter> paramList;
+  public ArrayList<LocalNodeParams> localParams = new ArrayList<LocalNodeParams>(0);
 
   // TODO are you sure that this public field is good idea? and they should be named in camel case style
   public ArrayList<Port> out_connect = new ArrayList<Port>(0);
@@ -38,6 +44,29 @@ public class Node {
     this.name = name;
     this.id = id;
     this.comDes = des;
+    importParams(des.getParameters());
+  }
+  
+  public void importParams(java.util.List<ComponentParameter> paramList) {
+	  for (int i = 0; i < paramList.size(); i++) {
+		  String name = paramList.get(i).name();
+		  String type = "";
+		  switch (paramList.get(i).type()) {
+			case INTEGER:
+				type = "integer";
+			break;
+			case FLOAT:
+				type = "float";
+			break;
+			case STRING:
+				type = "string";
+			break;
+			case BOOLEAN:
+				type = "boolean";
+			break;
+		  }
+		  localParams.add(new LocalNodeParams(name, type, paramList.get(i).defaultValue()));
+	  }
   }
 
   /**

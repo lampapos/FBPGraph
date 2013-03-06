@@ -2,6 +2,12 @@ package edu.kpi.fbp.app;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -9,12 +15,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import org.eclipse.swt.layout.GridData;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -25,6 +34,7 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import edu.kpi.fbp.network.Connect;
 import edu.kpi.fbp.network.LocalConnect;
 import edu.kpi.fbp.panel.Components;
+import edu.kpi.fbp.panel.NodeParams;
 import edu.kpi.fbp.panel.NodeProperties;
 import edu.kpi.fbp.panel.WorkField;
 import edu.kpi.fbp.parse.AlternativeSLcore;
@@ -33,6 +43,7 @@ import edu.kpi.fbp.parse.SLcore;
 import edu.kpi.fbp.primitives.Node;
 import edu.kpi.fbp.primitives.Port;
 import edu.kpi.fbp.primitives.imageArrow;
+
 
 /**
  * Main applet which including all gui elements.
@@ -84,7 +95,7 @@ public class Gui extends JApplet {
   /**
    * Class which generated attribute panel.
    */
-  private final NodeProperties prop = new NodeProperties(work, connect);
+  private final NodeParams prop = new NodeParams(work, connect);
   /**
    * PancompTreeow component attributes.
    */
@@ -191,12 +202,23 @@ public class Gui extends JApplet {
    * Repaint NodeProperties.
    */
   void repaintProperty(final int buf) {
-    remove(property);
-    property = prop.generateJP(workField.nodes, buf);
-    property.setBounds(745, 5, 150, 490);
-    add(property);
-    revalidate();
-    repaint(745, 5, 150, 490);
+    elements.removeAll();//remove(property);
+    
+    //property.setBounds(745, 5, 150, 490);
+    elements.add(jsp);
+    jsp.setMinimumSize(new Dimension(200, 40));
+    jsp.setMaximumSize(new Dimension(201, Integer.MAX_VALUE));
+    jsp.setAlignmentX(Component.LEFT_ALIGNMENT);
+    jsp.setAlignmentY(Component.TOP_ALIGNMENT);
+    if (buf != -1) {
+    	property = prop.generateJP(workField.nodes, buf);
+    	//property.setMinimumSize(new Dimension(150, 80));
+        property.setAlignmentX(Component.LEFT_ALIGNMENT);
+        property.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+    	elements.add(property);
+    }
+    elements.revalidate();
+    elements.repaint();
 
     cellI = buf;
   }
@@ -239,8 +261,7 @@ public class Gui extends JApplet {
     // Размер
     setSize(900, 520);
     // setLocation(100, 100);
-
-    setLayout(null); //new BorderLayout());
+    setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));//GridBagLayout());//BorderLayout());//null); 
     
     setBackground(Color.white);
 
@@ -313,7 +334,7 @@ public class Gui extends JApplet {
     menuBar.add(editMenu);
     setJMenuBar(menuBar);
 
-    work.setBounds(0, 0, 580, 490);
+    //work.setBounds(0, 0, 580, 490);
 
     // Прослушиваем мышку для mxGraph
     work.getGraphControl().addMouseListener(new MouseAdapter() {
@@ -422,24 +443,23 @@ public class Gui extends JApplet {
       }
     });
 
-    elements.setLayout(null);
-    // final JScrollPane
+    elements.setLayout(new BoxLayout(elements, BoxLayout.Y_AXIS));
     jsp = new JScrollPane(compTree.build());
-    jsp.setBounds(0, 0, 150, 490);
     elements.add(jsp);
     
-    jpArrow.setBounds(161, 6, 18, 18);
-    jpArrow.setVisible(false);
+    //jpArrow.setBounds(161, 6, 18, 18);
+    //jpArrow.setVisible(false);
 
-    elements.setBounds(5, 5, 150, 490); //PreferredSize(new Dimension(150, 490));
-    work.setBounds(160, 5, 580, 490);
-    property.setBounds(745, 5, 150, 490); //PreferredSize(new Dimension(150, 490));
-
-    add(jpArrow);
+    elements.setMinimumSize(new Dimension(200, 40));
+    elements.setMaximumSize(new Dimension(201, Integer.MAX_VALUE));
+    elements.setAlignmentX(Component.LEFT_ALIGNMENT);
+    elements.setAlignmentY(Component.TOP_ALIGNMENT);
     
-    add(elements); //, BorderLayout.WEST);
-    add(work); //, BorderLayout.CENTER);
-    add(property); //, BorderLayout.EAST);
+    work.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    work.setAlignmentY(Component.TOP_ALIGNMENT);
+    
+    add(elements);
+    add(work);
     
   }
 
