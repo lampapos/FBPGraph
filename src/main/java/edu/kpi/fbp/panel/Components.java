@@ -137,27 +137,4 @@ boolean D = true;
 	  return res[res.length-1];
   }
 
-  /* Not in client
-  public void addUserComponent(final String name) {
-    comp.add(new Component(name, "user"));
-    if (D)
-      System.out.println("insertIndex - " + insertIndex);
-    root.insert(new DefaultMutableTreeNode(name), insertIndex);
-
-    try {
-      final BufferedWriter out = new BufferedWriter(new FileWriter(pathToXml));
-
-      out.write("<Component>");
-      for (int i = 0; i < comp.size(); i++) {
-        out.write("<node type=\"" + comp.get(i).type + "\">\"" + comp.get(i).name + "\"</node>");
-      }
-      out.write("</Component>");
-
-      out.close();
-    } catch (final IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-  */
 }

@@ -1,13 +1,9 @@
 package edu.kpi.fbp.app;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -23,8 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.eclipse.swt.layout.GridData;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
@@ -35,11 +29,10 @@ import edu.kpi.fbp.network.Connect;
 import edu.kpi.fbp.network.LocalConnect;
 import edu.kpi.fbp.panel.Components;
 import edu.kpi.fbp.panel.NodeParams;
-import edu.kpi.fbp.panel.NodeProperties;
+import edu.kpi.fbp.panel.NodeParamsWindow;
 import edu.kpi.fbp.panel.WorkField;
 import edu.kpi.fbp.parse.AlternativeSLcore;
 import edu.kpi.fbp.parse.Connection;
-import edu.kpi.fbp.parse.SLcore;
 import edu.kpi.fbp.primitives.Node;
 import edu.kpi.fbp.primitives.Port;
 import edu.kpi.fbp.primitives.imageArrow;
@@ -95,11 +88,12 @@ public class Gui extends JApplet {
   /**
    * Class which generated attribute panel.
    */
-  private final NodeParams prop = new NodeParams(work, connect);
+  NodeParamsWindow paramWindow = null;
+  //private final NodeParams prop = new NodeParams(work, connect);
   /**
    * PancompTreeow component attributes.
    */
-  private JPanel property = prop.generateJP(workField.nodes, cellI);
+  //private JPanel property = prop.generateJP(workField.nodes, cellI);
   /**
    * Tree with all components.
    */
@@ -202,7 +196,19 @@ public class Gui extends JApplet {
    * Repaint NodeProperties.
    */
   void repaintProperty(final int buf) {
-    elements.removeAll();//remove(property);
+	  System.out.println("window draw start");
+	  if (buf != -1) {
+		  System.out.println("window draw in");
+		  Point pos = this.getLocationOnScreen();
+		  paramWindow = new NodeParamsWindow(pos.x + this.getWidth(), pos.y, 200, this.getHeight());
+		  System.out.println("window params: x - " + (pos.x + this.getWidth()) + "; y - " + pos.y + ";\nw - 200; h - " + this.getHeight() + ".");
+		  paramWindow.generateParams(workField.nodes.get(buf));
+		  paramWindow.setVisible(true);
+	  }
+
+	  System.out.println("window draw end");
+    /*
+	  elements.removeAll();//remove(property);
     
     //property.setBounds(745, 5, 150, 490);
     elements.add(jsp);
@@ -220,7 +226,8 @@ public class Gui extends JApplet {
     elements.revalidate();
     elements.repaint();
 
-    cellI = buf;
+    */
+	  cellI = buf;
   }
   
   /**
