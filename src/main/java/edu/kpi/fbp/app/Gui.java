@@ -19,6 +19,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
@@ -46,6 +49,9 @@ public class Gui extends JApplet {
    * serialVersionUID.
    */
   private static final long serialVersionUID = 1L;
+
+  /** Logger instance. */
+  private final Logger logger = LoggerFactory.getLogger(Gui.class);
 
   /**
    * Set true to debag options.
@@ -132,7 +138,7 @@ public class Gui extends JApplet {
   void deleteCell() {
     final mxCell cell = (mxCell) bufCell;
     if (debug) {
-      System.out.println("Source - " + cell.getSource());
+      logger.info("Source - " + cell.getSource());
     }
     final int pos = workField.getNode(cell);
 
@@ -154,7 +160,7 @@ public class Gui extends JApplet {
           work.getGraph().removeCells(new Object[] { bufCell });
         } else {
           saveLoad.dumpC(workField.con);
-          System.out.println("port - " + cell);
+          logger.info("port - " + cell);
           // Если это порт, то обрабатываем также как и удаление вершины но сначала необходимо найти эту вершину.
           // Находим порт
           Port buf = null;
@@ -199,17 +205,17 @@ public class Gui extends JApplet {
       paramWindow.generateParams(workField.nodes.get(buf));
     }
     /*
-    System.out.println("window draw start");
+    logger.info("window draw start");
     if (buf != -1) {
-      System.out.println("window draw in");
+      logger.info("window draw in");
       Point pos = this.getLocationOnScreen();
       paramWindow = new NodeParamsWindow(pos.x + this.getWidth(), pos.y, 200, this.getHeight());
-      System.out.println("window params: x - " + (pos.x + this.getWidth()) + "; y - " + pos.y + ";\nw - 200; h - " + this.getHeight() + ".");
+      logger.info("window params: x - " + (pos.x + this.getWidth()) + "; y - " + pos.y + ";\nw - 200; h - " + this.getHeight() + ".");
       paramWindow.generateParams(workField.nodes.get(buf));
       paramWindow.setVisible(true);
     }
 
-    System.out.println("window draw end");
+    logger.info("window draw end");
   */
     cellI = buf;
   }
@@ -331,7 +337,7 @@ public class Gui extends JApplet {
           final int buf = workField.getNode(bufCell);
           // =======
           if (debug) {
-            System.out.println("buf cellI - " + buf);
+            logger.info("buf cellI - " + buf);
           }
           // Отрисовать панельку свойств, если кликнули по тому же элементу не перерисовывать
           if (cellI != buf) {

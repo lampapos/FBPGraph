@@ -12,7 +12,7 @@ public interface Connect {
   /**
    * @return array of unique component names
    */
-  String[] getAvailableComponentsList();
+  Object[] getAvailableComponentsList();
 
   /**
    * @param componentName - unique component name

@@ -9,6 +9,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.app.Gui;
@@ -16,6 +19,9 @@ import edu.kpi.fbp.parse.Component;
 import edu.kpi.fbp.primitives.Node;
 
 public class Components {
+  /** Logger instance. */
+  private final Logger logger = LoggerFactory.getLogger(Components.class);
+
   // FIXME: public fields isn't acceptable
   /**
    * Элемент который был выбран.
@@ -32,8 +38,6 @@ public class Components {
   public Components(final Gui g) {
     G = g;
   }
-
-  boolean D = true;
 
   /**
    * @return сформированое дерево компонентов
@@ -70,13 +74,12 @@ public class Components {
             choose = "";
           }
 
-
-          if(D)System.out.println("Mouse - " + choose);
+          logger.debug("Mouse - " + choose);
     }
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-      System.out.println("target - " + e.getPoint());
+      logger.info("target - " + e.getPoint());
       //160, 5, 580, 490
       final int local_x = e.getX() - 160, local_y = e.getY() - 5;
 

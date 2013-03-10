@@ -27,8 +27,8 @@ public class LocalConnect implements Connect{
   }
 
   @Override
-  public String[] getAvailableComponentsList() {
-    return (String[]) obs.getAvailableComponentsSet().keySet().toArray();
+  public Object[] getAvailableComponentsList() {
+    return obs.getAvailableComponentsSet().keySet().toArray();
   }
 
 }
