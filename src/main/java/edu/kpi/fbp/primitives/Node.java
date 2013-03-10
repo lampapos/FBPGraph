@@ -48,25 +48,25 @@ public class Node {
   }
   
   public void importParams(java.util.List<ComponentParameter> paramList) {
-	  for (int i = 0; i < paramList.size(); i++) {
-		  String name = paramList.get(i).name();
-		  String type = "";
-		  switch (paramList.get(i).type()) {
-			case INTEGER:
-				type = "integer";
-			break;
-			case FLOAT:
-				type = "float";
-			break;
-			case STRING:
-				type = "string";
-			break;
-			case BOOLEAN:
-				type = "boolean";
-			break;
-		  }
-		  localParams.add(new LocalNodeParams(name, type, paramList.get(i).defaultValue()));
-	  }
+    for (int i = 0; i < paramList.size(); i++) {
+      String name = paramList.get(i).name();
+      String type = "";
+      switch (paramList.get(i).type()) {
+      case INTEGER:
+        type = "integer";
+      break;
+      case FLOAT:
+        type = "float";
+      break;
+      case STRING:
+        type = "string";
+      break;
+      case BOOLEAN:
+        type = "boolean";
+      break;
+      }
+      localParams.add(new LocalNodeParams(name, type, paramList.get(i).defaultValue()));
+    }
   }
 
   /**

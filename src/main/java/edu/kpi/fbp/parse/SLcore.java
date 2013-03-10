@@ -11,14 +11,14 @@ import edu.kpi.fbp.primitives.Node;
 import edu.kpi.fbp.utils.XmlIo;
 
 /**
- * Save|Load core
- * 
+ * Save|Load core.
+ *
  * @author cheshire
- * 
+ *
  */
 public class SLcore {
   /**
-   * Set true to debag options;
+   * Set true to debag options.
    */
   boolean D = true;
 
@@ -27,13 +27,13 @@ public class SLcore {
 
   public int max_id = 0;
 
-  public void dump(ArrayList<Node> nodes) {
+  public void dump(final ArrayList<Node> nodes) {
     for (int i = 0; i < nodes.size(); i++) {
       System.out.println(nodes.get(i));
     }
   }
 
-  public void dumpC(ArrayList<Connection> nodes) {
+  public void dumpC(final ArrayList<Connection> nodes) {
     for (int i = 0; i < nodes.size(); i++) {
       System.out.println(nodes.get(i));
     }
@@ -43,13 +43,13 @@ public class SLcore {
     SLContainer res = null;
 
     // Создаю диалог для загрузки (стандартный класс)
-    FileDialog fd = new FileDialog(new Frame(), "Открыть", FileDialog.LOAD);
+    final FileDialog fd = new FileDialog(new Frame(), "Открыть", FileDialog.LOAD);
     // Задаю ему стартовую директорию
     fd.setDirectory("../res/");
     // Показываю диалог.
     fd.show();
 
-    String path = fd.getDirectory() + fd.getFile();
+    final String path = fd.getDirectory() + fd.getFile();
     if (D)
       System.out.println(path);
 
@@ -62,23 +62,23 @@ public class SLcore {
     max_id = res.max_id;
   }
 
-  public void save(ArrayList<Node> N, ArrayList<Connection> C, int max) {
+  public void save(final ArrayList<Node> N, final ArrayList<Connection> C, final int max) {
 
     // Создаю диалог для загрузки (стандартный класс)
-    FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
+    final FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
     // Задаю ему стартовую директорию
     fd.setDirectory("../res/");
     // Показываю диалог.
     fd.show();
 
-    String path = fd.getDirectory() + fd.getFile();
+    final String path = fd.getDirectory() + fd.getFile();
     if (path != null) {
       final String out_data = XmlIo.serialize(new SLContainer(N, C, max));
       try {
-        FileWriter wr = new FileWriter(new File(path));
+        final FileWriter wr = new FileWriter(new File(path));
         wr.write(out_data);
         wr.close();
-      } catch (IOException e) {
+      } catch (final IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }

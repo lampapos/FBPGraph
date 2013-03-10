@@ -38,6 +38,7 @@ public class Port {
    * @param isOut
    *          - порт находится в массиве входящих или выходящих вершин
    */
+  // FIXME: camelase, again...
   public Port(final mxGraph graph, final int cell_id, final int id, final int x, final int y, final boolean isOut) {
     final Object parent = graph.getDefaultParent();
     cell = (mxCell) graph.insertVertex(parent, null, "", x, y, 10, 10, "shape=ellipse;perimter=ellipsePerimeter");

@@ -28,7 +28,6 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import edu.kpi.fbp.network.Connect;
 import edu.kpi.fbp.network.LocalConnect;
 import edu.kpi.fbp.panel.Components;
-import edu.kpi.fbp.panel.NodeParams;
 import edu.kpi.fbp.panel.NodeParamsWindow;
 import edu.kpi.fbp.panel.WorkField;
 import edu.kpi.fbp.parse.AlternativeSLcore;
@@ -41,17 +40,16 @@ import edu.kpi.fbp.primitives.imageArrow;
 /**
  * Main applet which including all gui elements.
  * @author Cheshire
- *
  */
 public class Gui extends JApplet {
-	/**
-	 * serialVersionUID.
-	 */
-	private static final long serialVersionUID = 1L;
+  /**
+   * serialVersionUID.
+   */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Set true to debag options.
-	 */
+  /**
+   * Set true to debag options.
+   */
   private final boolean debug = false;
   /**
    * Id of selected node.
@@ -80,7 +78,7 @@ public class Gui extends JApplet {
   /**
    * Auxiliary arrow.
    */
-  private imageArrow jpArrow = new imageArrow();
+  private final imageArrow jpArrow = new imageArrow();
   /**
    * mxGraph component created to adding cell on it.
    */
@@ -196,24 +194,24 @@ public class Gui extends JApplet {
    * Repaint NodeProperties.
    */
   void repaintProperty(final int buf) {
-	  
-	  if (buf != -1) {
-		  paramWindow.generateParams(workField.nodes.get(buf));
-	  }
-	  /*
-	  System.out.println("window draw start");
-	  if (buf != -1) {
-		  System.out.println("window draw in");
-		  Point pos = this.getLocationOnScreen();
-		  paramWindow = new NodeParamsWindow(pos.x + this.getWidth(), pos.y, 200, this.getHeight());
-		  System.out.println("window params: x - " + (pos.x + this.getWidth()) + "; y - " + pos.y + ";\nw - 200; h - " + this.getHeight() + ".");
-		  paramWindow.generateParams(workField.nodes.get(buf));
-		  paramWindow.setVisible(true);
-	  }
 
-	  System.out.println("window draw end");
-	*/
-	  cellI = buf;
+    if (buf != -1) {
+      paramWindow.generateParams(workField.nodes.get(buf));
+    }
+    /*
+    System.out.println("window draw start");
+    if (buf != -1) {
+      System.out.println("window draw in");
+      Point pos = this.getLocationOnScreen();
+      paramWindow = new NodeParamsWindow(pos.x + this.getWidth(), pos.y, 200, this.getHeight());
+      System.out.println("window params: x - " + (pos.x + this.getWidth()) + "; y - " + pos.y + ";\nw - 200; h - " + this.getHeight() + ".");
+      paramWindow.generateParams(workField.nodes.get(buf));
+      paramWindow.setVisible(true);
+    }
+
+    System.out.println("window draw end");
+  */
+    cellI = buf;
   }
 
   /**
@@ -244,8 +242,8 @@ public class Gui extends JApplet {
     // Размер
     setSize(900, 520);
     // setLocation(100, 100);
-    setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));//GridBagLayout());//BorderLayout());//null); 
-    
+    setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));//GridBagLayout());//BorderLayout());//null);
+
     setBackground(Color.white);
 
     final JMenuBar menuBar = new JMenuBar();
@@ -330,7 +328,7 @@ public class Gui extends JApplet {
           // Получить вершину по координатам
           bufCell = work.getCellAt(e.getX(), e.getY());
           // Получить ее обьект ( или -1 если мы нажали на пустое место )
-          int buf = workField.getNode(bufCell);
+          final int buf = workField.getNode(bufCell);
           // =======
           if (debug) {
             System.out.println("buf cellI - " + buf);
@@ -349,7 +347,7 @@ public class Gui extends JApplet {
 
       }
     });
-    
+
 
     // Прослушиваем mxGraph на предмет соединения вершин и запоминаем
     work.getConnectionHandler().addListener(mxEvent.CONNECT, new mxIEventListener() {
@@ -429,7 +427,7 @@ public class Gui extends JApplet {
     elements.setLayout(new BoxLayout(elements, BoxLayout.Y_AXIS));
     jsp = new JScrollPane(compTree.build());
     elements.add(jsp);
-    
+
     //jpArrow.setBounds(161, 6, 18, 18);
     //jpArrow.setVisible(false);
 
@@ -437,18 +435,18 @@ public class Gui extends JApplet {
     elements.setMaximumSize(new Dimension(201, Integer.MAX_VALUE));
     elements.setAlignmentX(Component.LEFT_ALIGNMENT);
     elements.setAlignmentY(Component.TOP_ALIGNMENT);
-    
+
     work.setAlignmentX(Component.RIGHT_ALIGNMENT);
     work.setAlignmentY(Component.TOP_ALIGNMENT);
-    
+
     add(elements);
     add(work);
-    
+
     setVisible(true);
-    Point pos = this.getLocationOnScreen();
-	paramWindow = new NodeParamsWindow(pos.x, pos.y + this.getHeight(), this.getWidth(), 200);
-	paramWindow.setVisible(true);
-    
+    final Point pos = this.getLocationOnScreen();
+  paramWindow = new NodeParamsWindow(pos.x, pos.y + this.getHeight(), this.getWidth(), 200);
+  paramWindow.setVisible(true);
+
   }
 
 }

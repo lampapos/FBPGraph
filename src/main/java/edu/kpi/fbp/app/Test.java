@@ -14,15 +14,17 @@ import com.mxgraph.swing.view.mxInteractiveCanvas;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
-// TODO java class name which is started with small letter... bue ):
-
+/**
+ * TODO:.
+ */
 public class Test extends JFrame {
 
-  /**
-	 *
-	 */
+  /** Serialization generated ID. */
   private static final long serialVersionUID = -844106998814982739L;
 
+  /**
+   * Default constructor.
+   */
   public Test() {
     super("Custom Canvas");
 
@@ -40,10 +42,9 @@ public class Test extends JFrame {
         if (getModel().isVertex(state.getCell()) && canvas instanceof mxImageCanvas
             && ((mxImageCanvas) canvas).getGraphicsCanvas() instanceof SwingCanvas) {
           ((SwingCanvas) ((mxImageCanvas) canvas).getGraphicsCanvas()).drawVertex(state, label);
-        }
-
+        } else
         // Redirection of drawing vertices in SwingCanvas
-        else if (getModel().isVertex(state.getCell()) && canvas instanceof SwingCanvas) {
+        if (getModel().isVertex(state.getCell()) && canvas instanceof SwingCanvas) {
           ((SwingCanvas) canvas).drawVertex(state, label);
         } else {
           super.drawState(canvas, state, drawLabel);
@@ -65,8 +66,8 @@ public class Test extends JFrame {
 
     final mxGraphComponent graphComponent = new mxGraphComponent(graph) {
       /**
-			 *
-			 */
+       *
+       */
       private static final long serialVersionUID = 4683716829748931448L;
 
       @Override

@@ -6,7 +6,6 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.primitives.Node;
-import edu.kpi.fbp.primitives.Port;
 
 public class Connection {
   public int source, destination;
@@ -30,13 +29,14 @@ public class Connection {
    * @param cell
    *          - графических эквивалент связи
    */
-  public Connection(int p_source,
-      boolean s_side,
-      int source,
-      int p_destination,
-      boolean d_side,
-      int destination,
-      mxCell cell) {
+  // FIXME: we use camelcase naming style in all other places, so we also should use it in this case
+  public Connection(final int p_source,
+      final boolean s_side,
+      final int source,
+      final int p_destination,
+      final boolean d_side,
+      final int destination,
+      final mxCell cell) {
     this.p_source = p_source;
     this.p_destination = p_destination;
     this.s_side = s_side;
@@ -46,7 +46,7 @@ public class Connection {
     this.cell = cell;
   }
 
-  public void drawCon(mxGraph graph, ArrayList<Node> N) {
+  public void drawCon(final mxGraph graph, final ArrayList<Node> N) {
     mxCell cS = null, cD = null;
 
     for (int i = 0; i < N.size(); i++) {
@@ -77,6 +77,7 @@ public class Connection {
     System.out.println("cS - " + cS + "; cD - " + cD);
   }
 
+  @Override
   public String toString() {
     return "cell(" + cell + "):\ns(" + source + ").port[" + p_source + "] -> d(" + destination + ").port["
         + p_destination + "];";
