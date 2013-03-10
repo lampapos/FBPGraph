@@ -196,6 +196,11 @@ public class Gui extends JApplet {
    * Repaint NodeProperties.
    */
   void repaintProperty(final int buf) {
+	  
+	  if (buf != -1) {
+		  paramWindow.generateParams(workField.nodes.get(buf));
+	  }
+	  /*
 	  System.out.println("window draw start");
 	  if (buf != -1) {
 		  System.out.println("window draw in");
@@ -207,37 +212,8 @@ public class Gui extends JApplet {
 	  }
 
 	  System.out.println("window draw end");
-    /*
-	  elements.removeAll();//remove(property);
-    
-    //property.setBounds(745, 5, 150, 490);
-    elements.add(jsp);
-    jsp.setMinimumSize(new Dimension(200, 40));
-    jsp.setMaximumSize(new Dimension(201, Integer.MAX_VALUE));
-    jsp.setAlignmentX(Component.LEFT_ALIGNMENT);
-    jsp.setAlignmentY(Component.TOP_ALIGNMENT);
-    if (buf != -1) {
-    	property = prop.generateJP(workField.nodes, buf);
-    	//property.setMinimumSize(new Dimension(150, 80));
-        property.setAlignmentX(Component.LEFT_ALIGNMENT);
-        property.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-    	elements.add(property);
-    }
-    elements.revalidate();
-    elements.repaint();
-
-    */
+	*/
 	  cellI = buf;
-  }
-  
-  /**
-   * Show/hide arrow image.
-   * @param bool - show or hide image
-   */
-  public void showArrow(boolean bool) {
-	  jpArrow.setVisible(bool);
-	  revalidate();
-	  jpArrow.repaint();//(161, 6, 18, 18);
   }
 
   /**
@@ -467,6 +443,11 @@ public class Gui extends JApplet {
     
     add(elements);
     add(work);
+    
+    setVisible(true);
+    Point pos = this.getLocationOnScreen();
+	paramWindow = new NodeParamsWindow(pos.x, pos.y + this.getHeight(), this.getWidth(), 200);
+	paramWindow.setVisible(true);
     
   }
 

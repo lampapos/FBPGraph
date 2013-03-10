@@ -1,15 +1,25 @@
 package edu.kpi.fbp.panel;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JApplet;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -29,6 +39,21 @@ public class NodeParamsWindow extends JFrame{
 	 */
 	private ArrayList<JTextField> textStore;
 	/**
+	 * Console text field.
+	 */
+	JTextField consoleText = new JTextField();
+	
+	private JPanel attributePanel = new JPanel();
+	private JPanel consolePanel = new JPanel();
+	/**
+	 * Is property tab exist?
+	 */
+	boolean isPropetryTabExist = false;
+	/**
+	 * Tabbed pane for property and console.
+	 */
+	JTabbedPane tabs;
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -41,23 +66,32 @@ public class NodeParamsWindow extends JFrame{
 		
 		setSize(width, height);
 	    setLocation(x, y);
-	    setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+	    //setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+	    tabs = new JTabbedPane();
+	    consolePanel.setLayout(new BoxLayout(consolePanel, BoxLayout.X_AXIS));
+	    consolePanel.add(consoleText);
+	    tabs.addTab("Console", null, consolePanel, "System log.");
+	    add(tabs);
 	}
-
-	//@Override
-	//public void init() {
-	    // Размер
-	    
-	//}
 	
 	public void generateParams(Node target){
+		
+		if (!isPropetryTabExist) {
+		    tabs.addTab("Properties", null, attributePanel, "Component attributes.");
+		    isPropetryTabExist = true;
+		}
+		
 		textStore = new ArrayList<JTextField>();
-		JPanel res = new JPanel();
-		res.setLayout(new GridLayout(target.localParams.size(), 2));
+		attributePanel.removeAll();// = new JPanel();
+		attributePanel.setLayout(new BoxLayout(attributePanel, BoxLayout.X_AXIS));// 
+		
+		JPanel options = new JPanel();
+		options.setLayout(new GridLayout(target.localParams.size(), 2));
+		int optionsHeight = 0;
 		
 		for (int i = 0; i < target.localParams.size(); i++) {
 			
-			res.add(new JLabel(target.localParams.get(i).name));
+			options.add(new JLabel(target.localParams.get(i).name));
 			final JTextField bufText = new JTextField(target.localParams.get(i).value);
 			textStore.add(bufText);
 			
@@ -76,21 +110,79 @@ public class NodeParamsWindow extends JFrame{
 		            public void stateChanged(ChangeEvent e) {
 		                if (bufText.getText().equals("true")) {
 		                	bufText.setText("false");
-		                }else{
+		                } else {
 		                	bufText.setText("true");
 		                }
 		            }
 		        });
 				booleanPanel.add(check);
 				
-				res.add(booleanPanel);
+				options.add(booleanPanel);
 			} else {
-				res.add(bufText);
+				options.add(bufText);
+			}
+			optionsHeight += 20;
+		}
+		JPanel atPos = new JPanel();
+		atPos.setLayout(new BoxLayout(atPos, BoxLayout.Y_AXIS));
+		options.setMinimumSize(new Dimension(200, optionsHeight));
+		//options.setPreferredSize(new Dimension(200, optionsHeight));
+		options.setMaximumSize(new Dimension(Integer.MAX_VALUE, optionsHeight));
+		options.setAlignmentY(Component.TOP_ALIGNMENT);
+		options.setAlignmentX(Component.LEFT_ALIGNMENT);
+		atPos.add(options);
+		
+		JPanel submitPanel = new JPanel();
+		//int rows = 2, cols = 3;
+		submitPanel.setLayout(new BoxLayout(submitPanel, BoxLayout.X_AXIS));//new GridLayout(rows, cols));
+		
+		//create submit button
+		JButton submit = new JButton("Submit");
+		submit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		/*
+		//creating place holders for empty grid cells
+		JPanel[][] placeHolder = new JPanel[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				placeHolder[i][j] = new JPanel();
+				submitPanel.add(placeHolder[i][j]);
 			}
 		}
+		*/
+		//add submit button
+		submit.setMinimumSize(new Dimension(50, 20));
+		submit.setMaximumSize(new Dimension(50, 20));
+		submit.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		//placeHolder[rows - 1][cols - 1].add(submit);
 		
-		this.add(res);
-		this.revalidate();
-		this.repaint();
+		submitPanel.setMinimumSize(new Dimension(200, 20));
+		//submitPanel.setPreferredSize(new Dimension(200, 60));
+		submitPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		
+		submitPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		submitPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		submitPanel.add(new JPanel());
+		submitPanel.add(submit);
+		atPos.add(new JPanel());
+		atPos.add(submitPanel);
+		
+		attributePanel.add(new JScrollPane(atPos));
+		
+		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+		separator.setMinimumSize(new Dimension(2, this.getHeight()));
+		separator.setPreferredSize(new Dimension(2, this.getHeight()));
+		separator.setMaximumSize(new Dimension(2, this.getHeight()));
+		attributePanel.add(separator);
+		
+		attributePanel.add(new JScrollPane(new JTextArea("Description:\n" + target.comDes.getDescription())));
+		attributePanel.revalidate();
+		attributePanel.repaint();
 	}
 }

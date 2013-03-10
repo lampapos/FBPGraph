@@ -5,7 +5,9 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Description: none
+    Checkstyle-Configuration: BaseConfig
+    Description: 
+Base checkstyle config
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -74,10 +76,21 @@
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
     <module name="InterfaceIsType"/>
-    <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters"/>
-    <module name="TodoComment"/>
-    <module name="UpperEll"/>
+    <module name="ArrayTypeStyle">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="FinalParameters">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="TodoComment">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="UpperEll">
+      <property name="severity" value="ignore"/>
+    </module>
     <module name="RegexpSinglelineJava">
       <property name="format" value="[^\s]\s+$"/>
       <property name="message" value="Line has trailing spaces."/>
@@ -122,8 +135,10 @@
     <property name="allowLegacy" value="true"/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
-  <module name="NewlineAtEndOfFile"/>
-  <module name="Translation"/>
+  <module name="Translation">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
   <module name="FileTabCharacter"/>
   <module name="SuppressionCommentFilter"/>
 </module>

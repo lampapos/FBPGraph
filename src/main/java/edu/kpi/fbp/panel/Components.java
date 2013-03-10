@@ -75,8 +75,6 @@ boolean D = true;
 	          choose = "";
 	        }
 	        
-	        //spawn arrow image
-	        G.showArrow(true);
 
 	        if(D)System.out.println("Mouse - " + choose);
 		}
@@ -104,9 +102,6 @@ boolean D = true;
 	
 		        }
 			}
-			
-			//remove arrow image
-	        G.showArrow(false);
 			
 			//delete visual selection
 			res.setSelectionPath(null);
