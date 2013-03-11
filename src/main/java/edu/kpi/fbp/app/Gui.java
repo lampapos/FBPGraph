@@ -84,7 +84,7 @@ public class Gui extends JApplet {
   /**
    * Auxiliary arrow.
    */
-  private final imageArrow jpArrow = new imageArrow();
+  //private final imageArrow jpArrow = new imageArrow();
   /**
    * mxGraph component created to adding cell on it.
    */
@@ -202,6 +202,7 @@ public class Gui extends JApplet {
   void repaintProperty(final int buf) {
 
     if (buf != -1) {
+      paramWindow.setVisible(true);
       paramWindow.generateParams(workField.nodes.get(buf));
     }
     /*
@@ -256,6 +257,7 @@ public class Gui extends JApplet {
 
     final JMenu fileMenu = new JMenu("File");
     final JMenu editMenu = new JMenu("Edit");
+    final JMenu runMenu = new JMenu("Run");
 
     final JMenuItem fileMenuOpen = new JMenuItem("Open");
     fileMenuOpen.addActionListener(new ActionListener() {
@@ -269,7 +271,7 @@ public class Gui extends JApplet {
     fileMenuSave.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        saveLoad.save(workField.nodes, workField.con, maxId);
+        saveLoad.save(workField.nodes, workField.con, maxId, true);
       }
     });
 
@@ -285,6 +287,7 @@ public class Gui extends JApplet {
         repaintProperty(-1);
       }
     });
+    
     // Удаление определенных элементов
     final JMenuItem editMenuDel = new JMenuItem("Delete (Del)");
     editMenuDel.addActionListener(new ActionListener() {
@@ -310,15 +313,36 @@ public class Gui extends JApplet {
       }
     });
 
+    final JMenuItem runMenuStart = new JMenuItem("Start network");
+    runMenuStart.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        saveLoad.save(workField.nodes, workField.con, maxId, false);
+        connect.networkRun(saveLoad.netModel);
+      }
+    });
+    
+    final JMenuItem runMenuStartParams = new JMenuItem("Start parametrized network");
+    runMenuStartParams.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        saveLoad.save(workField.nodes, workField.con, maxId, false);
+        connect.networkRun(saveLoad.netModel, saveLoad.paramStore);
+      }
+    });
+    
     fileMenu.add(fileMenuOpen);
     fileMenu.add(fileMenuSave);
     editMenu.add(editMenuClear);
     editMenu.add(editMenuDel);
     editMenu.add(zoomIn);
     editMenu.add(zoomOut);
+    runMenu.add(runMenuStart);
+    runMenu.add(runMenuStartParams);
 
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
+    menuBar.add(runMenu);
     setJMenuBar(menuBar);
 
     //work.setBounds(0, 0, 580, 490);
@@ -422,7 +446,7 @@ public class Gui extends JApplet {
           work.zoom(0.5);
         }
         if (e.isControlDown() && (e.getKeyCode() == 83)) {
-          saveLoad.save(workField.nodes, workField.con, maxId);
+          saveLoad.save(workField.nodes, workField.con, maxId, true);
         }
         if (e.isControlDown() && (e.getKeyCode() == 79)) {
           load();
@@ -450,8 +474,8 @@ public class Gui extends JApplet {
 
     setVisible(true);
     final Point pos = this.getLocationOnScreen();
-  paramWindow = new NodeParamsWindow(pos.x, pos.y + this.getHeight(), this.getWidth(), 200);
-  paramWindow.setVisible(true);
+    paramWindow = new NodeParamsWindow(pos.x, pos.y + this.getHeight(), this.getWidth(), 200);
+    //paramWindow.setVisible(true);
 
   }
 

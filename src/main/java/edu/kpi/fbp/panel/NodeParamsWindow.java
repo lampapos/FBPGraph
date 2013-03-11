@@ -74,7 +74,7 @@ public class NodeParamsWindow extends JFrame{
       add(tabs);
   }
   
-  public void generateParams(Node target){
+  public void generateParams(final Node target){
     
     if (!isPropetryTabExist) {
         tabs.addTab("Properties", null, attributePanel, "Component attributes.");
@@ -143,7 +143,32 @@ public class NodeParamsWindow extends JFrame{
       @Override
       public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        
+    	  for (int i = 0; i < textStore.size(); i++) {
+              switch (target.localParams.get(i).type) {
+                case "string":
+                  target.localParams.get(i).value = textStore.get(i).getText();
+                break;
+                case "integer":
+                  try {
+                    final int test = Integer.parseInt(textStore.get(i).getText());
+                    target.localParams.get(i).value = "" + test;
+                  } catch (final NumberFormatException ie) {
+                      textStore.get(i).setText("invalid format");
+                  }
+                break;
+                case "float":
+                  try {
+                    final float test = Float.parseFloat(textStore.get(i).getText());
+                    target.localParams.get(i).value = "" + test;
+                  } catch (final NumberFormatException ie) {
+                      textStore.get(i).setText("invalid format");
+                  }
+                break;
+                case "boolean":
+                  target.localParams.get(i).value = textStore.get(i).getText();
+                break;
+              }
+            }
       }
     });
     /*

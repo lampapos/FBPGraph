@@ -15,6 +15,9 @@ import edu.kpi.fbp.model.ComponentModel;
 import edu.kpi.fbp.model.LinkModel;
 import edu.kpi.fbp.model.NetworkModel;
 import edu.kpi.fbp.network.Connect;
+import edu.kpi.fbp.params.Parameter;
+import edu.kpi.fbp.params.ParameterBundle;
+import edu.kpi.fbp.params.ParametersStore;
 import edu.kpi.fbp.primitives.Node;
 import edu.kpi.fbp.utils.XmlIo;
 
@@ -44,6 +47,14 @@ public class AlternativeSLcore {
      * Used to set component descriptor to all loaded nodes.
      */
     private Connect connect;
+    /**
+     * 
+     */
+    public NetworkModel netModel = null;
+    /**
+     * 
+     */
+    public ParametersStore paramStore = null;
     
     public AlternativeSLcore(Connect c) {
       this.connect = c;
@@ -75,23 +86,29 @@ public class AlternativeSLcore {
       loadNodes = new ArrayList<Node>();
       loadConnection = new ArrayList<Connection>();
       
-      NetworkModel deserializedModel = null;
+      //NetworkModel deserializedModel = null;
       
       // Создаю диалог для загрузки (стандартный класс)
       FileDialog fd = new FileDialog(new Frame(), "Открыть", FileDialog.LOAD);
       // Задаю ему стартовую директорию
-      fd.setDirectory("../res/");
+      fd.setDirectory("./bin/");
       // Показываю диалог.
       fd.show();
 
       String path = fd.getDirectory() + fd.getFile();
       
       if (path != null) {
-        deserializedModel = XmlIo.deserialize(new File(path), NetworkModel.class);
+        netModel = XmlIo.deserialize(new File(path), NetworkModel.class);
         
-        final List<ComponentModel> components = deserializedModel.getComponents();
-        final List<LinkModel> links = deserializedModel.getLinks();
-        final Map<String, Object> extra = deserializedModel.getExtra();
+        final List<ComponentModel> components = netModel.getComponents();
+        final List<LinkModel> links = netModel.getLinks();
+        final Map<String, Object> extra = netModel.getExtra();
+        
+        File paramsFile = new File(fd.getDirectory() + "params_" + fd.getFile());
+        ParametersStore localParams = null;
+        if (paramsFile.exists()) {
+        	localParams = XmlIo.deserialize(paramsFile, ParametersStore.class);
+        }
         
         for (int i = 0; i < components.size(); i++) {
           String globalName = components.get(i).getName();
@@ -99,24 +116,29 @@ public class AlternativeSLcore {
           Node newNode = new Node(
               globalName.split("_")[0],
               newId,
-              connect.getComponentDescriptor("edu.kpi.fbp.network."+globalName.split("_")[0])
+              connect.getComponentDescriptor("edu.kpi.fbp.network." + globalName.split("_")[0])
               );
           
-          System.out.println("name - " + newNode.name+"_"+newNode.id);
+          System.out.println("name - " + newNode.componentClassName + "_" + newNode.id);
           
-          Point pos = (Point) extra.get(newNode.name+"_"+newNode.id+"|position");
+          Point pos = (Point) extra.get(newNode.componentClassName + "_" + newNode.id + "|position");
           
-          System.out.println("pos - "+pos);
+          System.out.println("pos - " + pos);
           
           newNode.x = (int) pos.getX();
           newNode.y = (int) pos.getY();
-          newNode.color = (String) extra.get(newNode.name+"_"+newNode.id+"|color");
-          if (newNode.color == null){
+          newNode.color = (String) extra.get(newNode.componentClassName + "_" + newNode.id + "|color");
+          if (newNode.color == null) {
             newNode.color = "";
           }
+          
+          if (localParams != null) {
+        	  getNodeParams(localParams, newNode);
+          }
+          
           loadNodes.add(newNode);
           
-          if(maxId < newId){
+          if (maxId < newId) {
             maxId = newId;
           }
         }
@@ -124,7 +146,7 @@ public class AlternativeSLcore {
         for (int i = 0; i < links.size(); i++) {
           LinkModel newLM = links.get(i);
           
-          System.out.println("LinkModel("+i+") - "+newLM) ;
+          System.out.println("LinkModel(" + i + ") - " + newLM);
           
           // getLinkName(nodes, con.get(i).source),
           //con.get(i).s_side + "_" + con.get(i).p_source,
@@ -151,55 +173,98 @@ public class AlternativeSLcore {
      * @param nodes - array of nodes
      * @param con - array of connections
      * @param maxId - maximum node id
+     * @param flag - save on default or user path
      */
-    public void save(ArrayList<Node> nodes, ArrayList<Connection> con, int maxId) {
+    public void save(ArrayList<Node> nodes, ArrayList<Connection> con, int maxId, boolean flag) {
       
-      // Создаю диалог для загрузки (стандартный класс)
-      FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
-      // Задаю ему стартовую директорию
-      fd.setDirectory("../res/");
-      // Показываю диалог.
-      fd.show();
+    	String fileName = "", fileDirectory = "";
+    	
+    	if (flag) {
+	      // Создаю диалог для загрузки (стандартный класс)
+	      FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
+	      // Задаю ему стартовую директорию
+	      fd.setDirectory("/");
+	      // Показываю диалог.
+	      fd.show();
+	      fileName = fd.getFile();
+	      fileDirectory = fd.getDirectory();
+    	} else {
+    		fileName = "defaultRun.txt";
+    		fileDirectory = "temp/";
+    	}
 
-      String path = fd.getDirectory() + fd.getFile();
+      String path =  fileDirectory + fileName;
       if (path != null) {
         
         final List<ComponentModel> components = new ArrayList<ComponentModel>();
         final Map<String, Object> extra = new HashMap<String, Object>();
+        
+        ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder();
+        
         Node bufNode;
         
         for (int i = 0; i < nodes.size(); i++) {
           bufNode = nodes.get(i);
-          
+          /*
           Map<String, Integer> portSize = new HashMap<String, Integer>();
-          portSize.put("in", bufNode.in_connect.size());
-          portSize.put("out", bufNode.out_connect.size());
-          String globalName = bufNode.name + "_" + bufNode.id;
-          components.add(new ComponentModel(bufNode.comDes.getClass().getCanonicalName(), globalName, portSize, "http://example.com"));
+          for ( int i = 0; i< bufNode.comDes.getInPorts().size(); i++){
+        	  if ( bufNode.comDes.getInPorts().get(i).arrayPort() ){
+        		  portSize.put(bufNode.comDes.getInPorts().get(i).arrayPort(), bufNode.comDes.getInPorts().get(i));
+        	  }
+          }
+          */
+          //portSize.put("out", bufNode.out_connect.size());
+          String[] splitTemp = nodes.get(i).componentClassName.split("\\.");
+          String globalName = splitTemp[splitTemp.length - 1] + "_" + bufNode.id;
+          components.add(new ComponentModel(bufNode.componentClassName, globalName, null , "http://example.com"));
           
           extra.put(globalName + "|position", new Point(bufNode.x, bufNode.y));
           extra.put(globalName + "|color", bufNode.color);
+          
+          if (bufNode.localParams.size() > 0) {
+        	  /*
+        	  if (paramStore == null) {
+        	  
+        		  paramStore = new ParametersStore.Builder();
+        	  }
+        	  */
+        	  addNodeParams(paramStoreBuilder, bufNode);//paramStore.addComponentConfiguration(componentName, parameters)
+          }
         }
         
         final List<LinkModel> links = new ArrayList<LinkModel>();
         
-        for (int i = 0; i < con.size(); i++) {
-          //links.add(new LinkModel("_Generate", "OUT", "_Sum", "IN"));
+        for (Connection connection : con) {
+          String inPortName = getNode(nodes, connection.source).out_connect.get(connection.p_source).portName;
+          String outPortName = getNode(nodes, connection.destination).in_connect.get(connection.p_destination).portName;
           links.add(new LinkModel(
-              getLinkName(nodes, con.get(i).source),
-              con.get(i).s_side + "_" + con.get(i).p_source,
-              getLinkName(nodes, con.get(i).destination),
-              con.get(i).d_side + "_" + con.get(i).p_destination
+              getNodeName(nodes, connection.source),
+              inPortName,//con.get(i).s_side + "_" + con.get(i).p_source,
+              getNodeName(nodes, connection.destination),
+              outPortName//con.get(i).d_side + "_" + con.get(i).p_destination
               ));
         }
         
-        final NetworkModel netModel = new NetworkModel(fd.getFile(), components, links, extra);
+        netModel = new NetworkModel(fileName, components, links, extra);
         
-        final String outData = XmlIo.serialize(netModel);
+        final String outNetwork = XmlIo.serialize(netModel);
+        String outParams = "";
+        //if (paramStore == null) {
+        	paramStore = paramStoreBuilder.build();
+        	outParams = XmlIo.serialize(paramStore);
+        //}
+        
           try {
-            FileWriter wr = new FileWriter(new File(path));
-            wr.write(outData);
-            wr.close();
+            FileWriter writeNetwork = new FileWriter(new File(path));
+            writeNetwork.write(outNetwork);
+            writeNetwork.close();
+            
+            if (paramStore != null) {
+            	FileWriter writeParams = new FileWriter(new File(fileDirectory + "params_" + fileName));
+            	writeParams.write(outParams);
+            	writeParams.close();
+            }
+            
           } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -209,30 +274,53 @@ public class AlternativeSLcore {
         
     }
     
-    String getLinkName(ArrayList<Node> nodes, int id){
+    /**
+     * Create unique node name.
+     * @param nodes - array list of all nodes;
+     * @param id - unique identifier of node;
+     * @return unique node name.
+     */
+    String getNodeName(ArrayList<Node> nodes, int id) {
       String res = "";
       
       for (int i = 0; i < nodes.size(); i++) {
         if (nodes.get(i).id == id) {
-          res = nodes.get(i).name + "_" + id;
+        	String[] splitTemp = nodes.get(i).componentClassName.split("\\.");
+          res = splitTemp[splitTemp.length - 1] + "_" + id;
         }
       }
       return res;
     }
-
-    /* split
-    String[] parceName(String in){
-      String[] res = new String[2];
-      boolean lock = false;
-      in.s
-        for (int i = 0; i < in.length(); i++){
-          if(in.charAt(i) == '_'){
-            lock = true;
-            i++;
-          }
-        }
-      
-      return res;
+    
+    void addNodeParams(ParametersStore.Builder store, Node node) {
+    	String[] splitTemp = node.componentClassName.split("\\.");
+    	String name = splitTemp[splitTemp.length - 1] + "_" + node.id;
+    	List<Parameter> parameters = new ArrayList<Parameter>();
+    	
+    	for (int i = 0; i < node.localParams.size(); i++) {
+    		parameters.add(new Parameter(node.localParams.get(i).name, node.localParams.get(i).value));
+    	}
+    	
+    	store.addComponentConfiguration(name, parameters);
     }
-    */
+    
+    void getNodeParams(ParametersStore store, Node node) {
+    	//for (int i = 0; i < paramStore.)
+    	ParameterBundle bundle = store.getComponentParameters(node.componentClassName + "_" + node.id, node.comDes);
+    	for (int i = 0; i < node.localParams.size(); i++) {
+    		node.localParams.get(i).value = bundle.getString(node.localParams.get(i).name);
+    	}
+    }
+    
+    Node getNode(ArrayList<Node> nodes, int id){
+
+    	for (int i = 0; i < nodes.size(); i++) {
+            if (nodes.get(i).id == id) {
+            	return nodes.get(i);
+            }
+    	}
+    	
+    	return null;
+    }
+    
 }

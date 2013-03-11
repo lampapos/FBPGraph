@@ -1,6 +1,11 @@
 package edu.kpi.fbp.network;
 
+import java.io.File;
+import java.net.URL;
+
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
+import edu.kpi.fbp.model.NetworkModel;
+import edu.kpi.fbp.params.ParametersStore;
 
 /**
  * Provide methods to get component descriptor from somewhere, specific to current realization.
@@ -20,4 +25,9 @@ public interface Connect {
    */
   ComponentDescriptor getComponentDescriptor(String componentName);
 
+  void networkRun(NetworkModel model);
+  
+  void networkRun(NetworkModel model, ParametersStore store);
+  
+  URL makeJar(NetworkModel model, File path);
 }

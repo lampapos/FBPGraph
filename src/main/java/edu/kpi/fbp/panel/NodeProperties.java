@@ -37,12 +37,12 @@ public class NodeProperties {
     if (iter != -1) {
 
         //obtain a certain descriptor
-        target = conDes.getComponentDescriptor("edu.kpi.fbp.network."+nodes.get(iter).name);
+        target = conDes.getComponentDescriptor("edu.kpi.fbp.network."+nodes.get(iter).componentClassName);
 
 
     P.setLayout(new BoxLayout(P, BoxLayout.Y_AXIS));
     P.add(new JLabel("Name:"));
-    final JTextField jtfN = new JTextField(nodes.get(iter).name);
+    final JTextField jtfN = new JTextField(nodes.get(iter).componentClassName);
     jtfN.setAlignmentX(Component.LEFT_ALIGNMENT);
     jtfN.setMinimumSize(new Dimension(150, 20));
     jtfN.setMaximumSize(new Dimension(150, 20));

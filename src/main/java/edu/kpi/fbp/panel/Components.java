@@ -91,7 +91,7 @@ public class Components {
                 gf.getModel().beginUpdate();
                 try {
                   G.maxId++;
-                  final Node n = new Node(choose, G.maxId, G.connect.getComponentDescriptor("edu.kpi.fbp.network."+choose));
+                  final Node n = new Node(choose, G.maxId, G.connect.getComponentDescriptor(choose));
                   n.draw(gf, local_x, local_y);
                   G.workField.nodes.add(n);
                 } finally {
@@ -115,7 +115,7 @@ public class Components {
     final Object[] comp = G.connect.getAvailableComponentsList();
 
     for(int i=0; i<comp.length; i++){
-      root.add(new DefaultMutableTreeNode(cutName(comp[i].toString())));
+      root.add(new DefaultMutableTreeNode(comp[i].toString()));
     }
 
     return root;

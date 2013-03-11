@@ -13,7 +13,7 @@ import edu.kpi.fbp.params.ComponentParameter;
 
 public class Node {
   // Logical
-  public String name;
+  public String componentClassName;
   public int id;
   
   //Component attributes
@@ -41,7 +41,7 @@ public class Node {
    *          - уникальный идентификатор вершины.
    */
   public Node(final String name, final int id, ComponentDescriptor des) {
-    this.name = name;
+    this.componentClassName = name;
     this.id = id;
     this.comDes = des;
     importParams(des.getParameters());
@@ -95,24 +95,25 @@ public class Node {
     portOut = comDes.getOutPorts().size();
     
     H = portIn;
-    if (H < portOut)
+    if (H < portOut) {
       H = portOut;
+    }
 
     H *= 30;
 
     final Object parent = graph.getDefaultParent();
-    cell = (mxCell) graph.insertVertex(parent, null, name, x, y, W, H);// ,"shape=ellipse;perimter=ellipsePerimeter");
+    cell = (mxCell) graph.insertVertex(parent, null, componentClassName, x, y, W, H);// ,"shape=ellipse;perimter=ellipsePerimeter");
     cell.setConnectable(false);
 
     // Создание и добавление портов.
     for (int i = 0; i < portIn; i++) {
-      final Port in = new Port(graph, in_connect.size(), id, (x - 5), (y + 10 + 30 * i), false);
+      final Port in = new Port(graph, in_connect.size(), id, (x - 5), (y + 10 + 30 * i), false, comDes.getInPorts().get(i).value());
       in.setOffset(x, y);
       in_connect.add(in);
     }
 
     for (int i = 0; i < portOut; i++) {
-      final Port out = new Port(graph, out_connect.size(), id, (x + 85), (y + 10 + 30 * i), true);
+      final Port out = new Port(graph, out_connect.size(), id, (x + 85), (y + 10 + 30 * i), true, comDes.getOutPorts().get(i).value());
       out.setOffset(x, y);
       out_connect.add(out);
     }
@@ -158,7 +159,7 @@ public class Node {
 
   @Override
   public String toString() {
-    String res = "< " + name + " id='" + id + "' > : [" + x + "," + y + "]";
+    String res = "< " + componentClassName + " id='" + id + "' > : [" + x + "," + y + "]";
     res += "\ncell[" + cell + "]";
     res += "\n   <p_in>";
     for (int i = 0; i < in_connect.size(); i++) {

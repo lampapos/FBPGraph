@@ -8,6 +8,7 @@ public class Port {
   public int cellId;
   public int parentId;
   public boolean side;
+  public String portName;
 
   // TODO why you use public fields? I would recommend you make getters for this fields. Misha
 
@@ -39,7 +40,7 @@ public class Port {
    *          - порт находится в массиве входящих или выходящих вершин
    */
   // FIXME: camelase, again...
-  public Port(final mxGraph graph, final int cell_id, final int id, final int x, final int y, final boolean isOut) {
+  public Port(final mxGraph graph, final int cell_id, final int id, final int x, final int y, final boolean isOut, String name) {
     final Object parent = graph.getDefaultParent();
     cell = (mxCell) graph.insertVertex(parent, null, "", x, y, 10, 10, "shape=ellipse;perimter=ellipsePerimeter");
     cell.setConnectable(true);
@@ -50,7 +51,7 @@ public class Port {
     this.cellId = cell_id;
     this.parentId = id;
     this.side = isOut;
-
+    this.portName = name;
   }
 
   public void setOffset(final int px, final int py) {
