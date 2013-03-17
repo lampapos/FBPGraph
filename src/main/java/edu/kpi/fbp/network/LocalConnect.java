@@ -37,29 +37,29 @@ public class LocalConnect implements Connect{
 
   @Override
   public void networkRun(NetworkModel model) {
-	  // TODO Auto-generated method stub
-	try {
-		NetworkStarter.startNetwork(model);
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+    // TODO Auto-generated method stub
+  try {
+    NetworkStarter.startNetwork(model);
+  } catch (Exception e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+  }
   }
 
   @Override
   public void networkRun(NetworkModel model, ParametersStore store) {
-	  // TODO Auto-generated method stub
-	  try {
-			NetworkStarter.startNetwork(model, store);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    // TODO Auto-generated method stub
+    try {
+      NetworkStarter.startNetwork(model, store);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   @Override
   public URL makeJar(NetworkModel model, File path) {
-  	// TODO Auto-generated method stub
+    // TODO Auto-generated method stub
     return null;
   }
 

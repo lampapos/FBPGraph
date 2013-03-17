@@ -143,7 +143,7 @@ public class NodeParamsWindow extends JFrame{
       @Override
       public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-    	  for (int i = 0; i < textStore.size(); i++) {
+        for (int i = 0; i < textStore.size(); i++) {
               switch (target.localParams.get(i).type) {
                 case "string":
                   target.localParams.get(i).value = textStore.get(i).getText();

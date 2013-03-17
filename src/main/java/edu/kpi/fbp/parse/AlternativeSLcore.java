@@ -107,7 +107,7 @@ public class AlternativeSLcore {
         File paramsFile = new File(fd.getDirectory() + "params_" + fd.getFile());
         ParametersStore localParams = null;
         if (paramsFile.exists()) {
-        	localParams = XmlIo.deserialize(paramsFile, ParametersStore.class);
+          localParams = XmlIo.deserialize(paramsFile, ParametersStore.class);
         }
         
         for (int i = 0; i < components.size(); i++) {
@@ -116,7 +116,7 @@ public class AlternativeSLcore {
           Node newNode = new Node(
               globalName.split("_")[0],
               newId,
-              connect.getComponentDescriptor("edu.kpi.fbp.network." + globalName.split("_")[0])
+              connect.getComponentDescriptor(globalName.split("_")[0])
               );
           
           System.out.println("name - " + newNode.componentClassName + "_" + newNode.id);
@@ -133,7 +133,7 @@ public class AlternativeSLcore {
           }
           
           if (localParams != null) {
-        	  getNodeParams(localParams, newNode);
+            getNodeParams(localParams, newNode);
           }
           
           loadNodes.add(newNode);
@@ -177,21 +177,21 @@ public class AlternativeSLcore {
      */
     public void save(ArrayList<Node> nodes, ArrayList<Connection> con, int maxId, boolean flag) {
       
-    	String fileName = "", fileDirectory = "";
-    	
-    	if (flag) {
-	      // Создаю диалог для загрузки (стандартный класс)
-	      FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
-	      // Задаю ему стартовую директорию
-	      fd.setDirectory("/");
-	      // Показываю диалог.
-	      fd.show();
-	      fileName = fd.getFile();
-	      fileDirectory = fd.getDirectory();
-    	} else {
-    		fileName = "defaultRun.txt";
-    		fileDirectory = "temp/";
-    	}
+      String fileName = "", fileDirectory = "";
+      
+      if (flag) {
+        // Создаю диалог для загрузки (стандартный класс)
+        FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
+        // Задаю ему стартовую директорию
+        fd.setDirectory("/");
+        // Показываю диалог.
+        fd.show();
+        fileName = fd.getFile();
+        fileDirectory = fd.getDirectory();
+      } else {
+        fileName = "defaultRun.txt";
+        fileDirectory = "temp/";
+      }
 
       String path =  fileDirectory + fileName;
       if (path != null) {
@@ -208,9 +208,9 @@ public class AlternativeSLcore {
           /*
           Map<String, Integer> portSize = new HashMap<String, Integer>();
           for ( int i = 0; i< bufNode.comDes.getInPorts().size(); i++){
-        	  if ( bufNode.comDes.getInPorts().get(i).arrayPort() ){
-        		  portSize.put(bufNode.comDes.getInPorts().get(i).arrayPort(), bufNode.comDes.getInPorts().get(i));
-        	  }
+            if ( bufNode.comDes.getInPorts().get(i).arrayPort() ){
+              portSize.put(bufNode.comDes.getInPorts().get(i).arrayPort(), bufNode.comDes.getInPorts().get(i));
+            }
           }
           */
           //portSize.put("out", bufNode.out_connect.size());
@@ -222,13 +222,13 @@ public class AlternativeSLcore {
           extra.put(globalName + "|color", bufNode.color);
           
           if (bufNode.localParams.size() > 0) {
-        	  /*
-        	  if (paramStore == null) {
-        	  
-        		  paramStore = new ParametersStore.Builder();
-        	  }
-        	  */
-        	  addNodeParams(paramStoreBuilder, bufNode);//paramStore.addComponentConfiguration(componentName, parameters)
+            /*
+            if (paramStore == null) {
+            
+              paramStore = new ParametersStore.Builder();
+            }
+            */
+            addNodeParams(paramStoreBuilder, bufNode);//paramStore.addComponentConfiguration(componentName, parameters)
           }
         }
         
@@ -250,8 +250,8 @@ public class AlternativeSLcore {
         final String outNetwork = XmlIo.serialize(netModel);
         String outParams = "";
         //if (paramStore == null) {
-        	paramStore = paramStoreBuilder.build();
-        	outParams = XmlIo.serialize(paramStore);
+          paramStore = paramStoreBuilder.build();
+          outParams = XmlIo.serialize(paramStore);
         //}
         
           try {
@@ -260,9 +260,9 @@ public class AlternativeSLcore {
             writeNetwork.close();
             
             if (paramStore != null) {
-            	FileWriter writeParams = new FileWriter(new File(fileDirectory + "params_" + fileName));
-            	writeParams.write(outParams);
-            	writeParams.close();
+              FileWriter writeParams = new FileWriter(new File(fileDirectory + "params_" + fileName));
+              writeParams.write(outParams);
+              writeParams.close();
             }
             
           } catch (IOException e) {
@@ -285,7 +285,7 @@ public class AlternativeSLcore {
       
       for (int i = 0; i < nodes.size(); i++) {
         if (nodes.get(i).id == id) {
-        	String[] splitTemp = nodes.get(i).componentClassName.split("\\.");
+          String[] splitTemp = nodes.get(i).componentClassName.split("\\.");
           res = splitTemp[splitTemp.length - 1] + "_" + id;
         }
       }
@@ -293,34 +293,34 @@ public class AlternativeSLcore {
     }
     
     void addNodeParams(ParametersStore.Builder store, Node node) {
-    	String[] splitTemp = node.componentClassName.split("\\.");
-    	String name = splitTemp[splitTemp.length - 1] + "_" + node.id;
-    	List<Parameter> parameters = new ArrayList<Parameter>();
-    	
-    	for (int i = 0; i < node.localParams.size(); i++) {
-    		parameters.add(new Parameter(node.localParams.get(i).name, node.localParams.get(i).value));
-    	}
-    	
-    	store.addComponentConfiguration(name, parameters);
+      String[] splitTemp = node.componentClassName.split("\\.");
+      String name = splitTemp[splitTemp.length - 1] + "_" + node.id;
+      List<Parameter> parameters = new ArrayList<Parameter>();
+      
+      for (int i = 0; i < node.localParams.size(); i++) {
+        parameters.add(new Parameter(node.localParams.get(i).name, node.localParams.get(i).value));
+      }
+      
+      store.addComponentConfiguration(name, parameters);
     }
     
     void getNodeParams(ParametersStore store, Node node) {
-    	//for (int i = 0; i < paramStore.)
-    	ParameterBundle bundle = store.getComponentParameters(node.componentClassName + "_" + node.id, node.comDes);
-    	for (int i = 0; i < node.localParams.size(); i++) {
-    		node.localParams.get(i).value = bundle.getString(node.localParams.get(i).name);
-    	}
+      //for (int i = 0; i < paramStore.)
+      ParameterBundle bundle = store.getComponentParameters(node.componentClassName + "_" + node.id, node.comDes);
+      for (int i = 0; i < node.localParams.size(); i++) {
+        node.localParams.get(i).value = bundle.getString(node.localParams.get(i).name);
+      }
     }
     
-    Node getNode(ArrayList<Node> nodes, int id){
+    Node getNode(ArrayList<Node> nodes, int id) {
 
-    	for (int i = 0; i < nodes.size(); i++) {
+      for (int i = 0; i < nodes.size(); i++) {
             if (nodes.get(i).id == id) {
-            	return nodes.get(i);
+              return nodes.get(i);
             }
-    	}
-    	
-    	return null;
+      }
+      
+      return null;
     }
     
 }
