@@ -8,17 +8,25 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import edu.kpi.fbp.gui.file.SaveLoadCore;
 import edu.kpi.fbp.gui.networkConnection.LocalConnection;
 import edu.kpi.fbp.gui.networkConnection.ServerConnection;
+import edu.kpi.fbp.gui.panels.AttributeTab;
 import edu.kpi.fbp.gui.panels.ColorTab;
 import edu.kpi.fbp.gui.panels.ComponentTree;
+import edu.kpi.fbp.gui.panels.DescriptionTab;
 import edu.kpi.fbp.gui.panels.WorkField;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 import net.miginfocom.swing.MigLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 import javax.swing.BoxLayout;
+import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 /** Main application window. */
 public class MainWindow extends JFrame {
@@ -41,10 +49,32 @@ public class MainWindow extends JFrame {
   private JPanel panelConsole;
   /** Link to server. */
   private ServerConnection serverConnection = new LocalConnection();
-  /** Tabed pane consist of three pane : color palette, none attributes, node description. */
+  /** Tabed pane consist of three pane : color palette, node attributes, node description. */
   private JTabbedPane tabbedPane;
   /** {@link ColorTab}. */
   private ColorTab colorTab;
+  /** {@link AttributeTab}. */
+  private AttributeTab attributeTab;
+  /** {@link DescriptionTab}. */
+  private DescriptionTab descriptionTab;
+  /** {@link JMenuBar}. */
+  private JMenuBar menuBar;
+  /** Edit scheme. */
+  private JMenu mnEdit;
+  /** Save/load scheme. */
+  private JMenu mnFile;
+  /** Run scheme. */
+  private JMenu mnRun;
+  /** Run scheme. */
+  private JMenuItem mnRunNetwork;
+  /** Save scheme. */
+  private JMenuItem mnFileSave;
+  /** Delete choosed cell and all links to it. */
+  private JMenuItem mnEditDelete;
+  /** Clear all field. */
+  private JMenuItem mnEditDeleteAll;
+  /** {@link SaveLoadCore}. */
+  private SaveLoadCore slCore = new SaveLoadCore();
   
 
   /**
@@ -71,10 +101,64 @@ public class MainWindow extends JFrame {
 
     classComponentTree = new ComponentTree(this);
     colorTab = new ColorTab();
-    classWorkField = new WorkField(colorTab);
+    descriptionTab = new DescriptionTab();
+    attributeTab = new AttributeTab();
+    classWorkField = new WorkField(colorTab, descriptionTab, attributeTab);
     
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 900, 500);
+    
+    menuBar = new JMenuBar();
+    setJMenuBar(menuBar);
+    
+    mnFile = new JMenu("File");
+    menuBar.add(mnFile);
+    
+    mnFileSave = new JMenuItem("Save  (Ctrl+S)");
+    mnFileSave.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        slCore.save(classWorkField.getNodes(), true);
+      }
+    });
+    mnFile.add(mnFileSave);
+    
+    mnEdit = new JMenu("Edit");
+    menuBar.add(mnEdit);
+    
+    mnEditDelete = new JMenuItem("Delete      (Del)");
+    mnEditDelete.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        classWorkField.deleteCell();
+      }
+    });
+    mnEdit.add(mnEditDelete);
+    
+    mnEditDeleteAll = new JMenuItem("Delete all (Ctrl+Del)");
+    mnEditDeleteAll.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        classWorkField.deleteAll();
+      }
+    });
+    mnEdit.add(mnEditDeleteAll);
+    
+    mnRun = new JMenu("Run");
+    menuBar.add(mnRun);
+    
+    mnRunNetwork = new JMenuItem("Run  (Ctrl+R)");
+    mnRunNetwork.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        slCore.save(classWorkField.getNodes(), false);
+        serverConnection.networkRun(slCore.getNetworkModel());
+      }
+    });
+    mnRun.add(mnRunNetwork);
+    
     contentPane = new JPanel();
     contentPane.setBackground(Color.WHITE);
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,7 +181,12 @@ public class MainWindow extends JFrame {
     panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.X_AXIS));
     
     tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-    tabbedPane.addTab("Color", colorTab.createPalette(classWorkField.getGraph()));
+    //Color chooser
+    //tabbedPane.addTab("Color", colorTab.createPalette(classWorkField.getGraph()));
+    //Component description
+    tabbedPane.addTab("Description", descriptionTab.getDescriptionPanel());
+    //Attribute panel
+    tabbedPane.addTab("Parameters", attributeTab.getAttributePanel());
     panelOption.add(tabbedPane);
     
     panelConsole = new JPanel();

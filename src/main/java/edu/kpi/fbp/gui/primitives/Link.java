@@ -30,6 +30,26 @@ public class Link {
     this.destinationPortName = destinationPortName;
   }
   
+  /** @return Name of link destination node. */
+  public String getDestinationNodeName() {
+    return destinationNodeName;
+  }
+  
+  /** @return Name of link source node. */
+  public String getSourceNodeName() {
+    return sourceNodeName;
+  }
+  
+  /** @return Name of link destination port. */
+  public String getDestinationPortName() {
+    return destinationPortName;
+  }
+  
+  /** @return Name of link source port. */
+  public String getSourcePortName() {
+    return sourcePortName;
+  }
+  
   /**
    * Used to debug.
    * @return string in xml style, consist of all link fields.

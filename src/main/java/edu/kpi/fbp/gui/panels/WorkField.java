@@ -40,14 +40,22 @@ public class WorkField {
   
   /** Need to set last choosed node. */
   ColorTab colorTab;
+  /** Need to set last choosed node. */
+  DescriptionTab descriptionTab;
+  /** Need to set last choosed node. */
+  AttributeTab attributeTab;
   /** Last choosed node. */
   Node lastChoose = null;
   
   /** {@link WorkField}.
    * @param colorTab - used to change last choosed node.
+   * @param descriptionTab - used to change last choosed node.
+   * @param attributeTab - used to change last choosed node.
    */
-  public WorkField(ColorTab colorTab) {
+  public WorkField(ColorTab colorTab, DescriptionTab descriptionTab, AttributeTab attributeTab) {
     this.colorTab = colorTab;
+    this.descriptionTab = descriptionTab;
+    this.attributeTab = attributeTab;
   }
   
   /** Return and increase maximum id of nodes.
@@ -98,16 +106,30 @@ public class WorkField {
     return getNode(graphComponent.getCellAt(x, y));
   }
   
-  /** Saving new node. 
+  /** @return array of all components on scheme. */
+  public ArrayList<Node> getNodes() {
+    return nodes;
+  }
+  
+  /**  Notify tabs about change lastChoosed node.
+   * @param node - lastChoosed node
+   */
+  public void updateLastChoosed(Node node) {
+    lastChoose = node;
+    colorTab.setNode(lastChoose);
+    descriptionTab.createDescription(lastChoose);
+    attributeTab.createAttribute(lastChoose);
+  }
+  
+  /** Saving new node and set it to {@link ColorTab.node}.
    * @param newNode - new node (k.o.)
    */
   public void addNode(Node newNode) {
     nodes.add(newNode);
+    updateLastChoosed(newNode);
   }
   
-  /**
-   * Used for debug. Print all nodes.
-   */
+  /** Used for debug. Print all nodes. */
   public void showNodes() {
     for (Node node : nodes) {
       System.out.println("//=======//" + node.toString() + "//=======//");
@@ -129,6 +151,40 @@ public class WorkField {
     return null;
   }
 
+  /** Delete choosed cell and all links to it. */
+  public void deleteCell() {
+    
+    if (lastChoose != null) {
+      ArrayList<Object> bufArray = new ArrayList<Object>();
+      //Delete node
+      bufArray.add(lastChoose.getCell());
+      //Delete ports
+      for (Port port : lastChoose.getPorts()) {
+        bufArray.add(port.getCell());
+      }
+      //Find and delete links to this nodes
+      for (Node node : nodes) {
+        for (Link link : node.getLinks()) {
+          if (link.getDestinationNodeName().equals(lastChoose.getName())) {
+            node.deleteLink(link);
+          }
+        }
+      }
+      
+      graph.removeCells(bufArray.toArray());
+      updateLastChoosed(null);
+    }
+  }
+  
+  /** Clear all field. */
+  public void deleteAll() {
+    graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+    nodes.clear();
+    maxId = 0;
+    
+    updateLastChoosed(null);
+  }
+  
   /**
    * @return new work field.
    */
@@ -214,8 +270,7 @@ public class WorkField {
       @Override
         public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-          lastChoose = getNode(e.getX(), e.getY());
-          colorTab.setNode(lastChoose);
+          updateLastChoosed(getNode(e.getX(), e.getY()));
         }
       }
     });

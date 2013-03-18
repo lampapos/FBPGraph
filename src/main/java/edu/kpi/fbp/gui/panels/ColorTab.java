@@ -30,7 +30,7 @@ import edu.kpi.fbp.gui.primitives.Port;
  */
 public class ColorTab {
   /** This node will change color. */
-  Node node;
+  private Node node;
   
   /** @param node - node to change color. */
   public void setNode(Node node) {

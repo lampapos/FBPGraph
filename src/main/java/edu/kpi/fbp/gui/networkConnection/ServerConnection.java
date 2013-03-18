@@ -9,7 +9,7 @@ import edu.kpi.fbp.params.ParametersStore;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 
 /**
- * Incapsulate all connections to server.
+ * Encapsulate all connections to server.
  * @author Cheshire
  */
 public interface ServerConnection {

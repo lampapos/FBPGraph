@@ -2,6 +2,7 @@ package edu.kpi.fbp.gui.primitives;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.gradle.messaging.remote.internal.OutgoingBroadcast;
 
@@ -9,6 +10,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
+import edu.kpi.fbp.params.ComponentParameter;
+import edu.kpi.fbp.params.Parameter;
 
 /** Scheme node. */
 public class Node {
@@ -31,6 +34,9 @@ public class Node {
   /** Array of outgoing links. */
   private ArrayList<Link> links = new ArrayList<Link>();
   
+  /** List of changed component attributes. */
+  private List<Parameter> newAttribute = new ArrayList<Parameter>();
+  
   /**
    * Node constructor. 
    * @param id - unique node id
@@ -39,7 +45,7 @@ public class Node {
    */
   public Node(int id, String className, ComponentDescriptor componentDescriptor) {
     String[] splitBuf = className.split("\\.");
-    this.nodeName = splitBuf[splitBuf.length - 1] + "-" + id;
+    this.nodeName = splitBuf[splitBuf.length - 1] + "" + id;
     this.className = className;
     this.componentDescriptor = componentDescriptor;
   }
@@ -54,6 +60,11 @@ public class Node {
    */
   public void setColor(String color) {
     this.color = color;
+  }
+  
+  /** @return node color. */
+  public String getColor() {
+    return color;
   }
   
   /** @return node position in Point. */
@@ -76,6 +87,16 @@ public class Node {
     return ports;
   }
   
+  /** @return Array of links. */
+  public ArrayList<Link> getLinks() {
+    return links;
+  }
+  
+  /** @param link - removed link. */ 
+  public void deleteLink(Link link) {
+    links.remove(link);
+  }
+  
   /** 
    * Save new outgoing link.
    * @param link - {@link Link}
@@ -92,6 +113,28 @@ public class Node {
   /** @return node class name. */
   public String getClassName() {
     return className;
+  }
+  
+  /** @return component description. */
+  public String getDescription() {
+    return componentDescriptor.getDescription();
+  }
+  
+  /** @return list of default component parameters. */
+  public List<ComponentParameter> getAttributes() {
+    return componentDescriptor.getParameters();
+  }
+  
+  /** @return changes in component attributes. */
+  public List<Parameter> getNewAttributes() {
+    return newAttribute;
+  }
+  
+  /** Save changes in component attributes.
+   * @param newParameters - list of {@link Parameter} with new value
+   */
+  public void setNewAttributes(List<Parameter> newParameters) {
+    newAttribute = newParameters;
   }
   
   /** Draw node on work field. 
@@ -161,6 +204,11 @@ public class Node {
       res += "      " + port.toString() + "\n";
     }
     res +=  "   </ports>\n";
+    res +=  "   <attribute>\n";
+    for (Parameter param : newAttribute) {
+      res += "      " + param.toString() + "\n";
+    }
+    res +=  "   </attribute>\n";
     res +=  "   <links>\n";
     for (Link link : links) {
       res += "      " + link.toString() + "\n";
