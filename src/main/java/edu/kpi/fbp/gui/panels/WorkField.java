@@ -67,6 +67,11 @@ public class WorkField {
     return buf;
   }
   
+  /** @param maxId - maximum id of nodes.*/
+  public void setMaxId(int maxId) {
+    this.maxId = maxId;
+  }
+  
   /** @return mxGraph */
   public mxGraph getGraph() {
     return graph;
@@ -111,6 +116,13 @@ public class WorkField {
     return nodes;
   }
   
+  /** Save array of all components.
+   * @param nodes - array of nodes
+   */
+  public void setNodes(ArrayList<Node> nodes) {
+    this.nodes = nodes;
+  }
+  
   /**  Notify tabs about change lastChoosed node.
    * @param node - lastChoosed node
    */
@@ -118,7 +130,7 @@ public class WorkField {
     lastChoose = node;
     colorTab.setNode(lastChoose);
     descriptionTab.createDescription(lastChoose);
-    attributeTab.createAttribute(lastChoose);
+    attributeTab.createAttributesPanel(lastChoose);
   }
   
   /** Saving new node and set it to {@link ColorTab.node}.
@@ -164,11 +176,13 @@ public class WorkField {
       }
       //Find and delete links to this nodes
       for (Node node : nodes) {
-        for (Link link : node.getLinks()) {
-          if (link.getDestinationNodeName().equals(lastChoose.getName())) {
-            node.deleteLink(link);
+        //if (node.getLinks() != null) {
+          for (Link link : node.getLinks()) {
+            if (link.getDestinationNodeName().equals(lastChoose.getName())) {
+              node.deleteLink(link);
+            }
           }
-        }
+        //}
       }
       
       graph.removeCells(bufArray.toArray());
@@ -285,8 +299,9 @@ public class WorkField {
           // сохраняем в ноде-источнике
           if (edge.getTarget() != null) {
             Port sourcePort = getPort(edge.getSource()), destinationPort = getPort(edge.getTarget());
-            
-            sourcePort.getParent().addLink(new Link(sourcePort.getParent().getName(), sourcePort.getName(), destinationPort.getParent().getName(), destinationPort.getName()));
+            Link newLink = new Link(sourcePort.getParent().getName(), sourcePort.getName(), destinationPort.getParent().getName(), destinationPort.getName());
+            newLink.setCell(edge, sourcePort.getCell(), destinationPort.getCell());
+            sourcePort.getParent().addLink(newLink);
           } else {
             graph.removeCells(new Object[] {edge});
           }

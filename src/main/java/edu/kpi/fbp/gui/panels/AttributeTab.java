@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.miginfocom.swing.MigLayout;
+
 import edu.kpi.fbp.gui.primitives.Node;
 import edu.kpi.fbp.params.ComponentParameter;
 import edu.kpi.fbp.params.Parameter;
@@ -39,9 +41,9 @@ public class AttributeTab {
   public AttributeTab() {
     attributePanel = new JPanel();
     attributePanel.setBackground(Color.white);
-    attributePanel.setLayout(new BoxLayout(attributePanel, BoxLayout.Y_AXIS));
+    attributePanel.setLayout(new MigLayout("", "[50][100]", "[]"));
     
-    createAttribute(null);
+    createAttributesPanel(null);
   }
   
   /** @return null if attribute value not changed, else - return new value. */
@@ -114,32 +116,21 @@ public class AttributeTab {
   /** Show new node attribute fields.
    * @param node - new node.
    */
-  public void createAttribute(final Node node) {
+  public void createAttributesPanel(final Node node) {
+    
     attributePanel.removeAll();
     
     if (node != null) {
       if (node.getAttributes().size() > 0) {
         attributeField = new ArrayList<JTextField>();
         
-        JPanel top = new JPanel();
-        top.setBackground(Color.white);
-        JPanel middle = new JPanel();
-        middle.setBackground(Color.white);
-        
-        //Text fields
-        top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
-        top.setAlignmentY(Component.TOP_ALIGNMENT);
-        top.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JPanel bufPanel;
-        
+        int i = 0;
         for (ComponentParameter comParam : node.getAttributes()) {
-          bufPanel = new JPanel();
-          bufPanel.setBackground(Color.white);
-          bufPanel.setLayout(new BoxLayout(bufPanel, BoxLayout.X_AXIS));
+          
           //Component name
           JLabel bufLabel = new JLabel(comParam.name());
-          bufLabel.setMaximumSize(new Dimension(NAME_LABEL_WIDTH, COL_HEIGHT));
-          bufPanel.add(bufLabel);
+          attributePanel.add(bufLabel, "cell 0 " + i);
+          
           //Component value
           String value = comParam.defaultValue();
           String newValue = isNewValueSet(node, comParam.name());
@@ -147,11 +138,11 @@ public class AttributeTab {
             value = newValue;
           }
           final JTextField bufText = new JTextField(value);
-          bufText.setMaximumSize(new Dimension(PANEL_WIDTH - NAME_LABEL_WIDTH, COL_HEIGHT));
+          attributeField.add(bufText);
           
           //Component type
           if (comParam.type() == ParameterType.BOOLEAN) {
-            
+            JPanel bufPanel = new JPanel();
             final JCheckBox checkBox = new JCheckBox();
             checkBox.setSelected(Boolean.getBoolean(value));
             checkBox.addChangeListener(new ChangeListener() {
@@ -166,21 +157,16 @@ public class AttributeTab {
             bufText.setVisible(false);
             bufPanel.add(bufText);
             
+            attributePanel.add(bufPanel, "cell 1 " + i + ",grow");
           } else {
-            
-            bufPanel.add(bufText);
+
+            attributePanel.add(bufText, "cell 1 " + i + ",grow");
             
           }
           
-          top.add(bufPanel);
-          attributeField.add(bufText);
+          i++;
         }
         
-        attributePanel.add(top);
-        
-        //Place holder
-        middle.setAlignmentX(Component.LEFT_ALIGNMENT);
-        attributePanel.add(middle);
         
         //Submit button
         JButton submit = new JButton("Submit");
@@ -192,20 +178,23 @@ public class AttributeTab {
           }
           
         });
-        submit.setMaximumSize(new Dimension(PANEL_WIDTH, COL_HEIGHT));
-        submit.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-        submit.setAlignmentX(Component.LEFT_ALIGNMENT);
-        attributePanel.add(submit);
+        JPanel placeHolder = new JPanel();
+        placeHolder.setBackground(Color.white);
+        attributePanel.add(placeHolder, "cell 0 " + i + " 1 " + i + ", grow, push, span");
+        i++;
+        attributePanel.add(submit, "cell 0 " + i + " 1 " + i + ", grow, span");
+        
         
       } else {
-        attributePanel.add(new JLabel("This component haven't"));
-        attributePanel.add(new JLabel("parameters."));
+        attributePanel.add(new JLabel("This component haven't"), "cell 0 0 1 0");
+        attributePanel.add(new JLabel("parameters."), "cell 0 1 1 1");
       }
     } else {
-      attributePanel.add(new JLabel("Nothing choose."));
+      attributePanel.add(new JLabel("Nothing choose."), "cell 0 0 1 0");
     }
     
     attributePanel.revalidate();
     attributePanel.repaint();
+    
   }
 }

@@ -1,5 +1,6 @@
 package edu.kpi.fbp.gui.app;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -16,17 +17,20 @@ import edu.kpi.fbp.gui.panels.ColorTab;
 import edu.kpi.fbp.gui.panels.ComponentTree;
 import edu.kpi.fbp.gui.panels.DescriptionTab;
 import edu.kpi.fbp.gui.panels.WorkField;
+import edu.kpi.fbp.gui.primitives.Node;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 import net.miginfocom.swing.MigLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Map;
-import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JTextArea;
 
 /** Main application window. */
 public class MainWindow extends JFrame {
@@ -67,6 +71,10 @@ public class MainWindow extends JFrame {
   private JMenu mnRun;
   /** Run scheme. */
   private JMenuItem mnRunNetwork;
+  /** Run scheme with parameters. */
+  private JMenuItem mnRunNetworkParam;
+  /** Save scheme. */
+  private JMenuItem mnFileOpen;
   /** Save scheme. */
   private JMenuItem mnFileSave;
   /** Delete choosed cell and all links to it. */
@@ -75,24 +83,6 @@ public class MainWindow extends JFrame {
   private JMenuItem mnEditDeleteAll;
   /** {@link SaveLoadCore}. */
   private SaveLoadCore slCore = new SaveLoadCore();
-  
-
-  /**
-   * Launch the application.
-   * @param args dance, checkstyle, dance
-   */
-  public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          MainWindow frame = new MainWindow();
-          frame.setVisible(true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
 
   /**
    * Create the frame.
@@ -113,6 +103,16 @@ public class MainWindow extends JFrame {
     
     mnFile = new JMenu("File");
     menuBar.add(mnFile);
+    
+    mnFileOpen = new JMenuItem("Open  (Ctrl+O)");
+    mnFileOpen.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        slCore.load(classWorkField, classComponentTree);
+      }
+    });
+    mnFile.add(mnFileOpen);
     
     mnFileSave = new JMenuItem("Save  (Ctrl+S)");
     mnFileSave.addActionListener(new ActionListener() {
@@ -148,16 +148,33 @@ public class MainWindow extends JFrame {
     mnRun = new JMenu("Run");
     menuBar.add(mnRun);
     
-    mnRunNetwork = new JMenuItem("Run  (Ctrl+R)");
+    mnRunNetwork = new JMenuItem("Run                                  (Ctrl+R)");
     mnRunNetwork.addActionListener(new ActionListener() {
       
       @Override
       public void actionPerformed(ActionEvent e) {
         slCore.save(classWorkField.getNodes(), false);
         serverConnection.networkRun(slCore.getNetworkModel());
+        slCore.clean();
       }
     });
     mnRun.add(mnRunNetwork);
+    
+    mnRunNetworkParam = new JMenuItem("Run with parameters  (Ctrl+P)");
+    mnRunNetworkParam.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        slCore.save(classWorkField.getNodes(), false);
+        if (slCore.getParametersStore() != null) {
+          serverConnection.networkRun(slCore.getNetworkModel(), slCore.getParametersStore());
+        } else {
+          System.out.println("Can't find file with parameters.");
+        }
+        slCore.clean();
+      }
+    });
+    mnRun.add(mnRunNetworkParam);
     
     contentPane = new JPanel();
     contentPane.setBackground(Color.WHITE);
@@ -166,31 +183,51 @@ public class MainWindow extends JFrame {
     contentPane.setLayout(new MigLayout("", "[::160px,grow][grow][::150px,grow]", "[159.00,grow][::100px,grow]"));
     
     panelComponentTree = new JPanel();
-    panelComponentTree.setLayout(new BoxLayout(panelComponentTree, BoxLayout.X_AXIS));
-    panelComponentTree.add(new JScrollPane(classComponentTree.build()));
-    contentPane.add(panelComponentTree, "cell 0 0 1 2,grow");
+    panelComponentTree.setLayout(new BorderLayout());
+    panelComponentTree.add(new JScrollPane(classComponentTree.build()), BorderLayout.CENTER);
     
     panelWorkField = new JPanel();
-    panelWorkField.add(classWorkField.createMXGraph());
-    contentPane.add(panelWorkField, "cell 1 0,grow");
-    panelWorkField.setLayout(new BoxLayout(panelWorkField, BoxLayout.X_AXIS));
+    panelWorkField.setLayout(new BorderLayout());
+    panelWorkField.add(classWorkField.createMXGraph(), BorderLayout.CENTER);
     
     panelOption = new JPanel();
     panelOption.setBackground(Color.white);
-    contentPane.add(panelOption, "cell 2 0,grow");
-    panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.X_AXIS));
-    
+    panelOption.setLayout(new BorderLayout());
     tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     //Color chooser
-    //tabbedPane.addTab("Color", colorTab.createPalette(classWorkField.getGraph()));
+    tabbedPane.addTab("Color", colorTab.createPalette(classWorkField.getGraph()));
     //Component description
     tabbedPane.addTab("Description", descriptionTab.getDescriptionPanel());
     //Attribute panel
     tabbedPane.addTab("Parameters", attributeTab.getAttributePanel());
-    panelOption.add(tabbedPane);
+    panelOption.add(tabbedPane, BorderLayout.CENTER);
+    
+    //JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelComponentTree, panelWorkField);
     
     panelConsole = new JPanel();
+    panelConsole.add(new JTextArea("LOKJLJKBGHCCTVGBKJNM"), BorderLayout.CENTER);
+
+    contentPane.add(panelWorkField, "cell 1 0,grow");
+    contentPane.add(panelComponentTree, "cell 0 0 1 2,grow");
+    contentPane.add(panelOption, "cell 2 0,grow");
     contentPane.add(panelConsole, "cell 1 1 2 1,grow");
+  }
+  
+  /**
+   * Launch the application.
+   * @param args dance, checkstyle, dance
+   */
+  public static void main(String[] args) {
+    EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          MainWindow frame = new MainWindow();
+          frame.setVisible(true);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
   
   /** 

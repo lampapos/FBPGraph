@@ -7,6 +7,7 @@ import java.util.List;
 import org.gradle.messaging.remote.internal.OutgoingBroadcast;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import edu.kpi.fbp.javafbp.ComponentDescriptor;
@@ -27,7 +28,7 @@ public class Node {
   /** Node position. */
   private int x, y;
   /** Node color. */
-  private String color;
+  private String color = null;
   
   /** Array of ports. */
   private ArrayList<Port> ports = new ArrayList<Port>();
@@ -45,7 +46,7 @@ public class Node {
    */
   public Node(int id, String className, ComponentDescriptor componentDescriptor) {
     String[] splitBuf = className.split("\\.");
-    this.nodeName = splitBuf[splitBuf.length - 1] + "" + id;
+    this.nodeName = splitBuf[splitBuf.length - 1] + "_" + id;
     this.className = className;
     this.componentDescriptor = componentDescriptor;
   }
@@ -82,6 +83,15 @@ public class Node {
     this.y = y;
   }
   
+  /**
+   * Set new node position.
+   * @param pos - node position
+   */
+  public void setPosition(Point pos) {
+    this.x = pos.x;
+    this.y = pos.y;
+  }
+  
   /** @return Array of ports. */
   public ArrayList<Port> getPorts() {
     return ports;
@@ -115,6 +125,11 @@ public class Node {
     return className;
   }
   
+  /** @return component descriptor. */
+  public ComponentDescriptor getComponentDescriptor() {
+    return componentDescriptor;
+  }
+  
   /** @return component description. */
   public String getDescription() {
     return componentDescriptor.getDescription();
@@ -131,6 +146,17 @@ public class Node {
   }
   
   /** Save changes in component attributes.
+   * @param newParameter - {@link Parameter} with new value
+   */
+  public void addNewAttribute(Parameter newParameter) {
+    if (newAttribute == null) {
+      newAttribute = new ArrayList<Parameter>();
+    }
+    
+    newAttribute.add(newParameter);
+  }
+  
+  /** Save changes in component attributes.
    * @param newParameters - list of {@link Parameter} with new value
    */
   public void setNewAttributes(List<Parameter> newParameters) {
@@ -144,6 +170,8 @@ public class Node {
    */
   public void draw(final mxGraph graph, final int x, final int y) {
     int width = 60, height = 30;
+    
+    ArrayList<Object> cells = new ArrayList<Object>();
     
     this.x = x;
     this.y = y;
@@ -172,6 +200,7 @@ public class Node {
       bufPort.draw(graph, x - bufPort.getSize().width, y + yKoef);
       yKoef += bufPort.getSize().height;
       ports.add(bufPort);
+      cells.add(bufPort.getCell());
     }
     
     yKoef = 0;
@@ -181,15 +210,22 @@ public class Node {
       bufPort.draw(graph, x + width, y + yKoef);
       yKoef += bufPort.getSize().height;
       ports.add(bufPort);
+      cells.add(bufPort.getCell());
     }
     
     //Finally draw node.
     final Object parent = graph.getDefaultParent();
-      cell = (mxCell) graph.insertVertex(parent, null, nodeName, x, y, width, height);
-      cell.setConnectable(false);
-      cell.setId("node");
+    cell = (mxCell) graph.insertVertex(parent, null, nodeName, x, y, width, height);
+    cell.setConnectable(false);
+    cell.setId("node");
+    cells.add(cell);
+      
+    //Add color
+    if (color != null) {
+      graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, cells.toArray());
+    }
   }
-  
+   
   /**
    * Used to debug.
    * @return string in xml style, consist of all node fields.

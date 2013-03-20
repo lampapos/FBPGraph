@@ -42,16 +42,16 @@ public class ComponentTree {
   }
   
   /** 
-   * @param ccd ComponentClassDescriptor
+   * @param className full class name.
    * @return cast ComponentClassDescriptor to ComponentDescriptor
    */
-  public ComponentDescriptor getComponentDescriptor(ComponentClassDescriptor ccd) {
-
+  public ComponentDescriptor getComponentDescriptor(String className) {
+      ComponentClassDescriptor ccd = components.get(className);
       final Class<? extends Component> clazz = ccd.getComponentClass();
       final ComponentDescriptor desc = ComponentDescriptor.buildDescriptor(clazz);
       
       return desc;
-    }
+  }
 
   /** @return Component tree. */
   public JTree build() {
@@ -106,7 +106,7 @@ public class ComponentTree {
             final mxGraph graph = linkToMainWindow.getClassWorkField().getGraph();
             graph.getModel().beginUpdate();
             try {
-              final Node newNode = new Node(linkToMainWindow.getClassWorkField().getMaxId(), choose, getComponentDescriptor(components.get(choose)));
+              final Node newNode = new Node(linkToMainWindow.getClassWorkField().getMaxId(), choose, getComponentDescriptor(choose));
               newNode.draw(graph, mouseX - offsetX, mouseY);
               linkToMainWindow.getClassWorkField().addNode(newNode);
             } finally {

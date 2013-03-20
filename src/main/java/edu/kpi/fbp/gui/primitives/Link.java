@@ -1,5 +1,8 @@
 package edu.kpi.fbp.gui.primitives;
 
+import com.mxgraph.model.mxCell;
+import com.mxgraph.view.mxGraph;
+
 /**
  * Primitive type Link consist of source [name, port] and destination [name, port].
  * @author Cheshire
@@ -15,6 +18,13 @@ public class Link {
   private String destinationNodeName;
   /** Destination port class name. */
   private String destinationPortName;
+  
+  /** {@link mxCell}. */
+  private mxCell cell;
+  /** {@link mxCell}. */
+  private mxCell sourcePortCell;
+  /** {@link mxCell}. */
+  private mxCell destinationPortCell;
   
   /**
    * Link constructor.
@@ -48,6 +58,33 @@ public class Link {
   /** @return Name of link source port. */
   public String getSourcePortName() {
     return sourcePortName;
+  }
+  
+  /** 
+   * @param cell - edge cell
+   * @param sourcePortCell - source port cell
+   * @param destinationPortCell - destination port cell
+   */
+  public void setCell(mxCell cell, mxCell sourcePortCell, mxCell destinationPortCell) {
+    this.cell = cell;
+    this.sourcePortCell = sourcePortCell;
+    this.destinationPortCell = destinationPortCell;
+  }
+  
+  /** 
+   * @param sourcePortCell - source port cell
+   * @param destinationPortCell - destination port cell
+   */
+  public void setCell(mxCell sourcePortCell, mxCell destinationPortCell) {
+    this.sourcePortCell = sourcePortCell;
+    this.destinationPortCell = destinationPortCell;
+  }
+  
+  /** Draw link.
+   * @param graph - {@link mxGraph}
+   */
+  public void draw(mxGraph graph) {
+    cell = (mxCell) graph.insertEdge(graph.getDefaultParent(), null, null, sourcePortCell, destinationPortCell);
   }
   
   /**

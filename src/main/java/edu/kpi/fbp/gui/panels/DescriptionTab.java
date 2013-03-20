@@ -1,5 +1,6 @@
 package edu.kpi.fbp.gui.panels;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.BoxLayout;
@@ -17,7 +18,7 @@ public class DescriptionTab {
   public DescriptionTab() {
     descriptionPanel = new JPanel();
     descriptionPanel.setBackground(Color.white);
-    descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.Y_AXIS));
+    descriptionPanel.setLayout(new BorderLayout());
     
     createDescription(null);
   }
@@ -41,7 +42,7 @@ public class DescriptionTab {
     } else {
       textArea.setText("Nothing choose.");
     }
-    descriptionPanel.add(textArea);
+    descriptionPanel.add(textArea, BorderLayout.CENTER);
     descriptionPanel.revalidate();
     descriptionPanel.repaint();
   }
