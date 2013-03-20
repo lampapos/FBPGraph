@@ -180,7 +180,7 @@ public class MainWindow extends JFrame {
     contentPane.setBackground(Color.WHITE);
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     setContentPane(contentPane);
-    contentPane.setLayout(new MigLayout("", "[::160px,grow][grow][::150px,grow]", "[159.00,grow][::100px,grow]"));
+    contentPane.setLayout(new BorderLayout());//new MigLayout("", "[::160px,grow][grow][::150px,grow]", "[159.00,grow][::100px,grow]"));
     
     panelComponentTree = new JPanel();
     panelComponentTree.setLayout(new BorderLayout());
@@ -202,15 +202,36 @@ public class MainWindow extends JFrame {
     tabbedPane.addTab("Parameters", attributeTab.getAttributePanel());
     panelOption.add(tabbedPane, BorderLayout.CENTER);
     
-    //JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelComponentTree, panelWorkField);
-    
     panelConsole = new JPanel();
+    panelConsole.setBackground(Color.WHITE);
     panelConsole.add(new JTextArea("LOKJLJKBGHCCTVGBKJNM"), BorderLayout.CENTER);
+    
+    JPanel lv0 = new JPanel();
+    lv0.setLayout(new BorderLayout());
+    panelOption.setPreferredSize(new Dimension(150, 350));
+    panelWorkField.setPreferredSize(new Dimension(590, 350));
+    JSplitPane lv0Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelWorkField, panelOption);
+    lv0.add(lv0Split, BorderLayout.CENTER);
+    
+    JPanel lv1 = new JPanel();
+    lv1.setLayout(new BorderLayout());
+    panelConsole.setPreferredSize(new Dimension(580, 150));
+    JSplitPane lv1Split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, lv0, panelConsole);
+    lv1.add(lv1Split, BorderLayout.CENTER);
+    
+    JPanel lv2 = new JPanel();
+    lv2.setLayout(new BorderLayout());
+    panelComponentTree.setMaximumSize(new Dimension(160, 500));
+    JSplitPane lv2Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelComponentTree, lv1);
+    lv2.add(lv2Split, BorderLayout.CENTER);
 
+    contentPane.add(lv2, BorderLayout.CENTER);
+    /*
     contentPane.add(panelWorkField, "cell 1 0,grow");
     contentPane.add(panelComponentTree, "cell 0 0 1 2,grow");
     contentPane.add(panelOption, "cell 2 0,grow");
     contentPane.add(panelConsole, "cell 1 1 2 1,grow");
+    */
   }
   
   /**

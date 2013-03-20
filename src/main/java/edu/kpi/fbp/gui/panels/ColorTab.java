@@ -45,6 +45,7 @@ public class ColorTab {
   public JPanel createPalette(final mxGraph graph) {
     
     JPanel res = new JPanel();
+    res.setMaximumSize(new Dimension(150, Integer.MAX_VALUE));
     res.setBackground(Color.white);
     res.setLayout(new MigLayout("", "[150px]", "[70px][70px][70px][70px][70px][70px]"));
     

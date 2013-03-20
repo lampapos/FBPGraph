@@ -2,6 +2,7 @@ package edu.kpi.fbp.gui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ public class DescriptionTab {
     descriptionPanel = new JPanel();
     descriptionPanel.setBackground(Color.white);
     descriptionPanel.setLayout(new BorderLayout());
+    descriptionPanel.setMaximumSize(new Dimension(150, Integer.MAX_VALUE));
     
     createDescription(null);
   }
