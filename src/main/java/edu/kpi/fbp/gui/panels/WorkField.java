@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.model.mxCell;
@@ -80,6 +81,11 @@ public class WorkField {
   /** @return last choosed node. */
   public Node getLastChoosed() {
     return lastChoose;
+  }
+  
+  /** @return graphComponent. */
+  public mxGraphComponent getGraphComponent() {
+    return graphComponent;
   }
   
   /** @return graphComponent size in Dimension*/
@@ -175,14 +181,16 @@ public class WorkField {
         bufArray.add(port.getCell());
       }
       //Find and delete links to this nodes
+      //Need to avoid java.util.ConcurrentModificationException
+      ArrayList<Link> bufLinks = new ArrayList<Link>();
       for (Node node : nodes) {
         //if (node.getLinks() != null) {
-          for (Link link : node.getLinks()) {
-            if (link.getDestinationNodeName().equals(lastChoose.getName())) {
-              node.deleteLink(link);
-            }
+        for (Link link : node.getLinks()) {
+          if (!link.getDestinationNodeName().equals(lastChoose.getName())) {
+            bufLinks.add(link);
           }
-        //}
+        }
+        node.setLinks(bufLinks);
       }
       
       graph.removeCells(bufArray.toArray());

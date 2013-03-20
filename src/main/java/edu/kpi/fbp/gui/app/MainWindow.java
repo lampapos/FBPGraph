@@ -23,6 +23,8 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JMenuItem;
@@ -96,7 +98,7 @@ public class MainWindow extends JFrame {
     classWorkField = new WorkField(colorTab, descriptionTab, attributeTab);
     
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setBounds(100, 100, 900, 500);
+    setBounds(100, 100, 950, 500);
     
     menuBar = new JMenuBar();
     setJMenuBar(menuBar);
@@ -109,6 +111,7 @@ public class MainWindow extends JFrame {
       
       @Override
       public void actionPerformed(ActionEvent e) {
+        classWorkField.deleteAll();
         slCore.load(classWorkField, classComponentTree);
       }
     });
@@ -232,6 +235,42 @@ public class MainWindow extends JFrame {
     contentPane.add(panelOption, "cell 2 0,grow");
     contentPane.add(panelConsole, "cell 1 1 2 1,grow");
     */
+    
+    //Hotkeys
+    classWorkField.getGraphComponent().addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(final KeyEvent e) {
+        
+        if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          classWorkField.deleteCell();
+        }
+        if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_DELETE)) {
+          classWorkField.deleteAll();
+        }
+        if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_S)) {
+          slCore.save(classWorkField.getNodes(), true);
+        }
+        if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_O)) {
+          classWorkField.deleteAll();
+          slCore.load(classWorkField, classComponentTree);
+        }
+        if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_R)) {
+          slCore.save(classWorkField.getNodes(), false);
+          serverConnection.networkRun(slCore.getNetworkModel());
+          slCore.clean();
+        }
+        if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_P)) {
+          slCore.save(classWorkField.getNodes(), false);
+          if (slCore.getParametersStore() != null) {
+            serverConnection.networkRun(slCore.getNetworkModel(), slCore.getParametersStore());
+          } else {
+            System.out.println("Can't find file with parameters.");
+          }
+          slCore.clean();
+        }
+      }
+    });
+    
   }
   
   /**
