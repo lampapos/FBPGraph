@@ -17,6 +17,7 @@ import edu.kpi.fbp.gui.panels.ColorTab;
 import edu.kpi.fbp.gui.panels.ComponentTree;
 import edu.kpi.fbp.gui.panels.DescriptionTab;
 import edu.kpi.fbp.gui.panels.WorkField;
+import edu.kpi.fbp.gui.primitives.ConsoleRedirect;
 import edu.kpi.fbp.gui.primitives.Node;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 import net.miginfocom.swing.MigLayout;
@@ -53,9 +54,14 @@ public class MainWindow extends JFrame {
   private JPanel panelOption;
   /** Console for all text output. */
   private JPanel panelConsole;
+  /** Console input redirect. */
+  private ConsoleRedirect consoleRedirect;
   /** Link to server. */
   private ServerConnection serverConnection = new LocalConnection();
-  /** Tabed pane consist of three pane : color palette, node attributes, node description. */
+  /**
+   * Tabed pane consist of three pane : color palette, node attributes, node
+   * description.
+   */
   private JTabbedPane tabbedPane;
   /** {@link ColorTab}. */
   private ColorTab colorTab;
@@ -96,19 +102,19 @@ public class MainWindow extends JFrame {
     descriptionTab = new DescriptionTab();
     attributeTab = new AttributeTab();
     classWorkField = new WorkField(colorTab, descriptionTab, attributeTab);
-    
+
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 950, 500);
-    
+
     menuBar = new JMenuBar();
     setJMenuBar(menuBar);
-    
+
     mnFile = new JMenu("File");
     menuBar.add(mnFile);
-    
+
     mnFileOpen = new JMenuItem("Open  (Ctrl+O)");
     mnFileOpen.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         classWorkField.deleteAll();
@@ -116,20 +122,20 @@ public class MainWindow extends JFrame {
       }
     });
     mnFile.add(mnFileOpen);
-    
+
     mnFileSave = new JMenuItem("Save  (Ctrl+S)");
     mnFileSave.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         slCore.save(classWorkField.getNodes(), true);
       }
     });
     mnFile.add(mnFileSave);
-    
+
     mnEdit = new JMenu("Edit");
     menuBar.add(mnEdit);
-    
+
     mnEditDelete = new JMenuItem("Delete      (Del)");
     mnEditDelete.addActionListener(new ActionListener() {
       @Override
@@ -138,7 +144,7 @@ public class MainWindow extends JFrame {
       }
     });
     mnEdit.add(mnEditDelete);
-    
+
     mnEditDeleteAll = new JMenuItem("Delete all (Ctrl+Del)");
     mnEditDeleteAll.addActionListener(new ActionListener() {
       @Override
@@ -147,13 +153,14 @@ public class MainWindow extends JFrame {
       }
     });
     mnEdit.add(mnEditDeleteAll);
-    
+
     mnRun = new JMenu("Run");
     menuBar.add(mnRun);
-    
-    mnRunNetwork = new JMenuItem("Run                                  (Ctrl+R)");
+
+    mnRunNetwork = new JMenuItem(
+        "Run                                  (Ctrl+R)");
     mnRunNetwork.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         slCore.save(classWorkField.getNodes(), false);
@@ -162,15 +169,16 @@ public class MainWindow extends JFrame {
       }
     });
     mnRun.add(mnRunNetwork);
-    
+
     mnRunNetworkParam = new JMenuItem("Run with parameters  (Ctrl+P)");
     mnRunNetworkParam.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         slCore.save(classWorkField.getNodes(), false);
         if (slCore.getParametersStore() != null) {
-          serverConnection.networkRun(slCore.getNetworkModel(), slCore.getParametersStore());
+          serverConnection.networkRun(slCore.getNetworkModel(),
+              slCore.getParametersStore());
         } else {
           System.out.println("Can't find file with parameters.");
         }
@@ -178,70 +186,81 @@ public class MainWindow extends JFrame {
       }
     });
     mnRun.add(mnRunNetworkParam);
-    
+
     contentPane = new JPanel();
     contentPane.setBackground(Color.WHITE);
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     setContentPane(contentPane);
-    contentPane.setLayout(new BorderLayout());//new MigLayout("", "[::160px,grow][grow][::150px,grow]", "[159.00,grow][::100px,grow]"));
-    
+    contentPane.setLayout(new BorderLayout());// new MigLayout("",
+                                              // "[::160px,grow][grow][::150px,grow]",
+                                              // "[159.00,grow][::100px,grow]"));
+
     panelComponentTree = new JPanel();
     panelComponentTree.setLayout(new BorderLayout());
-    panelComponentTree.add(new JScrollPane(classComponentTree.build()), BorderLayout.CENTER);
-    
+    panelComponentTree.add(new JScrollPane(classComponentTree.build()),
+        BorderLayout.CENTER);
+
     panelWorkField = new JPanel();
     panelWorkField.setLayout(new BorderLayout());
     panelWorkField.add(classWorkField.createMXGraph(), BorderLayout.CENTER);
-    
+
     panelOption = new JPanel();
     panelOption.setBackground(Color.white);
     panelOption.setLayout(new BorderLayout());
     tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-    //Color chooser
-    tabbedPane.addTab("Color", colorTab.createPalette(classWorkField.getGraph()));
-    //Component description
+    // Color chooser
+    tabbedPane.addTab("Color",
+        colorTab.createPalette(classWorkField.getGraph()));
+    // Component description
     tabbedPane.addTab("Description", descriptionTab.getDescriptionPanel());
-    //Attribute panel
+    // Attribute panel
     tabbedPane.addTab("Parameters", attributeTab.getAttributePanel());
     panelOption.add(tabbedPane, BorderLayout.CENTER);
-    
+
     panelConsole = new JPanel();
     panelConsole.setBackground(Color.WHITE);
-    panelConsole.add(new JTextArea("LOKJLJKBGHCCTVGBKJNM"), BorderLayout.CENTER);
-    
+    JTextArea textArea = new JTextArea();
+    textArea.setPreferredSize(new Dimension(580, 150));
+    consoleRedirect.redirectOutput(textArea);
+    panelConsole.add(new JScrollPane(textArea), BorderLayout.CENTER);
+
     JPanel lv0 = new JPanel();
     lv0.setLayout(new BorderLayout());
     panelOption.setPreferredSize(new Dimension(150, 350));
     panelWorkField.setPreferredSize(new Dimension(590, 350));
-    JSplitPane lv0Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelWorkField, panelOption);
+    JSplitPane lv0Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        panelWorkField, panelOption);
     lv0.add(lv0Split, BorderLayout.CENTER);
-    
+
     JPanel lv1 = new JPanel();
     lv1.setLayout(new BorderLayout());
     panelConsole.setPreferredSize(new Dimension(580, 150));
-    JSplitPane lv1Split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, lv0, panelConsole);
+    JSplitPane lv1Split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, lv0,
+        panelConsole);
     lv1.add(lv1Split, BorderLayout.CENTER);
-    
+
     JPanel lv2 = new JPanel();
     lv2.setLayout(new BorderLayout());
     panelComponentTree.setMaximumSize(new Dimension(160, 500));
-    JSplitPane lv2Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelComponentTree, lv1);
+    JSplitPane lv2Split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        panelComponentTree, lv1);
     lv2.add(lv2Split, BorderLayout.CENTER);
 
     contentPane.add(lv2, BorderLayout.CENTER);
     /*
-    contentPane.add(panelWorkField, "cell 1 0,grow");
-    contentPane.add(panelComponentTree, "cell 0 0 1 2,grow");
-    contentPane.add(panelOption, "cell 2 0,grow");
-    contentPane.add(panelConsole, "cell 1 1 2 1,grow");
-    */
-    
-    //Hotkeys
+     * contentPane.add(panelWorkField, "cell 1 0,grow");
+     * contentPane.add(panelComponentTree, "cell 0 0 1 2,grow");
+     * contentPane.add(panelOption, "cell 2 0,grow");
+     * contentPane.add(panelConsole, "cell 1 1 2 1,grow");
+     */
+
+    // Hotkeys
     classWorkField.getGraphComponent().addKeyListener(new KeyAdapter() {
       @Override
       public void keyReleased(final KeyEvent e) {
-        
-        if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+
+        if (e.getKeyCode() == KeyEvent.VK_DELETE
+            || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           classWorkField.deleteCell();
         }
         if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_DELETE)) {
@@ -262,7 +281,8 @@ public class MainWindow extends JFrame {
         if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_P)) {
           slCore.save(classWorkField.getNodes(), false);
           if (slCore.getParametersStore() != null) {
-            serverConnection.networkRun(slCore.getNetworkModel(), slCore.getParametersStore());
+            serverConnection.networkRun(slCore.getNetworkModel(),
+                slCore.getParametersStore());
           } else {
             System.out.println("Can't find file with parameters.");
           }
@@ -270,12 +290,14 @@ public class MainWindow extends JFrame {
         }
       }
     });
-    
+
   }
-  
+
   /**
    * Launch the application.
-   * @param args dance, checkstyle, dance
+   * 
+   * @param args
+   *          dance, checkstyle, dance
    */
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -289,9 +311,10 @@ public class MainWindow extends JFrame {
       }
     });
   }
-  
-  /** 
+
+  /**
    * Place in input variables coordinates of WorkField for drag'n'drop.
+   * 
    * @return int[4] = [x, y, width, heigth]
    */
   public int[] getWorkFieldCoordinates() {
@@ -300,22 +323,23 @@ public class MainWindow extends JFrame {
     res[1] = panelWorkField.getLocation().y;
     res[2] = classWorkField.getGraphComponentSize().width;
     res[3] = classWorkField.getGraphComponentSize().height;
-    
+
     return res;
   }
-  
+
   /** @return classWorkField */
   public WorkField getClassWorkField() {
     return classWorkField;
   }
-  
+
   /** @return available node types */
   public Map<String, ComponentClassDescriptor> getAvailableComponents() {
     return serverConnection.getAvailableComponents();
   }
-  
+
   /**
    * Test method used to calculate new node position.
+   * 
    * @return JPanel size
    */
   public Dimension getPanelComponentTreeSize() {

@@ -2,11 +2,9 @@ package edu.kpi.fbp.gui.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.model.mxCell;
@@ -22,7 +20,6 @@ import com.mxgraph.view.mxGraph;
 import edu.kpi.fbp.gui.primitives.Link;
 import edu.kpi.fbp.gui.primitives.Node;
 import edu.kpi.fbp.gui.primitives.Port;
-import edu.kpi.fbp.parse.Connection;
 
 
 /** Patchbay of nodes. */
