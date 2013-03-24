@@ -68,9 +68,6 @@ Base checkstyle config
     <module name="EqualsHashCode"/>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber">
-      <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
-    </module>
     <module name="MissingSwitchDefault"/>
     <module name="RedundantThrows"/>
     <module name="SimplifyBooleanExpression"/>
@@ -134,10 +131,6 @@ Base checkstyle config
     </module>
     <module name="JavadocVariable">
       <property name="excludeScope" value="public"/>
-    </module>
-    <module name="MagicNumber">
-      <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
-      <property name="ignoreHashCodeMethod" value="true"/>
     </module>
   </module>
   <module name="JavadocPackage">
