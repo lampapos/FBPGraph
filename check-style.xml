@@ -13,7 +13,9 @@ Base checkstyle config
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="FileContentsHolder"/>
-    <module name="JavadocType"/>
+    <module name="JavadocType">
+      <property name="excludeScope" value="public"/>
+    </module>
     <module name="JavadocVariable"/>
     <module name="JavadocStyle"/>
     <module name="ConstantName"/>
@@ -90,6 +92,7 @@ Base checkstyle config
     </module>
     <module name="UpperEll">
       <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="RegexpSinglelineJava">
       <property name="format" value="[^\s]\s+$"/>
@@ -128,6 +131,13 @@ Base checkstyle config
     </module>
     <module name="DeclarationOrder">
       <property name="ignoreModifiers" value="true"/>
+    </module>
+    <module name="JavadocVariable">
+      <property name="excludeScope" value="public"/>
+    </module>
+    <module name="MagicNumber">
+      <property name="ignoreNumbers" value="-1, 0, 1, 2, 3"/>
+      <property name="ignoreHashCodeMethod" value="true"/>
     </module>
   </module>
   <module name="JavadocPackage">
