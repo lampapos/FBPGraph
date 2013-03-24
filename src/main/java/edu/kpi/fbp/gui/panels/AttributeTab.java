@@ -41,7 +41,7 @@ public class AttributeTab {
   public AttributeTab() {
     attributePanel = new JPanel();
     attributePanel.setBackground(Color.white);
-    attributePanel.setLayout(new MigLayout("", "[::50px][::100px]", "[]"));
+    attributePanel.setLayout(new MigLayout("", "[::50px][grow]", "[]"));
     attributePanel.setMaximumSize(new Dimension(PANEL_WIDTH, Integer.MAX_VALUE));
     
     createAttributesPanel(null);

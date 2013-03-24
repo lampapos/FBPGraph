@@ -31,12 +31,12 @@ public class Node {
   private String color = null;
   
   /** Array of ports. */
-  private ArrayList<Port> ports = new ArrayList<Port>();
+  private ArrayList<Port> ports = null;
   /** Array of outgoing links. */
-  private ArrayList<Link> links = new ArrayList<Link>();
+  private ArrayList<Link> links = null;
   
   /** List of changed component attributes. */
-  private List<Parameter> newAttribute = new ArrayList<Parameter>();
+  private List<Parameter> newAttribute = null;
   
   /**
    * Node constructor. 
@@ -49,6 +49,10 @@ public class Node {
     this.nodeName = splitBuf[splitBuf.length - 1] + "_" + id;
     this.className = className;
     this.componentDescriptor = componentDescriptor;
+    
+    this.ports = new ArrayList<Port>();
+    this.links = new ArrayList<Link>();
+    this.newAttribute = new ArrayList<Parameter>();
   }
   
   /** @return cell revelant to node */
@@ -115,6 +119,14 @@ public class Node {
     links.add(link);
   }
   
+  /** 
+   * Set new outgoing links.
+   * @param links - array of {@link Link}
+   */
+  public void setLinks(ArrayList<Link> links) {
+    this.links = links;
+  }
+  
   /** @return node name. */
   public String getName() {
     return nodeName;
@@ -149,10 +161,6 @@ public class Node {
    * @param newParameter - {@link Parameter} with new value
    */
   public void addNewAttribute(Parameter newParameter) {
-    if (newAttribute == null) {
-      newAttribute = new ArrayList<Parameter>();
-    }
-    
     newAttribute.add(newParameter);
   }
   

@@ -80,6 +80,11 @@ public class WorkField {
     return lastChoose;
   }
 
+  /** @return graphComponent. */
+  public mxGraphComponent getGraphComponent() {
+    return graphComponent;
+  }
+
   /** @return graphComponent size in Dimension*/
   public Dimension getGraphComponentSize() {
     return graphComponent.getSize();
@@ -173,14 +178,20 @@ public class WorkField {
         bufArray.add(port.getCell());
       }
       //Find and delete links to this nodes
+      //Need to avoid java.util.ConcurrentModificationException
+      final ArrayList<Link> bufLinks = new ArrayList<Link>();
       for (final Node node : nodes) {
         //if (node.getLinks() != null) {
-          for (final Link link : node.getLinks()) {
-            if (link.getDestinationNodeName().equals(lastChoose.getName())) {
-              node.deleteLink(link);
-            }
+//          for (final Link link : node.getLinks()) {
+//            if (link.getDestinationNodeName().equals(lastChoose.getName())) {
+//              node.deleteLink(link);
+//            }
+        for (final Link link : node.getLinks()) {
+          if (!link.getDestinationNodeName().equals(lastChoose.getName())) {
+            bufLinks.add(link);
           }
-        //}
+        }
+        node.setLinks(bufLinks);
       }
 
       graph.removeCells(bufArray.toArray());
