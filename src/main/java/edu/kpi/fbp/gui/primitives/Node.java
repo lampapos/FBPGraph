@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.gradle.messaging.remote.internal.OutgoingBroadcast;
 
+import com.jpmorrsn.fbp.engine.InPort;
+import com.jpmorrsn.fbp.engine.OutPort;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
@@ -177,61 +180,90 @@ public class Node {
    * @param y - coordinate
    */
   public void draw(final mxGraph graph, final int x, final int y) {
-    int width = 60, height = 30;
-    
     ArrayList<Object> cells = new ArrayList<Object>();
+    int height = 20;
     
     this.x = x;
     this.y = y;
     
-    /** Maximum ports size. */
-    int heightKoef = componentDescriptor.getInPorts().size();
-    if (heightKoef < componentDescriptor.getOutPorts().size()) {
-      heightKoef = componentDescriptor.getOutPorts().size();
-    }
-    height *= heightKoef;
-    int inPortHeight = 0;
-    if (componentDescriptor.getInPorts().size() > 0) {
-      inPortHeight = height / componentDescriptor.getInPorts().size();
-    }
-    int outPortHeight = 0;
-    if (componentDescriptor.getOutPorts().size() > 0) {
-      outPortHeight = height / componentDescriptor.getOutPorts().size();
-    }
-    
-    //Creating new ports.
+    int maxWidth = 0, outWidth = 0, inWidth = 0;
     Port bufPort;
-    int yKoef = 0;
-    for (int i = 0; i < componentDescriptor.getInPorts().size(); i++) {
-      bufPort = new Port(componentDescriptor.getInPorts().get(i).value(), this);
-      bufPort.setHeight(inPortHeight);
-      bufPort.draw(graph, x - bufPort.getSize().width, y + yKoef);
-      yKoef += bufPort.getSize().height;
-      ports.add(bufPort);
-      cells.add(bufPort.getCell());
-    }
+    mxCell bufCell;
+    mxGeometry bufGeometry;
     
-    yKoef = 0;
-    for (int i = 0; i < componentDescriptor.getOutPorts().size(); i++) {
-      bufPort = new Port(componentDescriptor.getOutPorts().get(i).value(), this);
-      bufPort.setHeight(outPortHeight);
-      bufPort.draw(graph, x + width, y + yKoef);
-      yKoef += bufPort.getSize().height;
+    //Create inPorts and save it width.
+    for (InPort inPort : componentDescriptor.getInPorts()) {
+      bufPort = new Port(inPort.value(), this);
+      bufPort.draw(graph);
+      bufCell = bufPort.getCell();
       ports.add(bufPort);
-      cells.add(bufPort.getCell());
+      cells.add(bufCell);
+      bufCell.setValue(inPort.value());
+      graph.updateCellSize(bufCell);
+      bufGeometry = graph.getCellGeometry(bufCell);
+      inWidth += bufGeometry.getWidth();
     }
-    
-    //Finally draw node.
-    final Object parent = graph.getDefaultParent();
-    cell = (mxCell) graph.insertVertex(parent, null, nodeName, x, y, width, height);
+    maxWidth = inWidth;
+    //Create node and save it width.
+    cell = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, "", x, y, 0, 0);
     cell.setConnectable(false);
-    cell.setId("node");
+    cell.setValue(nodeName);
+    graph.updateCellSize(cell);
     cells.add(cell);
-      
-    //Add color
-    if (color != null) {
-      graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, cells.toArray());
+    bufGeometry = graph.getCellGeometry(cell);
+    if (bufGeometry.getWidth() > maxWidth) {
+      maxWidth = (int) bufGeometry.getWidth();
     }
+    //Create outPorts and save it width.
+    for (OutPort outPort : componentDescriptor.getOutPorts()) {
+      bufPort = new Port(outPort.value(), this);
+      bufPort.draw(graph);
+      bufCell = bufPort.getCell();
+      ports.add(bufPort);
+      cells.add(bufCell);
+      bufCell.setValue(outPort.value());
+      graph.updateCellSize(bufCell);
+      bufGeometry = graph.getCellGeometry(bufCell);
+      outWidth += bufGeometry.getWidth();
+    }
+    if (outWidth > maxWidth) {
+      maxWidth = outWidth;
+    }
+    
+    //Set size and position.
+    //In potrs.
+    int offcet = 0, i = 0;
+    while (i < componentDescriptor.getInPorts().size()) {
+      bufGeometry = graph.getCellGeometry(cells.get(i));
+      bufGeometry.setHeight(height);
+      int freeSpace = (maxWidth - inWidth) / componentDescriptor.getInPorts().size();
+      bufGeometry.setWidth(bufGeometry.getWidth() + freeSpace);
+      bufGeometry.setX(x + offcet);
+      bufGeometry.setY(y - height);
+      offcet += bufGeometry.getWidth() + maxWidth / inWidth;
+      graph.getModel().setGeometry(cells.get(i), bufGeometry);
+      i++;
+    }
+    //Node.
+    bufGeometry = graph.getCellGeometry(cells.get(i));
+    bufGeometry.setHeight(height);
+    bufGeometry.setWidth(maxWidth);
+    offcet = 0;
+    graph.getModel().setGeometry(cells.get(i), bufGeometry);
+    i++;
+    //Out Ports
+    while (i < cells.size()) {
+      bufGeometry = graph.getCellGeometry(cells.get(i));
+      bufGeometry.setHeight(height);
+      int freeSpace = (maxWidth - outWidth) / componentDescriptor.getOutPorts().size();
+      bufGeometry.setWidth(bufGeometry.getWidth() + freeSpace);
+      bufGeometry.setX(x + offcet);
+      bufGeometry.setY(y + height);
+      offcet += bufGeometry.getWidth() + maxWidth / outWidth;
+      graph.getModel().setGeometry(cells.get(i), bufGeometry);
+      i++;
+    }
+    //I hope it will works someday.
   }
    
   /**

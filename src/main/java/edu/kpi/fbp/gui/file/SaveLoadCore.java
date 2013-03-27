@@ -170,6 +170,46 @@ public class SaveLoadCore {
     }
   }
   
+  /** First part saving process.
+   * @param name - model name
+   * @param nodes - array of all nodes
+   * @return true if there are parameters.
+   */
+  public boolean makeModel(String name, ArrayList<Node> nodes) {
+    boolean paramFlag = false;
+    
+    final List<ComponentModel> components = new ArrayList<ComponentModel>();
+    final List<LinkModel> links = new ArrayList<LinkModel>();
+    final Map<String, Object> extra = new HashMap<String, Object>();
+    
+    ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder();
+    
+    for (Node node : nodes) {
+      //Don't work with port sizes.
+      components.add(new ComponentModel(node.getClassName(), node.getName(), null, "http://example.com"));
+      
+      for (Link link : node.getLinks()) {
+        links.add(new LinkModel(link.getSourceNodeName(), link.getSourcePortName(), link.getDestinationNodeName(), link.getDestinationPortName()));
+      }
+      
+      extra.put(node.getName() + "|position", node.getPosition());
+      extra.put(node.getName() + "|color", node.getColor());
+      
+      if (node.getNewAttributes().size() > 0) {
+        paramStoreBuilder.addComponentConfiguration(node.getName(), node.getNewAttributes());
+        paramFlag = true;
+      }
+    }
+    
+    netModel = new NetworkModel(name, components, links, extra);
+    
+    if (paramFlag) {
+      paramStore = paramStoreBuilder.build();
+    }
+    
+    return paramFlag;
+  }
+  
   /**
    * Save {@link NetworkModel} to file.
    * @param nodes - array of all nodes
@@ -179,54 +219,23 @@ public class SaveLoadCore {
     
     String fileName = "", fileDirectory = "";
     
-    if (flag) {
-      // Создаю диалог для загрузки (стандартный класс)
-      FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
-      // Задаю ему стартовую директорию
-      fd.setDirectory("bin/temp/");
-      // Показываю диалог.
-      fd.show();
-      fileName = fd.getFile();
-      fileDirectory = fd.getDirectory();
-    } else {
-      fileName = "defaultRun.txt";
-      fileDirectory = "bin/temp/";
-    }
+    // Создаю диалог для загрузки (стандартный класс)
+    FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
+    // Задаю ему стартовую директорию
+    fd.setDirectory("/");
+    // Показываю диалог.
+    fd.show();
+    fileName = fd.getFile();
+    fileDirectory = fd.getDirectory();
 
     String path =  fileDirectory + fileName;
     if (path != null) {
-      boolean paramFlag = false;
-      
-      final List<ComponentModel> components = new ArrayList<ComponentModel>();
-      final List<LinkModel> links = new ArrayList<LinkModel>();
-      final Map<String, Object> extra = new HashMap<String, Object>();
-      
-      ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder();
-      
-      for (Node node : nodes) {
-        //Don't work with port sizes.
-        components.add(new ComponentModel(node.getClassName(), node.getName(), null, "http://example.com"));
-        
-        for (Link link : node.getLinks()) {
-          links.add(new LinkModel(link.getSourceNodeName(), link.getSourcePortName(), link.getDestinationNodeName(), link.getDestinationPortName()));
-        }
-        
-        extra.put(node.getName() + "|position", node.getPosition());
-        extra.put(node.getName() + "|color", node.getColor());
-        
-        if (node.getNewAttributes().size() > 0) {
-          paramStoreBuilder.addComponentConfiguration(node.getName(), node.getNewAttributes());
-          paramFlag = true;
-        }
-      }
-      
-      netModel = new NetworkModel(fileName, components, links, extra);
+      boolean paramFlag = makeModel(fileName, nodes);
       
       final String outNetwork = XmlIo.serialize(netModel);
       
       String outParams = null;
       if (paramFlag) {
-        paramStore = paramStoreBuilder.build();
         outParams = XmlIo.serialize(paramStore);
       }
       

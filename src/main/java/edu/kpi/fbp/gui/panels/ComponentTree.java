@@ -96,7 +96,7 @@ public class ComponentTree {
         int[] dimension = linkToMainWindow.getWorkFieldCoordinates();
         //Read more about this weird offset.
         int offsetX = linkToMainWindow.getPanelComponentTreeSize().width;
-        int mouseX = e.getX(), mouseY = e.getY();
+        int mouseX = e.getX() - offsetX, mouseY = e.getY();
         int x0 = dimension[0], y0 = dimension[1], x1 = x0 + dimension[2], y1 = y0 + dimension[3];
   
         if ((mouseX > x0 && mouseX < x1) && (mouseY > y0 && mouseY < y1)) {
@@ -107,7 +107,7 @@ public class ComponentTree {
             graph.getModel().beginUpdate();
             try {
               final Node newNode = new Node(linkToMainWindow.getClassWorkField().getMaxId(), choose, getComponentDescriptor(choose));
-              newNode.draw(graph, mouseX - offsetX, mouseY);
+              newNode.draw(graph, mouseX, mouseY);
               linkToMainWindow.getClassWorkField().addNode(newNode);
             } finally {
               graph.getModel().endUpdate();

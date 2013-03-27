@@ -71,17 +71,14 @@ public class Port {
   
   /** Draw port on work field. 
    * @param graph mxGraph field
-   * @param x - coordinate
-   * @param y - coordinate
    */
-  public void draw(final mxGraph graph, final int x, final int y) {
+  public void draw(final mxGraph graph) {
     
     final Object parent = graph.getDefaultParent();
-      cell = (mxCell) graph.insertVertex(parent, null, portName, x, y, width, height);
+      cell = (mxCell) graph.insertVertex(parent, null, "", 0, 0, 0, 0);
       cell.setConnectable(true);
       cell.setId("port");
       
-      System.out.println(cell.getId());
   }
   
   /**

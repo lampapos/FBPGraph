@@ -44,6 +44,8 @@ public class WorkField {
   AttributeTab attributeTab;
   /** Last choosed node. */
   Node lastChoose = null;
+  /** Last choosed cell. */
+  mxCell lastChooseCell = null;
 
   /** {@link WorkField}.
    * @param colorTab - used to change last choosed node.
@@ -104,6 +106,21 @@ public class WorkField {
 
     return null;
   }
+  
+  /** Find node by its port mxCell.
+   * @param cell - port mxCell.
+   * @return node.
+   */
+  private Node getNodeFromPort(mxCell cell) {
+    for (final Node node : nodes) {
+      for (final Port port : node.getPorts()) {
+        if (cell.equals(port.getCell())) {
+          return port.getParent();
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    * @param x - coordinate of node
@@ -147,7 +164,7 @@ public class WorkField {
   /** Used for debug. Print all nodes. */
   public void showNodes() {
     for (final Node node : nodes) {
-      System.out.println("//=======//" + node.toString() + "//=======//");
+      System.out.println("//=======//\n" + node.toString() + "//=======//");
     }
   }
 
@@ -168,9 +185,11 @@ public class WorkField {
 
   /** Delete choosed cell and all links to it. */
   public void deleteCell() {
-
+    final ArrayList<Object> bufArray;
+    
+    //If last click was on node or port
     if (lastChoose != null) {
-      final ArrayList<Object> bufArray = new ArrayList<Object>();
+      bufArray = new ArrayList<Object>();
       //Delete node
       bufArray.add(lastChoose.getCell());
       //Delete ports
@@ -181,21 +200,38 @@ public class WorkField {
       //Need to avoid java.util.ConcurrentModificationException
       final ArrayList<Link> bufLinks = new ArrayList<Link>();
       for (final Node node : nodes) {
-        //if (node.getLinks() != null) {
-//          for (final Link link : node.getLinks()) {
-//            if (link.getDestinationNodeName().equals(lastChoose.getName())) {
-//              node.deleteLink(link);
-//            }
         for (final Link link : node.getLinks()) {
-          if (!link.getDestinationNodeName().equals(lastChoose.getName())) {
+          if (link.getDestinationNodeName().equals(lastChoose.getName())) {
             bufLinks.add(link);
+            //node.deleteLink(link);
           }
         }
-        node.setLinks(bufLinks);
+        for (Link link : bufLinks) {
+          node.deleteLink(link);
+        }
+        bufLinks.clear();
       }
 
+      nodes.remove(lastChoose);
       graph.removeCells(bufArray.toArray());
       updateLastChoosed(null);
+    } else {
+      //If last click was on link
+      if (lastChooseCell != null) {
+        bufArray = new ArrayList<Object>();
+        
+        breakFor:
+        for (Node node : nodes) {
+          for (Link link : node.getLinks()) {
+            if (lastChooseCell.equals(link.getCell())) {
+              bufArray.add(link.getCell());
+              node.deleteLink(link);
+              break breakFor;
+            }
+          }
+        }
+        graph.removeCells(bufArray.toArray());
+      }
     }
   }
 
@@ -256,6 +292,12 @@ public class WorkField {
         }
         return false;
       }
+      
+      /** Disable cell value changes.*/
+      @Override
+      public boolean isCellsEditable() {
+        return false;
+      }
 
     };
 
@@ -298,7 +340,28 @@ public class WorkField {
       @Override
         public void mouseClicked(final MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-          updateLastChoosed(getNode(e.getX(), e.getY()));
+          mxCell bufCell = (mxCell)graphComponent.getCellAt(e.getX(), e.getY());
+          if (bufCell != null) {
+            switch(bufCell.getId()) {
+              case "node":
+                updateLastChoosed(getNode(e.getX(), e.getY()));
+                lastChooseCell = null;
+              break;
+              case "port":
+                updateLastChoosed(getNodeFromPort(bufCell));
+                lastChooseCell = null;
+              break;
+              case "link":
+                updateLastChoosed(null);
+                lastChooseCell = bufCell;
+              break;
+              default:
+              break;
+            }
+          }
+          
+          //updateLastChoosed(getNode(e.getX(), e.getY()));
+          
         }
       }
     });
@@ -314,14 +377,11 @@ public class WorkField {
           if (edge.getTarget() != null) {
             final Port sourcePort = getPort(edge.getSource()), destinationPort = getPort(edge.getTarget());
             final Link newLink = new Link(sourcePort.getParent().getName(), sourcePort.getName(), destinationPort.getParent().getName(), destinationPort.getName());
+            edge.setId("link");
             newLink.setCell(edge, sourcePort.getCell(), destinationPort.getCell());
             sourcePort.getParent().addLink(newLink);
           } else {
             graph.removeCells(new Object[] {edge});
-          }
-
-          if (debugMode) {
-            showNodes();
           }
 
         }

@@ -60,6 +60,11 @@ public class Link {
     return sourcePortName;
   }
   
+  /** @return link cell. */
+  public mxCell getCell() {
+    return cell;
+  }
+  
   /** 
    * @param cell - edge cell
    * @param sourcePortCell - source port cell
@@ -85,6 +90,7 @@ public class Link {
    */
   public void draw(mxGraph graph) {
     cell = (mxCell) graph.insertEdge(graph.getDefaultParent(), null, null, sourcePortCell, destinationPortCell);
+    cell.setId("link");
   }
   
   /**

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -26,6 +27,7 @@ import edu.kpi.fbp.gui.panels.ColorTab;
 import edu.kpi.fbp.gui.panels.ComponentTree;
 import edu.kpi.fbp.gui.panels.DescriptionTab;
 import edu.kpi.fbp.gui.panels.WorkField;
+import edu.kpi.fbp.gui.primitives.ConsoleRedirect;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 
 /** Main application window. */
@@ -81,6 +83,8 @@ public class MainWindow extends JFrame {
   private final JMenuItem mnEditDeleteAll;
   /** {@link SaveLoadCore}. */
   private final SaveLoadCore slCore = new SaveLoadCore();
+  /** Console output text area. */
+  private final JTextArea consoleArea;
 
   /**
    * Create the frame.
@@ -102,7 +106,7 @@ public class MainWindow extends JFrame {
     mnFile = new JMenu("File");
     menuBar.add(mnFile);
 
-    mnFileOpen = new JMenuItem("Open  (Ctrl+O)");
+    mnFileOpen = new JMenuItem("Open       (Ctrl+O)");
     mnFileOpen.addActionListener(new ActionListener() {
 
       @Override
@@ -112,7 +116,7 @@ public class MainWindow extends JFrame {
     });
     mnFile.add(mnFileOpen);
 
-    mnFileSave = new JMenuItem("Save  (Ctrl+S)");
+    mnFileSave = new JMenuItem("Save as  (Ctrl+S)");
     mnFileSave.addActionListener(new ActionListener() {
 
       @Override
@@ -151,9 +155,8 @@ public class MainWindow extends JFrame {
 
       @Override
       public void actionPerformed(final ActionEvent e) {
-        slCore.save(classWorkField.getNodes(), false);
+        slCore.makeModel("ModelRun", classWorkField.getNodes());
         serverConnection.networkRun(slCore.getNetworkModel());
-        slCore.clean();
       }
     });
     mnRun.add(mnRunNetwork);
@@ -163,16 +166,30 @@ public class MainWindow extends JFrame {
 
       @Override
       public void actionPerformed(final ActionEvent e) {
-        slCore.save(classWorkField.getNodes(), false);
-        if (slCore.getParametersStore() != null) {
+        if (slCore.makeModel("ModelRunParameters", classWorkField.getNodes())) {
           serverConnection.networkRun(slCore.getNetworkModel(), slCore.getParametersStore());
         } else {
-          System.out.println("Can't find file with parameters.");
+          System.out.println("Can't find changed parameters, change something or use \"RUN\"");
         }
-        slCore.clean();
       }
     });
     mnRun.add(mnRunNetworkParam);
+    
+    //======================================================================
+    JMenu debug = new JMenu("Debug");
+    JMenuItem dumpNodes = new JMenuItem("Dump nodes");
+    dumpNodes.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        consoleArea.setText("");
+        classWorkField.showNodes();
+      }
+    });
+    debug.add(dumpNodes);
+    menuBar.add(debug);
+    //======================================================================
+    
 
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(ROOT_FORM_BORDER, ROOT_FORM_BORDER, ROOT_FORM_BORDER, ROOT_FORM_BORDER));
@@ -200,7 +217,9 @@ public class MainWindow extends JFrame {
     panelOption.add(tabbedPane, BorderLayout.CENTER);
 
     panelConsole = new JPanel(new BorderLayout());
-    panelConsole.add(new JTextArea(), BorderLayout.CENTER);
+    consoleArea = new JTextArea();
+    ConsoleRedirect.redirectOutput(consoleArea);
+    panelConsole.add(new JScrollPane(consoleArea), BorderLayout.CENTER);
 
     // Level 0: work pane + options panel
     final JPanel lv0 = new JPanel(new BorderLayout());
