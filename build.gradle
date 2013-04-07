@@ -12,8 +12,10 @@ jar {
 }
 
 repositories {
-    mavenCentral()
-    mavenRepo url: "https://raw.github.com/lampapos/FBPRepo/master"
+  mavenCentral()
+  mavenRepo url: 'http://repo.gradle.org/gradle/libs-releases-local'
+  mavenRepo url: "https://raw.github.com/lampapos/FBPRepo/master"
+//  mavenRepo url: "file:///windows/docs/prog/diploma/FBPRepo"
 }
 
 dependencies {
@@ -22,4 +24,6 @@ dependencies {
     compile 'org.slf4j:slf4j-log4j12:1.7.2'
     compile 'log4j:log4j:1.2.17'
     compile 'com.miglayout:miglayout:3.7.4'
+    compile 'edu.kpi.fbp:FBPCore:1.0'
+    compile 'edu.kpi.fbp:FBPUtils:1.0'
 }

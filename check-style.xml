@@ -16,7 +16,10 @@ Base checkstyle config
     <module name="JavadocType">
       <property name="excludeScope" value="public"/>
     </module>
-    <module name="JavadocVariable"/>
+    <module name="JavadocVariable">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
     <module name="JavadocStyle"/>
     <module name="ConstantName"/>
     <module name="LocalFinalVariableName"/>
@@ -144,4 +147,7 @@ Base checkstyle config
   </module>
   <module name="FileTabCharacter"/>
   <module name="SuppressionCommentFilter"/>
+  <module name="SuppressionFilter">
+    <property name="file" value="${samedir}/suppressions.xml" />
+  </module>
 </module>
