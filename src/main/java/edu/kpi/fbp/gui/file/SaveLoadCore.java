@@ -182,7 +182,7 @@ public class SaveLoadCore {
     final List<LinkModel> links = new ArrayList<LinkModel>();
     final Map<String, Object> extra = new HashMap<String, Object>();
 
-    final ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder();
+    final ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder(0);
 
     for (final Node node : nodes) {
       //Don't work with port sizes.
@@ -201,7 +201,7 @@ public class SaveLoadCore {
       }
     }
 
-    netModel = new NetworkModel(name, components, links, extra);
+    netModel = new NetworkModel(name, components, links, paramStore, extra);
 
     if (paramFlag) {
       paramStore = paramStoreBuilder.build();
