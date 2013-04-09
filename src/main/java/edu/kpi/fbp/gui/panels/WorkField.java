@@ -350,6 +350,8 @@ public class WorkField {
                 lastChooseCell = null;
               break;
               case "port":
+                Port bufPort = getPort(bufCell);
+                System.out.println("isCon - " + bufPort.isConnect() + "; isArr - " + bufPort.isArray());
                 updateLastChoosed(getNodeFromPort(bufCell));
                 lastChooseCell = null;
               break;

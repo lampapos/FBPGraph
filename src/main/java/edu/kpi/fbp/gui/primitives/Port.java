@@ -49,6 +49,11 @@ public class Port {
     this.isArray = in;
   }
   
+  /** @return true - if port Array. */
+  public boolean isArray() {
+    return isArray;
+  }
+  
   /** Set flag {@link isConnect} in opposite side. */
   public void switchConnect() {
     if (!isArray) {

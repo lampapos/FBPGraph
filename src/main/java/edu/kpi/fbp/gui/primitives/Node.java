@@ -195,6 +195,7 @@ public class Node {
     for (InPort inPort : componentDescriptor.getInPorts()) {
       bufPort = new Port(inPort.value(), this);
       bufPort.draw(graph);
+      bufPort.setArray(inPort.arrayPort());
       bufCell = bufPort.getCell();
       ports.add(bufPort);
       cells.add(bufCell);

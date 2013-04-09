@@ -73,6 +73,7 @@ public class SaveLoadCore {
       if (node.getName().equals(nodeName)) {
         for (final Port port : node.getPorts()) {
           if (port.getName().equals(portName)) {
+            port.switchConnect();
             return port.getCell();
           }
         }
@@ -100,7 +101,7 @@ public class SaveLoadCore {
       link.draw(graph);
     }
   }
-
+  
   /** Add links to node.
    * @param node - current node
    * @param links - all loaded links

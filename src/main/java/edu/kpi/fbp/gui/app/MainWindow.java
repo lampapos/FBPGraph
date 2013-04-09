@@ -3,8 +3,11 @@ package edu.kpi.fbp.gui.app;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.Map;
 
@@ -71,6 +74,8 @@ public class MainWindow extends JFrame {
   private final JMenu mnRun;
   /** Run scheme. */
   private final JMenuItem mnRunNetwork;
+  /** Make Jar. */
+  private final JMenuItem mnMakeJar;
   /** Run scheme with parameters. */
   //private final JMenuItem mnRunNetworkParam;
   /** Save scheme. */
@@ -160,6 +165,31 @@ public class MainWindow extends JFrame {
       }
     });
     mnRun.add(mnRunNetwork);
+    
+    mnMakeJar = new JMenuItem("Make Jar");
+    mnMakeJar.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        String fileName = "", fileDirectory = "";
+
+        // Создаю диалог для загрузки (стандартный класс)
+        final FileDialog fd = new FileDialog(new Frame(), "Cохранить Jar", FileDialog.SAVE);
+        // Задаю ему стартовую директорию
+        fd.setDirectory("/");
+        // Показываю диалог.
+        fd.show();
+        fileName = fd.getFile();
+        fileDirectory = fd.getDirectory();
+
+        final String path =  fileDirectory + fileName;
+        if (path != null) {
+          slCore.makeModel("MakeJar", classWorkField.getNodes());
+          serverConnection.makeJar(slCore.getNetworkModel(), new File(path));
+        }
+      }
+    });
+    mnRun.add(mnMakeJar);
 
     /*
     mnRunNetworkParam = new JMenuItem("Run with parameters  (Ctrl+P)");

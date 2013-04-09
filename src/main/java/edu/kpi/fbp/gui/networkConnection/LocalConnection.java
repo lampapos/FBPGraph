@@ -1,12 +1,14 @@
 package edu.kpi.fbp.gui.networkConnection;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
 import edu.kpi.fbp.model.NetworkModel;
 import edu.kpi.fbp.params.ParametersStore;
 import edu.kpi.fbp.utils.ComponentsObserver;
+import edu.kpi.fbp.utils.JarBuilder;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
 import edu.kpi.fbp.utils.NetworkStarter;
 
@@ -31,7 +33,7 @@ public class LocalConnection implements ServerConnection {
   @Override
   public void networkRun(final NetworkModel model) {
     try {
-      NetworkStarter.startNetwork(model);
+      NetworkStarter.startNetwork(model, new File("components/"));
     } catch (final Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -41,7 +43,7 @@ public class LocalConnection implements ServerConnection {
   @Override
   public void networkRun(final NetworkModel model, final ParametersStore store) {
     try {
-      NetworkStarter.startNetwork(model, store);
+      NetworkStarter.startNetwork(model, store, new File("components/"));
     } catch (final Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -50,7 +52,12 @@ public class LocalConnection implements ServerConnection {
 
   @Override
   public URL makeJar(final NetworkModel model, final File path) {
-    // TODO Auto-generated method stub
+    try {
+      JarBuilder.buildAndSaveJar(model, path);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     return null;
   }
 
