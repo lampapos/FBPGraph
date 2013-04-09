@@ -14,6 +14,10 @@ public class Port {
   private String portName;
   /** Link to parent node. */
   private Node parentNode;
+  /** Is port already connected. */
+  private boolean isConnect;
+  /** If this is array port. */
+  private boolean isArray;
   
   /** mxGraph cell. */
   private mxCell cell;
@@ -31,6 +35,25 @@ public class Port {
   public Port(String name, Node parentNode) {
     this.portName = name;
     this.parentNode = parentNode;
+    this.isConnect = false;
+    this.isArray = false;
+  }
+  
+  /** @return true if cell connected. */
+  public boolean isConnect() {
+    return isConnect;
+  }
+  
+  /** @param in - is port Array. */
+  public void setArray(boolean in) {
+    this.isArray = in;
+  }
+  
+  /** Set flag {@link isConnect} in opposite side. */
+  public void switchConnect() {
+    if (!isArray) {
+      isConnect = !isConnect;
+    }
   }
   
   /** @return cell revelant to port */

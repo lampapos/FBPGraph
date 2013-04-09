@@ -65,6 +65,16 @@ public class Link {
     return cell;
   }
   
+  /** @return link sourcePortCell. */
+  public mxCell getSourcePortCell() {
+    return sourcePortCell;
+  }
+  
+  /** @return link destinationPortCell. */
+  public mxCell getDestinationPortCell() {
+    return destinationPortCell;
+  }
+  
   /** 
    * @param cell - edge cell
    * @param sourcePortCell - source port cell

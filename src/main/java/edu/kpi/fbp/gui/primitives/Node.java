@@ -207,6 +207,7 @@ public class Node {
     //Create node and save it width.
     cell = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, "", x, y, 0, 0);
     cell.setConnectable(false);
+    cell.setId("node");
     cell.setValue(nodeName);
     graph.updateCellSize(cell);
     cells.add(cell);
@@ -218,6 +219,7 @@ public class Node {
     for (OutPort outPort : componentDescriptor.getOutPorts()) {
       bufPort = new Port(outPort.value(), this);
       bufPort.draw(graph);
+      bufPort.setArray(outPort.arrayPort());
       bufCell = bufPort.getCell();
       ports.add(bufPort);
       cells.add(bufCell);

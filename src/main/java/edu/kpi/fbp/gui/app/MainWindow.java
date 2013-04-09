@@ -72,7 +72,7 @@ public class MainWindow extends JFrame {
   /** Run scheme. */
   private final JMenuItem mnRunNetwork;
   /** Run scheme with parameters. */
-  private final JMenuItem mnRunNetworkParam;
+  //private final JMenuItem mnRunNetworkParam;
   /** Save scheme. */
   private final JMenuItem mnFileOpen;
   /** Save scheme. */
@@ -161,6 +161,7 @@ public class MainWindow extends JFrame {
     });
     mnRun.add(mnRunNetwork);
 
+    /*
     mnRunNetworkParam = new JMenuItem("Run with parameters  (Ctrl+P)");
     mnRunNetworkParam.addActionListener(new ActionListener() {
 
@@ -173,7 +174,7 @@ public class MainWindow extends JFrame {
         }
       }
     });
-    mnRun.add(mnRunNetworkParam);
+    mnRun.add(mnRunNetworkParam);*/
     
     //======================================================================
     JMenu debug = new JMenu("Debug");

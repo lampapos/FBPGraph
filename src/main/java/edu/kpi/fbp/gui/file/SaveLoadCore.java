@@ -149,11 +149,10 @@ public class SaveLoadCore {
         setLinks(bufNode, links);
         res.add(bufNode);
       }
-
       //Load attributes
-      final File paramFile = new File(fd.getDirectory() + "params_" + fd.getFile());
-      if (paramFile.exists()) {
-        final ParametersStore localParams = XmlIo.deserialize(paramFile, ParametersStore.class);
+
+      final ParametersStore localParams = netModel.getParameters();
+      if (localParams != null) {
         for (final Node node : res) {
           final ParameterBundle paramBundle = localParams.getComponentParameters(node.getName(), node.getComponentDescriptor());
           for (final ComponentParameter comPar : node.getAttributes()) {
@@ -200,12 +199,12 @@ public class SaveLoadCore {
         paramFlag = true;
       }
     }
-
-    netModel = new NetworkModel(name, components, links, paramStore, extra);
-
+    
     if (paramFlag) {
       paramStore = paramStoreBuilder.build();
     }
+
+    netModel = new NetworkModel(name, components, links, paramStore, extra);
 
     return paramFlag;
   }
@@ -230,14 +229,14 @@ public class SaveLoadCore {
 
     final String path =  fileDirectory + fileName;
     if (path != null) {
-      final boolean paramFlag = makeModel(fileName, nodes);
+      makeModel(fileName, nodes);
 
       final String outNetwork = XmlIo.serialize(netModel);
 
-      String outParams = null;
+      /*String outParams = null;
       if (paramFlag) {
         outParams = XmlIo.serialize(paramStore);
-      }
+      }*/
 
       try {
         modelFile = new File(path);
@@ -245,12 +244,12 @@ public class SaveLoadCore {
         writeNetwork.write(outNetwork);
         writeNetwork.close();
 
-        if (paramFlag) {
+        /*if (paramFlag) {
           paramFile = new File(fileDirectory + "params_" + fileName);
           final FileWriter writeParams = new FileWriter(paramFile);
           writeParams.write(outParams);
           writeParams.close();
-        }
+        }*/
 
       } catch (final IOException e) {
         e.printStackTrace();

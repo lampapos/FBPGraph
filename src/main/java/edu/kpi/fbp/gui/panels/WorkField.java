@@ -224,6 +224,8 @@ public class WorkField {
         for (Node node : nodes) {
           for (Link link : node.getLinks()) {
             if (lastChooseCell.equals(link.getCell())) {
+              getPort(link.getSourcePortCell()).switchConnect();
+              getPort(link.getDestinationPortCell()).switchConnect();
               bufArray.add(link.getCell());
               node.deleteLink(link);
               break breakFor;
@@ -344,7 +346,7 @@ public class WorkField {
           if (bufCell != null) {
             switch(bufCell.getId()) {
               case "node":
-                updateLastChoosed(getNode(e.getX(), e.getY()));
+                updateLastChoosed(getNode(bufCell));
                 lastChooseCell = null;
               break;
               case "port":
@@ -360,8 +362,6 @@ public class WorkField {
             }
           }
           
-          //updateLastChoosed(getNode(e.getX(), e.getY()));
-          
         }
       }
     });
@@ -376,10 +376,16 @@ public class WorkField {
           // сохраняем в ноде-источнике
           if (edge.getTarget() != null) {
             final Port sourcePort = getPort(edge.getSource()), destinationPort = getPort(edge.getTarget());
-            final Link newLink = new Link(sourcePort.getParent().getName(), sourcePort.getName(), destinationPort.getParent().getName(), destinationPort.getName());
-            edge.setId("link");
-            newLink.setCell(edge, sourcePort.getCell(), destinationPort.getCell());
-            sourcePort.getParent().addLink(newLink);
+            if (!sourcePort.isConnect() && !destinationPort.isConnect()) {
+              final Link newLink = new Link(sourcePort.getParent().getName(), sourcePort.getName(), destinationPort.getParent().getName(), destinationPort.getName());
+              edge.setId("link");
+              newLink.setCell(edge, sourcePort.getCell(), destinationPort.getCell());
+              sourcePort.switchConnect();
+              destinationPort.switchConnect();
+              sourcePort.getParent().addLink(newLink);
+            } else {
+              graph.removeCells(new Object[] {edge});
+            }
           } else {
             graph.removeCells(new Object[] {edge});
           }
