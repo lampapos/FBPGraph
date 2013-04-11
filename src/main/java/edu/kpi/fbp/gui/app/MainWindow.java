@@ -82,6 +82,8 @@ public class MainWindow extends JFrame {
   private final JMenuItem mnFileOpen;
   /** Save scheme. */
   private final JMenuItem mnFileSave;
+  /** Save attributes. */
+  private final JMenuItem mnParamSave;
   /** Delete choosed cell and all links to it. */
   private final JMenuItem mnEditDelete;
   /** Clear all field. */
@@ -111,7 +113,7 @@ public class MainWindow extends JFrame {
     mnFile = new JMenu("File");
     menuBar.add(mnFile);
 
-    mnFileOpen = new JMenuItem("Open       (Ctrl+O)");
+    mnFileOpen = new JMenuItem("Open                      (Ctrl+O)");
     mnFileOpen.addActionListener(new ActionListener() {
 
       @Override
@@ -121,15 +123,25 @@ public class MainWindow extends JFrame {
     });
     mnFile.add(mnFileOpen);
 
-    mnFileSave = new JMenuItem("Save as  (Ctrl+S)");
+    mnFileSave = new JMenuItem("Save network as (Ctrl+S)");
     mnFileSave.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(final ActionEvent e) {
-        slCore.save(classWorkField.getNodes(), true);
+        slCore.save(classWorkField.getNodes());
       }
     });
     mnFile.add(mnFileSave);
+    
+    mnParamSave = new JMenuItem("Save parameters as");
+    mnParamSave.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        slCore.saveParams(classWorkField.getNodes());
+      }
+    });
+    mnFile.add(mnParamSave);
 
     mnEdit = new JMenu("Edit");
     menuBar.add(mnEdit);

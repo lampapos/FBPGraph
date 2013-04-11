@@ -17,6 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.jpmorrsn.fbp.engine.InPort;
+import com.jpmorrsn.fbp.engine.OutPort;
+
 import net.miginfocom.swing.MigLayout;
 
 import edu.kpi.fbp.gui.primitives.Node;
@@ -77,7 +80,7 @@ public class AttributeTab {
         break;
         case INTEGER:
           try {
-            int test = Integer.parseInt(attributeField.get(i).getText());
+            Integer.parseInt(attributeField.get(i).getText());
             if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
               bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
             }
@@ -88,7 +91,7 @@ public class AttributeTab {
         break;
         case FLOAT:
           try {
-            float test = Integer.parseInt(attributeField.get(i).getText());
+            Integer.parseInt(attributeField.get(i).getText());
             if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
               bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
             }
@@ -102,15 +105,14 @@ public class AttributeTab {
             bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
           }
         break;
+        default:
+        break;
       }
     }
     
     if (!errorFlag) {
       node.setNewAttributes(bufArray);
     }
-    //====================================
-    System.out.println(node.toString());
-    //====================================
     
   }
   
@@ -122,6 +124,8 @@ public class AttributeTab {
     attributePanel.removeAll();
     
     if (node != null) {
+      String[] splitBuf;
+      
       if (node.getAttributes().size() > 0) {
         attributeField = new ArrayList<JTextField>();
         
@@ -168,6 +172,26 @@ public class AttributeTab {
           i++;
         }
         
+        if (node.getComponentDescriptor().getInPorts().size() > 0) {
+          attributePanel.add(new JLabel("In ports name, type:"), "cell 0 " + i + ",grow");
+          i++;
+          for (InPort inPort : node.getComponentDescriptor().getInPorts()) {
+            attributePanel.add(new JLabel(inPort.value()), "cell 0 " + i + ",grow");
+            splitBuf = inPort.type().toString().split("\\.");
+            attributePanel.add(new JLabel(splitBuf[splitBuf.length - 1]), "cell 1 " + i + ",grow");
+            i++;
+          }
+        }
+        if (node.getComponentDescriptor().getOutPorts().size() > 0) {
+          attributePanel.add(new JLabel("Out ports name, type:"), "cell 0 " + i + ",grow");
+          i++;
+          for (OutPort outPort : node.getComponentDescriptor().getOutPorts()) {
+            attributePanel.add(new JLabel(outPort.value()), "cell 0 " + i + ",grow");
+            splitBuf = outPort.type().toString().split("\\.");
+            attributePanel.add(new JLabel(splitBuf[splitBuf.length - 1]), "cell 1 " + i + ",grow");
+            i++;
+          }
+        }
         
         //Submit button
         JButton submit = new JButton("Submit");
@@ -189,6 +213,29 @@ public class AttributeTab {
       } else {
         attributePanel.add(new JLabel("This component haven't"), "cell 0 0 1 0");
         attributePanel.add(new JLabel("parameters."), "cell 0 1 1 1");
+        
+        int i = 2;
+        if (node.getComponentDescriptor().getInPorts().size() > 0) {
+          attributePanel.add(new JLabel("In ports name, type:"), "cell 0 " + i + ",grow");
+          i++;
+          for (InPort inPort : node.getComponentDescriptor().getInPorts()) {
+            attributePanel.add(new JLabel(inPort.value()), "cell 0 " + i + ",grow");
+            splitBuf = inPort.type().toString().split("\\.");
+            attributePanel.add(new JLabel(splitBuf[splitBuf.length - 1]), "cell 1 " + i + ",grow");
+            i++;
+          }
+        }
+        if (node.getComponentDescriptor().getOutPorts().size() > 0) {
+          attributePanel.add(new JLabel("Out ports name, type:"), "cell 0 " + i + ",grow");
+          i++;
+          for (OutPort outPort : node.getComponentDescriptor().getOutPorts()) {
+            attributePanel.add(new JLabel(outPort.value()), "cell 0 " + i + ",grow");
+            splitBuf = outPort.type().toString().split("\\.");
+            attributePanel.add(new JLabel(splitBuf[splitBuf.length - 1]), "cell 1 " + i + ",grow");
+            i++;
+          }
+        }
+        
       }
     } else {
       attributePanel.add(new JLabel("Nothing choose."), "cell 0 0 1 0");

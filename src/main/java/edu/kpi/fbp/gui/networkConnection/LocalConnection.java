@@ -52,12 +52,21 @@ public class LocalConnection implements ServerConnection {
 
   @Override
   public URL makeJar(final NetworkModel model, final File path) {
-    try {
-      JarBuilder.buildAndSaveJar(model, path);
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    
+    Thread jarTread = new Thread(
+        new Runnable() {
+          public void run() {
+            try {
+              JarBuilder.buildAndSaveJar(model, path);
+              System.out.println("Buid finished.");
+            } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+        }
+    );
+      
     return null;
   }
 

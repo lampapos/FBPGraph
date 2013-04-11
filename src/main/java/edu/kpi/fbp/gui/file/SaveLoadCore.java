@@ -107,9 +107,15 @@ public class SaveLoadCore {
    * @param links - all loaded links
    */
   private void setLinks(final Node node, final List<LinkModel> links) {
+    String[] buf;
+    String from, to;
     for (final LinkModel link : links) {
       if (link.getFromComponent().equals(node.getName())) {
-        node.addLink(new Link(link.getFromComponent(), link.getFromPort(), link.getToComponent(), link.getToPort()));
+        buf = link.getFromPort().split("\\[");
+        from = buf[0];
+        buf = link.getToPort().split("\\[");
+        to = buf[0];
+        node.addLink(new Link(link.getFromComponent(), from, link.getToComponent(), to));
       }
     }
   }
@@ -165,6 +171,7 @@ public class SaveLoadCore {
       }
 
       drawNodes(workField.getGraph(), res);
+      workField.getGraph().refresh();
       workField.setMaxId(maxId);
       workField.setNodes(res);
     }
@@ -179,7 +186,8 @@ public class SaveLoadCore {
     boolean paramFlag = false;
 
     final List<ComponentModel> components = new ArrayList<ComponentModel>();
-    final List<LinkModel> links = new ArrayList<LinkModel>();
+    final List<LinkModel> linkModel = new ArrayList<LinkModel>();
+    final ArrayList<Link> links = new ArrayList<Link>();
     final Map<String, Object> extra = new HashMap<String, Object>();
 
     final ParametersStore.Builder paramStoreBuilder = new ParametersStore.Builder(0);
@@ -187,10 +195,7 @@ public class SaveLoadCore {
     for (final Node node : nodes) {
       //Don't work with port sizes.
       components.add(new ComponentModel(node.getClassName(), node.getName(), null, "http://example.com"));
-
-      for (final Link link : node.getLinks()) {
-        links.add(new LinkModel(link.getSourceNodeName(), link.getSourcePortName(), link.getDestinationNodeName(), link.getDestinationPortName()));
-      }
+      links.addAll(node.getLinks());
 
       extra.put(node.getName() + "|position", node.getPosition());
       extra.put(node.getName() + "|color", node.getColor());
@@ -205,7 +210,41 @@ public class SaveLoadCore {
       paramStore = paramStoreBuilder.build();
     }
 
-    netModel = new NetworkModel(name, components, links, paramStore, extra);
+    //Multiconnection port indexation
+    int inPortNum = 1, outPortNum = 1;
+    
+    for (int i = 0; i < links.size() - 1; i++) {
+      for (int j = i + 1; j < links.size(); j++) {
+        //Проверяем множественные выходные порты
+        if (links.get(i).getSourceNodeName().equals(links.get(j).getSourceNodeName())) {
+          if (links.get(i).getSourcePortName().equals(links.get(j).getSourcePortName())) {
+            links.get(j).setSourcePortName(links.get(j).getSourcePortName() + "[" + inPortNum + "]");
+            inPortNum++;
+          }
+        }
+        //Проверяем множественные входные порты
+        if (links.get(i).getDestinationNodeName().equals(links.get(j).getDestinationNodeName())) {
+          if (links.get(i).getDestinationPortName().equals(links.get(j).getDestinationPortName())) {
+            links.get(j).setDestinationPortName(links.get(j).getDestinationPortName() + "[" + outPortNum + "]");
+            outPortNum++;
+          }
+        }
+      }
+      if (inPortNum != 1) {
+        links.get(i).setSourcePortName(links.get(i).getSourcePortName() + "[0]");
+      }
+      if (outPortNum != 1) {
+        links.get(i).setDestinationPortName(links.get(i).getDestinationPortName() + "[0]");
+      }
+      inPortNum = 1;
+      outPortNum = 1;
+    }
+    
+    for (final Link link : links) {
+      linkModel.add(new LinkModel(link.getSourceNodeName(), link.getSourcePortName(), link.getDestinationNodeName(), link.getDestinationPortName()));
+    }
+    
+    netModel = new NetworkModel(name, components, linkModel, paramStore, extra);
 
     return paramFlag;
   }
@@ -213,9 +252,8 @@ public class SaveLoadCore {
   /**
    * Save {@link NetworkModel} to file.
    * @param nodes - array of all nodes
-   * @param flag - work mode (true - ask save path, false - use default)
    */
-  public void save(final ArrayList<Node> nodes, final boolean flag) {
+  public void save(final ArrayList<Node> nodes) {
 
     String fileName = "", fileDirectory = "";
 
@@ -234,23 +272,11 @@ public class SaveLoadCore {
 
       final String outNetwork = XmlIo.serialize(netModel);
 
-      /*String outParams = null;
-      if (paramFlag) {
-        outParams = XmlIo.serialize(paramStore);
-      }*/
-
       try {
         modelFile = new File(path);
         final FileWriter writeNetwork = new FileWriter(modelFile);
         writeNetwork.write(outNetwork);
         writeNetwork.close();
-
-        /*if (paramFlag) {
-          paramFile = new File(fileDirectory + "params_" + fileName);
-          final FileWriter writeParams = new FileWriter(paramFile);
-          writeParams.write(outParams);
-          writeParams.close();
-        }*/
 
       } catch (final IOException e) {
         e.printStackTrace();
@@ -260,4 +286,33 @@ public class SaveLoadCore {
 
   }
 
+  /**
+   * Save only parameters.
+   * @param nodes - array of all nodes
+   */
+  public void saveParams(final ArrayList<Node> nodes) {
+
+    // Создаю диалог для загрузки (стандартный класс)
+    final FileDialog fd = new FileDialog(new Frame(), "Cохранить", FileDialog.SAVE);
+    // Задаю ему стартовую директорию
+    fd.setDirectory("/");
+    // Показываю диалог.
+    fd.show();
+
+    final String path =  fd.getDirectory() + fd.getFile();
+    if (path != null) {
+      makeModel("param", nodes);
+      
+      try {
+        String outParams = XmlIo.serialize(paramStore);
+        paramFile = new File(path);
+        final FileWriter writeParams = new FileWriter(paramFile);
+        writeParams.write(outParams);
+        writeParams.close();
+      } catch (final IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  
 }

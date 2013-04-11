@@ -55,9 +55,19 @@ public class Link {
     return destinationPortName;
   }
   
+  /** @param name - name of link destination port. */
+  public void setDestinationPortName(String name) {
+    this.destinationPortName = name;
+  }
+  
   /** @return Name of link source port. */
   public String getSourcePortName() {
     return sourcePortName;
+  }
+  
+  /** @param name - name of link source port. */
+  public void setSourcePortName(String name) {
+    this.sourcePortName = name;
   }
   
   /** @return link cell. */

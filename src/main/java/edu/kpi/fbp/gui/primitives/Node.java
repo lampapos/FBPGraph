@@ -234,7 +234,7 @@ public class Node {
     }
     
     //Set size and position.
-    //In potrs.
+    //In ports.
     int offcet = 0, i = 0;
     while (i < componentDescriptor.getInPorts().size()) {
       bufGeometry = graph.getCellGeometry(cells.get(i));
