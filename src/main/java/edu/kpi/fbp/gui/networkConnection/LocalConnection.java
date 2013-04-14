@@ -8,12 +8,12 @@ import java.util.Map;
 import edu.kpi.fbp.model.NetworkModel;
 import edu.kpi.fbp.params.ParametersStore;
 import edu.kpi.fbp.utils.ComponentsObserver;
-import edu.kpi.fbp.utils.JarBuilder;
 import edu.kpi.fbp.utils.ComponentsObserver.ComponentClassDescriptor;
+import edu.kpi.fbp.utils.JarBuilder;
 import edu.kpi.fbp.utils.NetworkStarter;
 
 /**
- * Local realization of server connection.
+ * The local implementation of server connection.
  * @author Cheshire
  */
 public class LocalConnection implements ServerConnection {
@@ -33,7 +33,7 @@ public class LocalConnection implements ServerConnection {
   @Override
   public void networkRun(final NetworkModel model) {
     try {
-      NetworkStarter.startNetwork(model, new File("components/"));
+      NetworkStarter.startNetwork(model, new File("components/"), new File("libs/"));
     } catch (final Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -43,7 +43,7 @@ public class LocalConnection implements ServerConnection {
   @Override
   public void networkRun(final NetworkModel model, final ParametersStore store) {
     try {
-      NetworkStarter.startNetwork(model, store, new File("components/"));
+      NetworkStarter.startNetwork(model, store, new File("components/"), new File("libs/"));
     } catch (final Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -52,21 +52,21 @@ public class LocalConnection implements ServerConnection {
 
   @Override
   public URL makeJar(final NetworkModel model, final File path) {
-    
-    Thread jarTread = new Thread(
+
+    new Thread(
         new Runnable() {
+          @Override
           public void run() {
             try {
               JarBuilder.buildAndSaveJar(model, path);
               System.out.println("Buid finished.");
-            } catch (IOException e) {
-              // TODO Auto-generated catch block
+            } catch (final IOException e) {
               e.printStackTrace();
             }
           }
         }
-    );
-      
+    ).start();
+
     return null;
   }
 

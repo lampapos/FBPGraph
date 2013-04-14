@@ -101,7 +101,7 @@ public class SaveLoadCore {
       link.draw(graph);
     }
   }
-  
+
   /** Add links to node.
    * @param node - current node
    * @param links - all loaded links
@@ -132,7 +132,7 @@ public class SaveLoadCore {
     // Задаю ему стартовую директорию
     fd.setDirectory("bin/temp/");
     // Показываю диалог.
-    fd.show();
+    fd.setVisible(true);
 
     final String path = fd.getDirectory() + fd.getFile();
 
@@ -205,14 +205,14 @@ public class SaveLoadCore {
         paramFlag = true;
       }
     }
-    
+
     if (paramFlag) {
       paramStore = paramStoreBuilder.build();
     }
 
     //Multiconnection port indexation
     int inPortNum = 1, outPortNum = 1;
-    
+
     for (int i = 0; i < links.size() - 1; i++) {
       for (int j = i + 1; j < links.size(); j++) {
         //Проверяем множественные выходные порты
@@ -239,11 +239,11 @@ public class SaveLoadCore {
       inPortNum = 1;
       outPortNum = 1;
     }
-    
+
     for (final Link link : links) {
       linkModel.add(new LinkModel(link.getSourceNodeName(), link.getSourcePortName(), link.getDestinationNodeName(), link.getDestinationPortName()));
     }
-    
+
     netModel = new NetworkModel(name, components, linkModel, paramStore, extra);
 
     return paramFlag;
@@ -262,7 +262,7 @@ public class SaveLoadCore {
     // Задаю ему стартовую директорию
     fd.setDirectory("/");
     // Показываю диалог.
-    fd.show();
+    fd.setVisible(true);
     fileName = fd.getFile();
     fileDirectory = fd.getDirectory();
 
@@ -297,14 +297,14 @@ public class SaveLoadCore {
     // Задаю ему стартовую директорию
     fd.setDirectory("/");
     // Показываю диалог.
-    fd.show();
+    fd.setVisible(true);
 
     final String path =  fd.getDirectory() + fd.getFile();
     if (path != null) {
       makeModel("param", nodes);
-      
+
       try {
-        String outParams = XmlIo.serialize(paramStore);
+        final String outParams = XmlIo.serialize(paramStore);
         paramFile = new File(path);
         final FileWriter writeParams = new FileWriter(paramFile);
         writeParams.write(outParams);
@@ -314,5 +314,5 @@ public class SaveLoadCore {
       }
     }
   }
-  
+
 }

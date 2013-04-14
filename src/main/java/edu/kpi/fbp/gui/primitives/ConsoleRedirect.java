@@ -10,59 +10,73 @@ import java.io.PrintStream;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-public class ConsoleRedirect implements Runnable{
-  JTextArea displayPane;
-  BufferedReader reader;
+/**
+ * Utility class for console redirection.
+ *
+ * @author Pustovit Michael, pustovitm@gmail.com
+ */
+public final class ConsoleRedirect implements Runnable {
+  /** The pane which will show all console messages. */
+  private final JTextArea displayPane;
+  /** Reader which reads from system out. */
+  private BufferedReader reader;
 
-  private ConsoleRedirect(JTextArea displayPane, PipedOutputStream pos) {
+  private ConsoleRedirect(final JTextArea displayPane, final PipedOutputStream pos) {
       this.displayPane = displayPane;
 
-      try
-      {
-          PipedInputStream pis = new PipedInputStream(pos);
+      try {
+          final PipedInputStream pis = new PipedInputStream(pos);
           reader = new BufferedReader(new InputStreamReader(pis));
-      }
-      catch(IOException e) {
+      } catch (final IOException e) {
         e.printStackTrace();
       }
   }
 
+  @Override
   public void run() {
       String line = null;
 
       try {
           while ((line = reader.readLine()) != null) {
-//            displayPane.replaceSelection( line + "\n" );
               displayPane.append(line + "\n");
               displayPane.setCaretPosition(displayPane.getDocument().getLength());
           }
 
           System.err.println("im here");
-      } catch (IOException ioe) {
+      } catch (final IOException ioe) {
           JOptionPane.showMessageDialog(null, "Error redirecting output : " + ioe.getMessage());
       }
   }
-  
-  public static void redirectOut(JTextArea displayPane) {
-    PipedOutputStream pos = new PipedOutputStream();
+
+  /**
+   * @param displayPane the pane which will show all console messages
+   */
+  public static void redirectOut(final JTextArea displayPane) {
+    final PipedOutputStream pos = new PipedOutputStream();
     System.setOut(new PrintStream(pos, true));
 
-    ConsoleRedirect console = new ConsoleRedirect(displayPane, pos);
+    final ConsoleRedirect console = new ConsoleRedirect(displayPane, pos);
     new Thread(console).start();
   }
-  
-  public static void redirectErr(JTextArea displayPane) {
-      PipedOutputStream pos = new PipedOutputStream();
+
+  /**
+   * @param displayPane the pane which will show all console messages
+   */
+  public static void redirectErr(final JTextArea displayPane) {
+      final PipedOutputStream pos = new PipedOutputStream();
       System.setErr(new PrintStream(pos, true));
 
-      ConsoleRedirect console = new ConsoleRedirect(displayPane, pos);
+      final ConsoleRedirect console = new ConsoleRedirect(displayPane, pos);
       new Thread(console).start();
   }
 
-  public static void redirectOutput(JTextArea displayPane) {
+  /**
+   * @param displayPane the pane which will show all console messages
+   */
+  public static void redirectOutput(final JTextArea displayPane) {
     ConsoleRedirect.redirectOut(displayPane);
     ConsoleRedirect.redirectErr(displayPane);
   }
 
-  
+
 }

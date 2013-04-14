@@ -2,13 +2,14 @@ package edu.kpi.fbp.gui.app;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import edu.kpi.fbp.gui.file.SaveLoadCore;
@@ -113,7 +115,8 @@ public class MainWindow extends JFrame {
     mnFile = new JMenu("File");
     menuBar.add(mnFile);
 
-    mnFileOpen = new JMenuItem("Open                      (Ctrl+O)");
+    mnFileOpen = new JMenuItem("Open");
+    mnFileOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
     mnFileOpen.addActionListener(new ActionListener() {
 
       @Override
@@ -123,7 +126,8 @@ public class MainWindow extends JFrame {
     });
     mnFile.add(mnFileOpen);
 
-    mnFileSave = new JMenuItem("Save network as (Ctrl+S)");
+    mnFileSave = new JMenuItem("Save network as");
+    mnFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
     mnFileSave.addActionListener(new ActionListener() {
 
       @Override
@@ -132,7 +136,7 @@ public class MainWindow extends JFrame {
       }
     });
     mnFile.add(mnFileSave);
-    
+
     mnParamSave = new JMenuItem("Save parameters as");
     mnParamSave.addActionListener(new ActionListener() {
 
@@ -146,7 +150,8 @@ public class MainWindow extends JFrame {
     mnEdit = new JMenu("Edit");
     menuBar.add(mnEdit);
 
-    mnEditDelete = new JMenuItem("Delete      (Del)");
+    mnEditDelete = new JMenuItem("Delete");
+    mnEditDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
     mnEditDelete.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -155,7 +160,8 @@ public class MainWindow extends JFrame {
     });
     mnEdit.add(mnEditDelete);
 
-    mnEditDeleteAll = new JMenuItem("Delete all (Ctrl+Del)");
+    mnEditDeleteAll = new JMenuItem("Delete all");
+    mnEditDeleteAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.SHIFT_MASK | Event.ALT_MASK));
     mnEditDeleteAll.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -177,7 +183,7 @@ public class MainWindow extends JFrame {
       }
     });
     mnRun.add(mnRunNetwork);
-    
+
     mnMakeJar = new JMenuItem("Make Jar");
     mnMakeJar.addActionListener(new ActionListener() {
 
@@ -190,7 +196,7 @@ public class MainWindow extends JFrame {
         // Задаю ему стартовую директорию
         fd.setDirectory("/");
         // Показываю диалог.
-        fd.show();
+        fd.setVisible(true);
         fileName = fd.getFile();
         fileDirectory = fd.getDirectory();
 
@@ -217,14 +223,14 @@ public class MainWindow extends JFrame {
       }
     });
     mnRun.add(mnRunNetworkParam);*/
-    
+
     //======================================================================
-    JMenu debug = new JMenu("Debug");
-    JMenuItem dumpNodes = new JMenuItem("Dump nodes");
+    final JMenu debug = new JMenu("Debug");
+    final JMenuItem dumpNodes = new JMenuItem("Dump nodes");
     dumpNodes.addActionListener(new ActionListener() {
-      
+
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(final ActionEvent e) {
         consoleArea.setText("");
         classWorkField.showNodes();
       }
@@ -232,7 +238,7 @@ public class MainWindow extends JFrame {
     debug.add(dumpNodes);
     menuBar.add(debug);
     //======================================================================
-    
+
 
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(ROOT_FORM_BORDER, ROOT_FORM_BORDER, ROOT_FORM_BORDER, ROOT_FORM_BORDER));
