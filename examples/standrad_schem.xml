@@ -1,0 +1,332 @@
+<network name="standrad_schem.xml">
+  <components>
+    <component className="edu.kpi.fbp.network.components.TsvReader" name="TsvReader_0" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Multiplicator" name="Multiplicator_1" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.StandartDeviation" name="StandartDeviation_2" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Average" name="Average_3" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.FrequencyChartBuilder" name="FrequencyChartBuilder_4" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.ArrayNormalizer" name="ArrayNormalizer_5" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Multiplicator" name="Multiplicator_6" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Multiplicator" name="Multiplicator_7" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlArray" name="HtmlArray_8" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlArray" name="HtmlArray_9" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlReport" name="HtmlReport_10" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlLabeler" name="HtmlLabeler_11" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlLabeler" name="HtmlLabeler_12" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlLabeler" name="HtmlLabeler_13" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlLabeler" name="HtmlLabeler_14" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Prioritizer" name="Prioritizer_15" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Prioritizer" name="Prioritizer_16" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Prioritizer" name="Prioritizer_17" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Prioritizer" name="Prioritizer_18" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.Prioritizer" name="Prioritizer_19" sourceUrl="http://example.com"/>
+  </components>
+  <links>
+    <link fromComponent="TsvReader_0" fromPort="COLUMNS" toComponent="Multiplicator_1" toPort="IN"/>
+    <link fromComponent="Multiplicator_1" fromPort="OUT[0]" toComponent="StandartDeviation_2" toPort="IN"/>
+    <link fromComponent="Multiplicator_1" fromPort="OUT[1]" toComponent="Average_3" toPort="IN"/>
+    <link fromComponent="Multiplicator_1" fromPort="OUT[2]" toComponent="FrequencyChartBuilder_4" toPort="IN"/>
+    <link fromComponent="Multiplicator_1" fromPort="OUT[3]" toComponent="ArrayNormalizer_5" toPort="ARRAY"/>
+    <link fromComponent="Multiplicator_1" fromPort="OUT[4]" toComponent="HtmlArray_8" toPort="IN"/>
+    <link fromComponent="StandartDeviation_2" fromPort="OUT" toComponent="Multiplicator_6" toPort="IN"/>
+    <link fromComponent="Average_3" fromPort="OUT" toComponent="Multiplicator_7" toPort="IN"/>
+    <link fromComponent="FrequencyChartBuilder_4" fromPort="OUT" toComponent="Prioritizer_18" toPort="IN"/>
+    <link fromComponent="ArrayNormalizer_5" fromPort="OUT" toComponent="HtmlArray_9" toPort="IN"/>
+    <link fromComponent="Multiplicator_6" fromPort="OUT[0]" toComponent="ArrayNormalizer_5" toPort="DEVIATION"/>
+    <link fromComponent="Multiplicator_6" fromPort="OUT[1]" toComponent="HtmlLabeler_11" toPort="IN"/>
+    <link fromComponent="Multiplicator_7" fromPort="OUT[0]" toComponent="ArrayNormalizer_5" toPort="AVERAGE"/>
+    <link fromComponent="Multiplicator_7" fromPort="OUT[1]" toComponent="HtmlLabeler_12" toPort="IN"/>
+    <link fromComponent="HtmlArray_8" fromPort="OUT" toComponent="HtmlLabeler_14" toPort="IN"/>
+    <link fromComponent="HtmlArray_9" fromPort="OUT" toComponent="HtmlLabeler_13" toPort="IN"/>
+    <link fromComponent="HtmlLabeler_11" fromPort="OUT" toComponent="Prioritizer_15" toPort="IN"/>
+    <link fromComponent="HtmlLabeler_12" fromPort="OUT" toComponent="Prioritizer_16" toPort="IN"/>
+    <link fromComponent="HtmlLabeler_13" fromPort="OUT" toComponent="Prioritizer_17" toPort="IN"/>
+    <link fromComponent="HtmlLabeler_14" fromPort="OUT" toComponent="Prioritizer_19" toPort="IN"/>
+    <link fromComponent="Prioritizer_15" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN[0]"/>
+    <link fromComponent="Prioritizer_16" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN[1]"/>
+    <link fromComponent="Prioritizer_17" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN[2]"/>
+    <link fromComponent="Prioritizer_18" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN[3]"/>
+    <link fromComponent="Prioritizer_19" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN[4]"/>
+  </links>
+  <parameters>
+    <networkHash>0</networkHash>
+    <store>
+      <entry>
+        <string>TsvReader_0</string>
+        <bundle>
+          <parameter name="fileUrl">https://raw.github.com/lampapos/KpiFBP/master/misc/in.tsv</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>HtmlLabeler_14</string>
+        <bundle>
+          <parameter name="TEXT">Initial array</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>Prioritizer_17</string>
+        <bundle>
+          <parameter name="PRIORITY">4</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>Prioritizer_18</string>
+        <bundle>
+          <parameter name="PRIORITY">1</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>HtmlLabeler_11</string>
+        <bundle>
+          <parameter name="TEXT">Standard deviation</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>Prioritizer_15</string>
+        <bundle>
+          <parameter name="PRIORITY">2</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>HtmlLabeler_12</string>
+        <bundle>
+          <parameter name="TEXT">Average</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>Prioritizer_16</string>
+        <bundle>
+          <parameter name="PRIORITY">3</parameter>
+        </bundle>
+      </entry>
+      <entry>
+        <string>HtmlLabeler_13</string>
+        <bundle>
+          <parameter name="TEXT">Normalized array</parameter>
+        </bundle>
+      </entry>
+    </store>
+  </parameters>
+  <extra>
+    <entry>
+      <string>StandartDeviation_2|position</string>
+      <java.awt.Point>
+        <x>10</x>
+        <y>270</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_13|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_16|position</string>
+      <java.awt.Point>
+        <x>130</x>
+        <y>600</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Prioritizer_18|position</string>
+      <java.awt.Point>
+        <x>460</x>
+        <y>560</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_11|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>FrequencyChartBuilder_4|position</string>
+      <java.awt.Point>
+        <x>380</x>
+        <y>270</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Multiplicator_7|position</string>
+      <java.awt.Point>
+        <x>150</x>
+        <y>340</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Multiplicator_1|position</string>
+      <java.awt.Point>
+        <x>270</x>
+        <y>140</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_11|position</string>
+      <java.awt.Point>
+        <x>20</x>
+        <y>480</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>TsvReader_0|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_19|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_13|position</string>
+      <java.awt.Point>
+        <x>340</x>
+        <y>550</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlArray_8|position</string>
+      <java.awt.Point>
+        <x>510</x>
+        <y>440</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Prioritizer_15|position</string>
+      <java.awt.Point>
+        <x>20</x>
+        <y>600</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Multiplicator_6|position</string>
+      <java.awt.Point>
+        <x>20</x>
+        <y>360</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Average_3|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_12|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlArray_9|position</string>
+      <java.awt.Point>
+        <x>240</x>
+        <y>550</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Multiplicator_6|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlReport_10|position</string>
+      <java.awt.Point>
+        <x>280</x>
+        <y>760</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Prioritizer_19|position</string>
+      <java.awt.Point>
+        <x>570</x>
+        <y>560</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>FrequencyChartBuilder_4|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Multiplicator_1|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_16|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_17|position</string>
+      <java.awt.Point>
+        <x>340</x>
+        <y>650</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>ArrayNormalizer_5|position</string>
+      <java.awt.Point>
+        <x>240</x>
+        <y>470</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlReport_10|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>StandartDeviation_2|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_18|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_12|position</string>
+      <java.awt.Point>
+        <x>130</x>
+        <y>480</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlArray_9|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlArray_8|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_14|position</string>
+      <java.awt.Point>
+        <x>600</x>
+        <y>440</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>Prioritizer_15|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>TsvReader_0|position</string>
+      <java.awt.Point>
+        <x>270</x>
+        <y>60</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlLabeler_14|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>ArrayNormalizer_5|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Multiplicator_7|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Prioritizer_17|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>Average_3|position</string>
+      <java.awt.Point>
+        <x>160</x>
+        <y>270</y>
+      </java.awt.Point>
+    </entry>
+  </extra>
+</network>

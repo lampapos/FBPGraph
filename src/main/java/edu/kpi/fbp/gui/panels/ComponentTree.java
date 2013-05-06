@@ -31,25 +31,30 @@ public class ComponentTree {
   Map<String, ComponentClassDescriptor> components;
   /** Tree root. */
   DefaultMutableTreeNode root;
-  
-  /** 
+
+  /**
    * Get components map.
    * @param mainWindow link to main window
    */
-  public ComponentTree(MainWindow mainWindow) {
+  public ComponentTree(final MainWindow mainWindow) {
     this.linkToMainWindow = mainWindow;
     components = mainWindow.getAvailableComponents();
   }
-  
-  /** 
+
+  /**
    * @param className full class name.
    * @return cast ComponentClassDescriptor to ComponentDescriptor
    */
-  public ComponentDescriptor getComponentDescriptor(String className) {
-      ComponentClassDescriptor ccd = components.get(className);
+  public ComponentDescriptor getComponentDescriptor(final String className) {
+      final ComponentClassDescriptor ccd = components.get(className);
+      if (ccd == null) {
+        System.err.println("There isn't descriptor for element " + className);
+        return null;
+      }
+
       final Class<? extends Component> clazz = ccd.getComponentClass();
       final ComponentDescriptor desc = ComponentDescriptor.buildDescriptor(clazz);
-      
+
       return desc;
   }
 
@@ -57,24 +62,24 @@ public class ComponentTree {
   public JTree build() {
 
     final JTree res = new JTree(buildTree());
-    
+
     res.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     res.addMouseListener(new MouseAdapter() {
-  
+
       @Override
       public void mousePressed(final MouseEvent e) {
         final TreePath tPath = res.getPathForLocation(e.getX(), e.getY());
-      
+
           //add visual selection to tree node
           res.setSelectionPath(tPath);
-      
+
           if (tPath != null) {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tPath.getLastPathComponent();
             // if nothing is selected
             if (node == null) {
               choose = null;
             }
-      
+
             // retrieve the node that was selected
             final Object nodeInfo = node.getUserObject();
             if (node.isLeaf()) {
@@ -83,25 +88,25 @@ public class ComponentTree {
             } else {
               choose = null;
             }
-      
+
           } else {
             choose = null;
           }
-      
+
       }
-      
+
       @Override
       public void mouseReleased(final MouseEvent e) {
-        
-        int[] dimension = linkToMainWindow.getWorkFieldCoordinates();
+
+        final int[] dimension = linkToMainWindow.getWorkFieldCoordinates();
         //Read more about this weird offset.
-        int offsetX = linkToMainWindow.getPanelComponentTreeSize().width;
-        int mouseX = e.getX() - offsetX, mouseY = e.getY();
-        int x0 = dimension[0], y0 = dimension[1], x1 = x0 + dimension[2], y1 = y0 + dimension[3];
-  
+        final int offsetX = linkToMainWindow.getPanelComponentTreeSize().width;
+        final int mouseX = e.getX() - offsetX, mouseY = e.getY();
+        final int x0 = dimension[0], y0 = dimension[1], x1 = x0 + dimension[2], y1 = y0 + dimension[3];
+
         if ((mouseX > x0 && mouseX < x1) && (mouseY > y0 && mouseY < y1)) {
           final Node bufNode = linkToMainWindow.getClassWorkField().getNode(e.getPoint());
-  
+
           if ((bufNode == null) && (choose != null)) {
             final mxGraph graph = linkToMainWindow.getClassWorkField().getGraph();
             graph.getModel().beginUpdate();
@@ -112,10 +117,10 @@ public class ComponentTree {
             } finally {
               graph.getModel().endUpdate();
             }
-  
+
           }
         }
-  
+
         //delete visual selection
         res.setSelectionPath(null);
       }
@@ -123,16 +128,16 @@ public class ComponentTree {
 
     return res;
   }
-  
+
   /** @return tree from components. */
   private DefaultMutableTreeNode buildTree() {
     root = new DefaultMutableTreeNode("Components");
 
-    Object[] names = components.keySet().toArray();
-    ArrayList<DefaultMutableTreeNode> packageName = new ArrayList<DefaultMutableTreeNode>();
+    final Object[] names = components.keySet().toArray();
+    final ArrayList<DefaultMutableTreeNode> packageName = new ArrayList<DefaultMutableTreeNode>();
     String[] complexName;
     DefaultMutableTreeNode bufNode;
-    
+
     for (int i = 0; i < names.length; i++) {
       complexName = splitName(names[i].toString());
       bufNode = inPackageName(complexName[0], packageName);
@@ -144,29 +149,29 @@ public class ComponentTree {
         packageName.add(bufNode);
       }
     }
-    
-    for (DefaultMutableTreeNode node : packageName) {
+
+    for (final DefaultMutableTreeNode node : packageName) {
         root.add(node);
     }
 
     return root;
   }
-  
-  /** 
+
+  /**
    * Split class name to package and component name.
    * @return String[2] = [package name, component name].
    */
-  private String[] splitName(String in) {
-    String[] res = new String[2];
-    String[] splitBuf = in.split("\\.");
+  private String[] splitName(final String in) {
+    final String[] res = new String[2];
+    final String[] splitBuf = in.split("\\.");
     res[1] = splitBuf[splitBuf.length - 1];
     res[0] = in.substring(0, in.length() - res[1].length());
-        
+
     return res;
   }
-  
+
   /** @return DefaultMutableTreeNode if it already in array. */
-  private DefaultMutableTreeNode inPackageName(String name, ArrayList<DefaultMutableTreeNode> packageName) {
+  private DefaultMutableTreeNode inPackageName(final String name, final ArrayList<DefaultMutableTreeNode> packageName) {
     for (int i = 0; i < packageName.size(); i++) {
       if (packageName.get(i).getUserObject().toString().equals(name)) {
         return packageName.get(i);
@@ -174,5 +179,5 @@ public class ComponentTree {
     }
     return null;
   }
-  
+
 }

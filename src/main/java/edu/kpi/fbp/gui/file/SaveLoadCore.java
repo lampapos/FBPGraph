@@ -163,8 +163,8 @@ public class SaveLoadCore {
         for (final Node node : res) {
           final ParameterBundle paramBundle = localParams.getComponentParameters(node.getName(), node.getComponentDescriptor());
           for (final ComponentParameter comPar : node.getAttributes()) {
-            if (!paramBundle.get(comPar.name()).getValue().equals(comPar.defaultValue())) {
-              node.addNewAttribute(new Parameter(comPar.name(), paramBundle.get(comPar.name()).getValue()));
+            if (!paramBundle.get(comPar.port()).getValue().equals(comPar.defaultValue())) {
+              node.addNewAttribute(new Parameter(comPar.port(), paramBundle.get(comPar.port()).getValue()));
             }
           }
         }

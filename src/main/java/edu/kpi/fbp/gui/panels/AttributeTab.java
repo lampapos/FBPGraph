@@ -73,14 +73,14 @@ public class AttributeTab {
       switch (node.getAttributes().get(i).type()) {
         case BOOLEAN:
           if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
-            bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
+            bufArray.add(new Parameter(node.getAttributes().get(i).port(), attributeField.get(i).getText()));
           }
         break;
         case INTEGER:
           try {
             Integer.parseInt(attributeField.get(i).getText());
             if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
-              bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
+              bufArray.add(new Parameter(node.getAttributes().get(i).port(), attributeField.get(i).getText()));
             }
           } catch (final NumberFormatException ie) {
             attributeField.get(i).setText("Invalid format [INTEGER]");
@@ -91,7 +91,7 @@ public class AttributeTab {
           try {
             Integer.parseInt(attributeField.get(i).getText());
             if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
-              bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
+              bufArray.add(new Parameter(node.getAttributes().get(i).port(), attributeField.get(i).getText()));
             }
           } catch (final NumberFormatException ie) {
             attributeField.get(i).setText("Invalid format [FLOAT]");
@@ -100,7 +100,7 @@ public class AttributeTab {
         break;
         case STRING:
           if (!attributeField.get(i).getText().equals(node.getAttributes().get(i).defaultValue())) {
-            bufArray.add(new Parameter(node.getAttributes().get(i).name(), attributeField.get(i).getText()));
+            bufArray.add(new Parameter(node.getAttributes().get(i).port(), attributeField.get(i).getText()));
           }
         break;
         default:
@@ -131,12 +131,12 @@ public class AttributeTab {
         for (final ComponentParameter comParam : node.getAttributes()) {
 
           //Component name
-          final JLabel bufLabel = new JLabel(comParam.name());
+          final JLabel bufLabel = new JLabel(comParam.port());
           attributePanel.add(bufLabel, "cell 0 " + i);
 
           //Component value
           String value = comParam.defaultValue();
-          final String newValue = isNewValueSet(node, comParam.name());
+          final String newValue = isNewValueSet(node, comParam.port());
           if (newValue != null) {
             value = newValue;
           }
