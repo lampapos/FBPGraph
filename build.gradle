@@ -2,13 +2,18 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 version = '1.0'
 
 jar {
-    manifest {
-        attributes 'Implementation-Title': 'FBPGraph', 'Implementation-Version': version
-    }
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+  manifest {
+    attributes(
+        'Implementation-Title': 'FBPGraph',
+        'Implementation-Version': version,
+        'Main-Class': 'edu.kpi.fbp.gui.app.MainWindow')
+  }
 }
 
 repositories {
@@ -18,10 +23,10 @@ repositories {
 }
 
 dependencies {
-    compile 'org.tinyjee.jgraphx:jgraphx:1.10.4.1'
-    compile 'org.slf4j:slf4j-api:1.7.2'
-    compile 'org.slf4j:slf4j-log4j12:1.7.2'
-    compile 'log4j:log4j:1.2.17'
-    compile 'com.miglayout:miglayout:3.7.4'
-    compile 'edu.kpi.fbp:FBPUtils:1.0'
+  compile 'org.tinyjee.jgraphx:jgraphx:1.10.4.1'
+  compile 'org.slf4j:slf4j-api:1.7.2'
+  compile 'org.slf4j:slf4j-log4j12:1.7.2'
+  compile 'log4j:log4j:1.2.17'
+  compile 'com.miglayout:miglayout:3.7.4'
+  compile 'edu.kpi.fbp:FBPUtils:1.0'
 }
