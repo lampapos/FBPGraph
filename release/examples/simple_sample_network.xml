@@ -1,0 +1,57 @@
+<network name="simple_sample_network.xml">
+  <components>
+    <component className="edu.kpi.fbp.network.components.TsvReader" name="TsvReader_0" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.FrequencyChartBuilder" name="FrequencyChartBuilder_4" sourceUrl="http://example.com"/>
+    <component className="edu.kpi.fbp.network.components.HtmlReport" name="HtmlReport_10" sourceUrl="http://example.com"/>
+  </components>
+  <links>
+    <link fromComponent="TsvReader_0" fromPort="COLUMNS" toComponent="FrequencyChartBuilder_4" toPort="IN"/>
+    <link fromComponent="FrequencyChartBuilder_4" fromPort="OUT" toComponent="HtmlReport_10" toPort="IN"/>
+  </links>
+  <parameters>
+    <networkHash>0</networkHash>
+    <store>
+      <entry>
+        <string>TsvReader_0</string>
+        <bundle>
+          <parameter name="fileUrl">https://raw.github.com/lampapos/KpiFBP/master/misc/in.tsv</parameter>
+        </bundle>
+      </entry>
+    </store>
+  </parameters>
+  <extra>
+    <entry>
+      <string>FrequencyChartBuilder_4|position</string>
+      <java.awt.Point>
+        <x>10</x>
+        <y>130</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>TsvReader_0|position</string>
+      <java.awt.Point>
+        <x>50</x>
+        <y>40</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>HtmlReport_10|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>HtmlReport_10|position</string>
+      <java.awt.Point>
+        <x>90</x>
+        <y>230</y>
+      </java.awt.Point>
+    </entry>
+    <entry>
+      <string>FrequencyChartBuilder_4|color</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>TsvReader_0|color</string>
+      <null/>
+    </entry>
+  </extra>
+</network>

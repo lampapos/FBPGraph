@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ public class ColorTab {
     res.setBackground(Color.white);
     res.setLayout(new MigLayout("", "[150px]", "[70px][70px][70px][70px][70px][70px]"));
 
-    final JPanel colorRed = new ColorImage("bin/img/colorRed.jpg");
+    final JPanel colorRed = new ColorImage("/img/colorRed.jpg");
     colorRed.setBackground(Color.white);
     colorRed.addMouseListener(new MouseAdapter() {
       @Override
@@ -55,7 +54,7 @@ public class ColorTab {
         changeColor("red", graph);
       }
     });
-    final JPanel colorOrange = new ColorImage("bin/img/colorOrange.jpg");
+    final JPanel colorOrange = new ColorImage("/img/colorOrange.jpg");
     colorOrange.setBackground(Color.white);
     colorOrange.addMouseListener(new MouseAdapter() {
       @Override
@@ -63,7 +62,7 @@ public class ColorTab {
         changeColor("orange", graph);
       }
     });
-    final JPanel colorGreen = new ColorImage("bin/img/colorGreen.jpg");
+    final JPanel colorGreen = new ColorImage("/img/colorGreen.jpg");
     colorGreen.setBackground(Color.white);
     colorGreen.addMouseListener(new MouseAdapter() {
       @Override
@@ -71,7 +70,7 @@ public class ColorTab {
         changeColor("green", graph);
       }
     });
-    final JPanel colorBlue = new ColorImage("bin/img/colorBlue.jpg");
+    final JPanel colorBlue = new ColorImage("/img/colorBlue.jpg");
     colorBlue.setBackground(Color.white);
     colorBlue.addMouseListener(new MouseAdapter() {
       @Override
@@ -79,7 +78,7 @@ public class ColorTab {
         changeColor("blue", graph);
       }
     });
-    final JPanel colorWhite = new ColorImage("bin/img/colorWhite.jpg");
+    final JPanel colorWhite = new ColorImage("/img/colorWhite.jpg");
     colorWhite.setBackground(Color.white);
     colorWhite.addMouseListener(new MouseAdapter() {
       @Override
@@ -87,7 +86,7 @@ public class ColorTab {
         changeColor("white", graph);
       }
     });
-    final JPanel colorDefault = new ColorImage("bin/img/colorDefault.jpg");
+    final JPanel colorDefault = new ColorImage("/img/colorDefault.jpg");
     colorDefault.setBackground(Color.white);
     colorDefault.addMouseListener(new MouseAdapter() {
       @Override
@@ -135,7 +134,7 @@ public class ColorTab {
 
       public ColorImage(final String path) {
          try {
-           image = ImageIO.read(new File(path));
+           image = ImageIO.read(getClass().getResourceAsStream(path));
          } catch (final IOException ex) {
            ex.printStackTrace();
          }
